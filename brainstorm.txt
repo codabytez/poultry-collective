@@ -1,0 +1,76 @@
+project-root
+│
+├── pages
+│   ├── index.tsx                  // Landing page (Buyer section)
+│   ├── login.tsx                  // Login page
+│   ├── signup.tsx                 // Signup page
+│   ├── verification.tsx           // Email verification page
+│   ├── forgot-password.tsx        // Forgot password page
+│   ├── buyer
+│   │   ├── start-shopping.tsx     // Start shopping page (display all products)
+│   │   ├── index.tsx              // Buyer dashboard
+│   │   ├── view-cart.tsx          // View cart page
+│   │   ├── checkout.tsx           // Checkout page
+│   │   ├── order-success.tsx      // Order success page
+│   │   ├── profile
+│   │   │   ├── index.tsx          // Buyer profile
+│   │   │   ├── order-history.tsx  // Order history page
+│   │   │   ├── settings.tsx       // Buyer settings page
+│   │   │   ├── change-password.tsx // Change password page
+│   │   ├── forgot-password
+│   │   │   ├── request.tsx        // Request new password page
+│   │   │   ├── reset.tsx          // Reset password page
+│   │   │   ├── success.tsx        // Password reset success page
+│   ├── seller
+│   │   ├── index.tsx              // Seller dashboard
+│   │   ├── onboarding
+│   │   │   ├── StepOne.tsx        // Seller onboarding step one
+│   │   │   ├── StepTwo.tsx        // Seller onboarding step two
+│   │   │   ├── StepThree.tsx      // Seller onboarding step three
+│   │   ├── profile
+│   │   │   ├── index.tsx          // Seller profile
+│   │   │   ├── ProductList.tsx    // Seller's listed products
+│   │   │   ├── AddProduct.tsx     // Add product popup
+│
+├── components
+│   ├── auth
+│   │   ├── LoginForm.tsx          // Login form component
+│   │   ├── SignupForm.tsx         // Signup form component
+│   │   ├── VerificationForm.tsx   // Verification form component
+│   │   ├── ForgotPasswordForm.tsx // Forgot password form component
+│   │   ├── ResetPasswordForm.tsx  // Reset password form component
+│   │   ├── ChangePasswordForm.tsx // Change password form component
+│   ├── common
+│   │   ├── Navbar.tsx             // Common navbar component
+│   │   ├── Footer.tsx             // Common footer component
+│   ├── buyer
+│   │   ├── BuyerProductList.tsx   // Buyer product list component
+│   │   ├── ViewCart.tsx           // View cart component
+│   │   ├── Checkout.tsx           // Checkout component
+│   │   ├── OrderSuccess.tsx       // Order success component
+│   ├── seller
+│   │   ├── SellerProfile.tsx      // Seller profile component
+│   │   ├── SellerOnboarding.tsx   // Seller onboarding component
+│
+├── context
+│   ├── AuthContext.tsx             // Authentication context
+│   ├── CartContext.tsx             // Shopping cart context
+│
+├── api
+│   ├── appwrite.ts                // Appwrite API integration
+│
+├── auth
+│   ├── auth.ts                    // Authentication utility functions
+│   ├── withAuth.tsx               // HOC for protecting routes
+│
+├── public
+│   ├── images                      // Publicly accessible images
+│
+├── styles
+│   ├── global.css                  // Global styles
+│   ├── tailwind.css                // Tailwind CSS styles
+│
+├── tsconfig.json                   // TypeScript configuration
+├── next.config.js                  // Next.js configuration
+├── package.json
+├── yarn.lock

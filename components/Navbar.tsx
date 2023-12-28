@@ -1,10 +1,13 @@
+"use client";
 import { NextPage } from "next";
 import Link from "next/link";
-import Image from "next/image";
-import logo from "@/public/assets/logo_green.svg";
-import location from "@/public/assets/location.svg";
-import shop from "@/public/assets/shop.svg";
+import Logo from "./Logo";
 import Button from "./UI/Button";
+import CountryDropdown from "./CountryDropdown";
+import { countries } from "./countries";
+import { Location, Shop } from "iconsax-react";
+import { useUser } from "@/context/user";
+import { useRouter } from "next/navigation";
 
 export const Navbar: NextPage = () => {
   return (
@@ -15,41 +18,33 @@ export const Navbar: NextPage = () => {
             className="inline-flex py-3 p-6 justify-center items-center gap-2 rounded-lg"
             href="/"
           >
-            <Image src={shop} alt="shop" />
+            <Shop color="#0d5c3d" />
             <h5 className="text-H6-03 text-base text-main-green-mg">
               Start Shopping
             </h5>
           </Link>
-          <div className="inline-flex py-2 px-4 justify-center items-center gap-3 border-main-green-mg">
-            <Image src={location} alt="location" />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                d="M19.9181 8.9502L13.3981 15.4702C12.6281 16.2402 11.3681 16.2402 10.5981 15.4702L4.07812 8.9502"
-                stroke="#0D5C3D"
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+          <div className="flex py-2 px-4 justify-center items-center gap-3 border-main-green-mg">
+            <Location color="#0D5C3D" />
+            <CountryDropdown countries={countries} fullWidth={false} />
           </div>
         </div>
       </div>
+
       <BottomNavbar />
     </nav>
   );
 };
 
 export const BottomNavbar: NextPage = () => {
+  const contextUser = useUser();
+  const router = useRouter();
+
   return (
     <div className="flex items-center justify-between gap-10 px-16 py-4 m-auto max-w-[1436px] bg-white">
-      <Image src={logo} alt="logo" />
+      <Logo />
+      <div className="flex items-center justify-between gap-10 px-16 py-4 m-auto h-10 border border-red-900 max-w-[1436px] bg-white">
+        {contextUser?.user?.name}
+      </div>
       <div className="flex gap-16 text-H6-01 text-base text-cod-gray-cg-500">
         <Link
           className="text-cod-gray text-base leading-5 font-normal hover:text-main-green-mg transition-all"
@@ -90,8 +85,16 @@ export const BottomNavbar: NextPage = () => {
         </div>
       </div>
 
-      <Button color="white" size="small">
-        Login
+      <Button
+        color="white"
+        size="small"
+        onClick={
+          contextUser?.user
+            ? () => contextUser.logout()
+            : () => router.push("/login")
+        }
+      >
+        {contextUser?.user ? "Logout" : "Login"}
       </Button>
     </div>
   );

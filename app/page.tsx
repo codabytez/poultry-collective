@@ -3,27 +3,27 @@ import Footer from "@/components/Footer";
 import GetStarted from "@/components/LandingPage/GetStarted";
 import Hero from "@/components/LandingPage/Hero";
 import HowItWorks from "@/components/LandingPage/HowItWorks";
+import ShopasGuest from "@/components/LandingPage/ShopasGuest";
 import Testimonial from "@/components/LandingPage/Testimonial";
 import Whyus from "@/components/LandingPage/Whyus";
 import { Navbar } from "@/components/Navbar";
-import withAuth from "@/utils/withAuth";
+import MainLayout from "@/layouts/MainLayout";
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
-    <main>
-      <Navbar />
+    <MainLayout>
       <Hero />
       <Whyus />
       <HowItWorks />
       <Testimonial />
       <GetStarted />
-      <Footer />
-    </main>
+      <ShopasGuest />
+    </MainLayout>
   );
 };
 
-export default withAuth(Home);
+export default Home;
 
 // app/
 // |-- components/
@@ -41,3 +41,10 @@ export default withAuth(Home);
 // styles/
 // |-- globals.css
 // |-- other-styles...
+
+// NOTE: tedefresh-rebrand
+// const client = new Client();
+
+// client
+//     .setEndpoint('https://cloud.appwrite.io/v1')
+//     .setProject('657d7bb31401dbefa690');

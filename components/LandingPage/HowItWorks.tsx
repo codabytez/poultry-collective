@@ -1,10 +1,7 @@
 import { NextPage } from "next";
 import Button from "@/components/UI/Button";
-import Image from "next/image";
-import reg from "@/public/assets/user-edit.svg";
-import shop from "@/public/assets/shopping-cart.svg";
-import payment from "@/public/assets/moneys.svg";
 import Link from "next/link";
+import { Moneys, ShoppingCart, UserEdit } from "iconsax-react";
 
 const HowItWorks: NextPage = () => {
   return (
@@ -13,7 +10,7 @@ const HowItWorks: NextPage = () => {
         <h2 className=" text-H2-03 text-center">How it works</h2>
         <div className="flex flex-1 gap-6 m-auto justify-center">
           <div className="max-w-[378px] flex flex-col gap-4 items-center rounded bg-offwhite p-6 pb-11">
-            <Image src={reg} alt="register" />
+            <UserEdit size="32" color="#1A1A1A" />
             <p className="text-center text-cod-gray-cg-500 text-LP-03">
               Register
             </p>
@@ -23,7 +20,7 @@ const HowItWorks: NextPage = () => {
           </div>
 
           <div className="max-w-[378px] flex flex-col gap-4 items-center rounded bg-offwhite p-6 pb-11">
-            <Image src={shop} alt="register" />
+            <ShoppingCart size="32" color="#1A1A1A" />
             <p className="text-center text-cod-gray-cg-500 text-LP-03">Shop</p>
             <p className="text-cod-gray-cg-500 text-MP-03">
               Engage with our broadly curated list of storefronts in our
@@ -32,7 +29,7 @@ const HowItWorks: NextPage = () => {
           </div>
 
           <div className="max-w-[378px] flex flex-col gap-4 items-center rounded bg-offwhite p-6 pb-11">
-            <Image src={payment} alt="register" />
+            <Moneys size="32" color="#1A1A1A" />
             <p className="text-center text-cod-gray-cg-500 text-LP-03">
               Payment
             </p>

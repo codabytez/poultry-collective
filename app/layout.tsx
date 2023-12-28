@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Red_Hat_Display } from "next/font/google";
 import "./globals.css";
+import UserProvider from "@/context/user";
+import { FormProvider } from "@/context/seller";
 
 const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
@@ -20,7 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={redHatDisplay.variable}>{children}</body>
+      <UserProvider>
+        <FormProvider>
+          <body className={redHatDisplay.variable}>{children}</body>
+        </FormProvider>
+      </UserProvider>
     </html>
   );
 }

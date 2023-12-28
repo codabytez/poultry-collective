@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {
+    domains: [
+      "picsum.photos",
+      "placehold.co",
+      "fastly.picsum.photos",
+      "cloud.appwrite.io",
+    ],
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

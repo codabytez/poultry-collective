@@ -1,3 +1,4 @@
+'use client'
 import { NextPage } from "next";
 import SignUpForm from "@/components/SignUpForm";
 import { BottomNavbar } from "@/components/Navbar";

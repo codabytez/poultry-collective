@@ -1,15 +1,14 @@
 import { NextPage } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/assets/logo_white.svg";
+import Logo from "./Logo";
 import Button from "./UI/Button";
 
 const Footer: NextPage = () => {
   return (
     <footer className=" bg-cod-gray-cg w-full p-6">
-      <div className="max-w-[1291px] m-auto">
+      <div className="max-w-[1291px] mx-auto">
         <div className="flex flex-col gap-10">
-          <Image src={logo} alt="logo" />
+          <Logo fill="#FFF8F0" />
           <div className="flex justify-between items-start">
             <div>
               <h6 className="text-H6-03 text-cod-gray-cg-50">

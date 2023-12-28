@@ -1,32 +1,30 @@
 "use client";
-import { useAuth } from "@/app/hooks/useAuth";
 import Image from "next/image";
-import { FcGoogle } from "react-icons/fc";
+import { Google } from "iconsax-react";
 import signupImg from "@/public/assets/signup_eggs.png";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "./UI/Button";
 import { NextPage } from "next";
 import Input from "./UI/Input";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
+import { useUser } from "@/context/user";
+import { useGeneralStore } from "@/stores/general";
 
 const SignUpForm: NextPage = () => {
-  const {
-    loggedInUser,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    name,
-    setName,
-    login,
-    register,
-    logout,
-    signInWithGoogle,
-  } = useAuth();
+  const router = useRouter();
+  const contextUser = useUser();
+
+  const [name, setName] = useState<string | "">("");
+  const [email, setEmail] = useState<string | "">("");
+  const [password, setPassword] = useState<string | "">("");
+  const [confirmPassword, setConfirmPassword] = useState<string | "">("");
+  //   const [terms, setTerms] = useState<boolean>(false);
+  //   const [error, setError] = useState<string | null>(null);
+  const { setIsLoading } = useGeneralStore();
 
   const signUpSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -62,26 +60,17 @@ const SignUpForm: NextPage = () => {
 
   type FormData = z.infer<typeof signUpSchema>;
 
-  const onSubmit = (data: FormData) => {
-    if (data.password !== data.confirmPassword) {
-      console.log("password", data.password);
-      console.log("confirm-password", data.confirmPassword);
-      alert("Passwords do not match");
-    } else {
-      register();
+  const onSubmit = async () => {
+    try {
+      setIsLoading(true);
+      await contextUser.register(email, password, name);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  if (loggedInUser) {
-    return (
-      <div>
-        <p>Logged in as {loggedInUser.name}</p>
-        <button type="button" onClick={logout}>
-          Logout
-        </button>
-      </div>
-    );
-  }
 
   return (
     <section className="flex justify-center items-center min-h-screen mt-10">
@@ -110,7 +99,9 @@ const SignUpForm: NextPage = () => {
               type="text"
               placeholder="e.g John Doe"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
+              }
             />
 
             <Input
@@ -121,7 +112,9 @@ const SignUpForm: NextPage = () => {
               type="email"
               placeholder="e.g jackbauer24@ctu.email.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
             />
 
             <Input
@@ -132,7 +125,9 @@ const SignUpForm: NextPage = () => {
               type="password"
               placeholder="e.g REnee24*****"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
             />
 
             <Input
@@ -143,7 +138,9 @@ const SignUpForm: NextPage = () => {
               type="password"
               placeholder="e.g REnee24*****"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setConfirmPassword(e.target.value)
+              }
             />
 
             <Button color="green" size="large" fullWidth type="submit">
@@ -179,9 +176,9 @@ const SignUpForm: NextPage = () => {
               color="white"
               size="small"
               fullWidth
-              onClick={signInWithGoogle}
+              //   onClick={signInWithGoogle}
             >
-              <FcGoogle size={30} />
+              <Google color="#0d5c3d" />
               <span>Use your Google Account</span>
             </Button>
 

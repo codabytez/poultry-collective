@@ -1,7 +1,6 @@
 "use client";
-import { useAuth } from "@/app/hooks/useAuth";
 import Image from "next/image";
-import { FcGoogle } from "react-icons/fc";
+import { Google } from "iconsax-react";
 import loginImg from "@/public/assets/login_eggs.png";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -11,24 +10,17 @@ import Button from "./UI/Button";
 import { NextPage } from "next";
 import Input from "./UI/Input";
 import { useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useUser } from "@/context/user";
+import { useGeneralStore } from "@/stores/general";
 
 const LoginForm: NextPage = () => {
   const router = useRouter();
-  const {
-    loggedInUser,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    name,
-    setName,
-    login,
-    register,
-    logout,
-    signInWithGoogle,
-  } = useAuth();
+  const contextUser = useUser();
+  const [email, setEmail] = useState<string | "">("");
+  const [password, setPassword] = useState<string>("");
+  //   const [error, setError] = useState<string | null>(null);
+  const { setIsLoading } = useGeneralStore();
 
   const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -46,25 +38,37 @@ const LoginForm: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async () => {
+    if (!contextUser) return console.log("No user context");
+
     try {
-      await login(data.email, data.password);
-      router.push("/see");
+      setIsLoading(true);
+      await contextUser.login(email, password);
+      //   router.push("/");
     } catch (error) {
       // Check the error message to set the appropriate form error
-      if (error.message.includes("email")) {
-        console.log(error.message);
+      const errorMessage = (error as Error).message;
+      console.log("error", errorMessage);
+      if (errorMessage.includes("email")) {
         setError("email", {
-          message: "Invalid credentials. Please check the email and password.",
+          message:
+            "E! Invalid credentials. Please check the email and password.",
         });
-      } else if (error.message.includes("password")) {
-        console.log(error.message);
+      } else if (errorMessage.includes("password")) {
+        console.log("error1", errorMessage);
         setError("password", {
-          message: "Invalid credentials. Please check the email and password.",
+          message:
+            "P! Invalid credentials. Please check the email and password.",
         });
       }
     }
   };
+
+  useEffect(() => {
+    if (contextUser.user) {
+      router.push("/");
+    }
+  }, [contextUser, router]);
 
   return (
     <section className="flex justify-center items-center min-h-screen my-10">
@@ -81,7 +85,10 @@ const LoginForm: NextPage = () => {
             poultry produce.
           </p>
 
-          <form className="w-[426px] flex flex-col items-start gap-6">
+          <form
+            className="w-[426px] flex flex-col items-start gap-6"
+            onClick={handleSubmit(onSubmit)}
+          >
             <Input
               label="Your Email Address"
               type="email"
@@ -89,6 +96,9 @@ const LoginForm: NextPage = () => {
               register={formRegister}
               name="email"
               error={errors.email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
             />
             <div className="flex flex-col w-full gap-2">
               <Input
@@ -98,6 +108,9 @@ const LoginForm: NextPage = () => {
                 register={formRegister}
                 name="password"
                 error={errors.password}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setPassword(e.target.value)
+                }
               />
               <Link
                 className="text-SC-03 font-normal text-cod-gray-cg-400"
@@ -106,13 +119,7 @@ const LoginForm: NextPage = () => {
                 Forgot Password?
               </Link>
             </div>
-            <Button
-              type="submit"
-              color="green"
-              size="large"
-              fullWidth
-              onClick={handleSubmit(onSubmit)}
-            >
+            <Button type="submit" color="green" size="large" fullWidth>
               Login
             </Button>
           </form>
@@ -123,9 +130,9 @@ const LoginForm: NextPage = () => {
               color="white"
               size="small"
               fullWidth
-              onClick={signInWithGoogle}
+              //   onClick={signInWithGoogle}
             >
-              <FcGoogle size={30} />
+              <Google color="#0d5c3d" />
               <span>Use your Google Account</span>
             </Button>
 
