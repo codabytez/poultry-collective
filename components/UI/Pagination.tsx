@@ -10,21 +10,6 @@ const Pagination: React.FC<PaginationProps> = ({
   const pageNumbers = [];
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  //   for (let i = 1; i <= totalPages; i++) {
-  //     if (
-  //       i === 1 ||
-  //       i === totalPages ||
-  //       i === currentPage ||
-  //       i === currentPage - 1 ||
-  //       i === currentPage + 1 ||
-  //       i <= 9
-  //     ) {
-  //       pageNumbers.push(i);
-  //     } else if (i === currentPage - 2 || i === currentPage + 9) {
-  //       pageNumbers.push("...");
-  //     }
-  //   }
-
   for (let i = 1; i <= totalPages; i++) {
     if (
       i === 1 ||
@@ -57,10 +42,10 @@ const Pagination: React.FC<PaginationProps> = ({
             <path
               d="M15.4998 19.9201L8.97984 13.4001C8.20984 12.6301 8.20984 11.3701 8.97984 10.6001L15.4998 4.08008"
               stroke={currentPage === 1 ? "#6C757D" : "#0D5C3D"}
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
           <span
@@ -84,7 +69,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {number === "..." ? (
               <span className="text-SC-03">...</span>
             ) : (
-              <button onClick={() => paginate(number)}>{number}</button>
+              <button onClick={() => paginate(Number(number))}>{number}</button>
             )}
           </p>
         ))}
@@ -114,10 +99,10 @@ const Pagination: React.FC<PaginationProps> = ({
             <path
               d="M9.41016 19.9201L15.9302 13.4001C16.7002 12.6301 16.7002 11.3701 15.9302 10.6001L9.41016 4.08008"
               stroke={currentPage === totalPages ? "#6C757D" : "#0D5C3D"}
-              stroke-width="1.5"
-              stroke-miterlimit="10"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>

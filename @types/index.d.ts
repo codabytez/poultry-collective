@@ -13,6 +13,10 @@ export type userContextProps = {
   checkUser: () => Promise<void>;
 };
 
+export interface CustomError extends Error {
+  type?: string;
+}
+
 export type FormContextProps = {
   businessInfo: {
     name: string;
@@ -202,3 +206,7 @@ export type StarProps = {
 };
 ///////////////////////
 //////////////////////
+
+export interface productDetailTypes {
+  params: { productid: string };
+}

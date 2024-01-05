@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { NextPage } from "next";
-import Image from "next/image";
-import { CheckoutProductProps, cartItemProps } from "@/@types";
+import { cartItemProps } from "@/@types";
 import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
 import { useEffect, useState } from "react";
 

@@ -1,51 +1,77 @@
+/* eslint-disable @next/next/no-img-element */
+"use client";
 import { NextPage } from "next";
-import { dummyProducts } from "../LandingPage/dummyProducts";
 import MainLayout from "@/layouts/MainLayout";
-import Image from "next/image";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import Product from "../Product";
+import { useUser } from "@/context/user";
+import { useProductStore } from "@/stores/product";
+import { useEffect, useState } from "react";
+import { productDetailTypes } from "@/@types";
 
-const ProductDescription: NextPage = () => {
-  const quantities = [1, 2, 3, 4, 5]; // replace with your quantities
-  const items = dummyProducts.slice(0, 3); // replace with your items
+const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
+  const contextUser = useUser();
+  const { productsById, setProductsById, allProducts } = useProductStore();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (contextUser.user) {
+      setLoading(true);
+      try {
+        setProductsById(params.productid);
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+
+        throw new Error(
+          "Failed to add the item to the cart. Please try again."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <MainLayout>
-      <section className="w-[1312px] m-auto shrink-0 bg-light-green-shade p-14 h-[724px] flex gap-16 mb-16">
+      <section className="max-w-[1312px] m-auto shrink-0 bg-light-green-shade p-14 h-[724px] flex gap-16 mb-16 ">
         <div>
-          <Image
-            src={dummyProducts[0].image}
-            alt={dummyProducts[0].name}
-            width={537}
-            height={496}
-            className="w-[537px] h-[496px]"
+          <img
+            src={productsById.imageUrl}
+            alt={productsById.product_name}
+            className="w-[537px] h-[496px] object-cover"
           />
         </div>
 
         <div className="flex flex-col gap-24">
           <div>
             <h3 className="text-H3-03 text-cod-gray-cg">
-              {dummyProducts[0].name}
+              {productsById.product_name}
             </h3>
 
             <h4 className="w-[590px] h-[183.5px] shrink-0 text-cod-gray-cg-500 text-H4-03 font-normal">
-              Our poultry eggs are weighted at 1kg per crate. These are hatched
-              by our healthy broiler chickens aging from 20 to 32 months.
+              {productsById.product_details}
             </h4>
           </div>
 
           <div className="w-[425px] flex flex-col gap-5">
             <h3 className="text-H3-03 text-cod-gray-cg">Select Quantity</h3>
 
-            <select className="w-full flex h-[60px] p-5 items-center justify-between shrink-0 bg-light-green-shade text-cod-gray-cg-400 text-SP-03 font-normal focus:outline-none mb-5">
+            <Input type="text" placeholder="Enter quantity" fullWidth />
+
+            {/* <select className="w-full flex h-[60px] p-5 items-center justify-between shrink-0 bg-light-green-shade text-cod-gray-cg-400 text-SP-03 font-normal focus:outline-none mb-5">
               <option value="">Select...</option>
-              {quantities.map((quantity) => (
+              {productsById.quantity_available.map((quantity) => (
                 <option key={quantity} value={quantity}>
                   {quantity}
                 </option>
               ))}
-            </select>
+            </select> */}
             <Button size="large" color="green" fullWidth>
               Add to Cart
             </Button>
@@ -53,11 +79,13 @@ const ProductDescription: NextPage = () => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-10 mb-20 w-max m-auto">
-        <h3 className="text-H3-03 text-cod-gray-cg">See Other Items</h3>
+      <section className="flex flex-col gap-10 mb-20 m-auto">
+        <h3 className="text-H3-03 text-cod-gray-cg w-full border">
+          See Other Items
+        </h3>
 
-        <div className="grid grid-cols-3 gap-4">
-          {items.map((item) => (
+        <div className="flex flex-wrap gap-4">
+          {allProducts.slice(0, 3).map((item) => (
             <Product key={item.id} {...item} />
           ))}
         </div>

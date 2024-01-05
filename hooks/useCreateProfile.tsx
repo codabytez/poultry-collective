@@ -1,4 +1,4 @@
-import { database, ID } from "@/config/appwriteConfig";
+import { database, ID } from  "@/libs/AppwriteClient";
 
 const useCreateProfile = async (
   userId: string,

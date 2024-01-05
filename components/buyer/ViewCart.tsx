@@ -11,14 +11,15 @@ import { useCartStore } from "@/stores/cart";
 import { useProductStore } from "@/stores/product";
 import { useGeneralStore } from "@/stores/general";
 import { useUser } from "@/context/user";
+import { useRouter } from "next/navigation";
 
 const ViewCart: NextPage = () => {
   const contextUser = useUser();
+  const Router = useRouter();
   const { setIsModalOpen } = useGeneralStore();
 
-  const { cart, addToCart, loadUserCart, removeFromCart, removeTempItem } =
-    useCartStore();
-  const { allProducts, setAllProducts } = useProductStore();
+  const { cart, loadUserCart, removeFromCart } = useCartStore();
+  const { allProducts } = useProductStore();
   const [viewOthers, setViewOthers] = useState<ProductProps[]>([]);
 
   useEffect(() => {
@@ -41,6 +42,10 @@ const ViewCart: NextPage = () => {
     removeFromCart(id);
   };
 
+  const handleProceedToCheckout = () => {
+    return Router.push("/buyer/checkout");
+  };
+
   return (
     <MainLayout>
       <h2 className="text-H2-03 text-cod-gray-cg-600 m-10">My Cart</h2>
@@ -52,7 +57,12 @@ const ViewCart: NextPage = () => {
       </div>
       <div className="max-w-[1312px]">
         <div className="w-[460px] mt-20 mb-36 mx-auto">
-          <Button color="green" size="large" fullWidth>
+          <Button
+            color="green"
+            size="large"
+            fullWidth
+            onClick={handleProceedToCheckout}
+          >
             Proceed to Checkout
           </Button>
         </div>

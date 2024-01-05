@@ -1,6 +1,4 @@
-import { profileProps } from "@/@types";
-import { database, ID } from "@/libs/AppwriteClient";
-import { useCartStore } from "@/stores/cart";
+import { ID, database } from "@/libs/AppwriteClient";
 
 const useAddToCart = async (
   userId: string,

@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, MouseEvent } from "react";
+import { MouseEvent } from "react";
 import { NextPage } from "next";
 import { ModalProps } from "@/@types";
 import { useGeneralStore } from "@/stores/general";

@@ -8,8 +8,6 @@ import Button from "../UI/Button";
 import { useUser } from "@/context/user";
 import { useRouter } from "next/navigation";
 import useCreateProduct from "@/hooks/useCreateProduct";
-import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
-import useGetProductBySeller from "@/hooks/useGetProductBySeller";
 import { useProductStore } from "@/stores/product";
 
 const AddProduct: NextPage<{

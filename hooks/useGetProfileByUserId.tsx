@@ -1,5 +1,4 @@
-import { NextPage } from "next";
-import { database, Query } from "@/config/appwriteConfig";
+import { database, Query } from "@/libs/AppwriteClient";
 
 const useGetProfileByUserId = async (userId: string) => {
   try {

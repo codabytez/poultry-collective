@@ -4,7 +4,7 @@ import { CartModalProps } from "@/@types";
 import Button from "../UI/Button";
 import CartItemPopUp from "./CartItemPopUp";
 import { useCartStore } from "@/stores/cart";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGeneralStore } from "@/stores/general";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user";
@@ -14,12 +14,20 @@ const CartModal: NextPage<CartModalProps> = ({ items, onDelete }) => {
   const { cart, loadUserCart } = useCartStore();
   const router = useRouter();
   const contextUser = useUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleViewCart = async () => {
-    if (!contextUser?.user) return router.push("/login");
-    router.push("/buyer/viewcart");
+    setIsLoading(true);
+
+    try {
+      router.push("/buyer/viewcart");
+      if (contextUser?.user) loadUserCart(contextUser.user.id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
     setIsModalOpen(false);
-    loadUserCart(contextUser.user.id);
   };
 
   if (items.length === 0) {

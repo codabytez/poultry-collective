@@ -1,19 +1,19 @@
 "use client";
 import { NextPage } from "next";
 import CheckoutProduct from "./CheckoutProduct";
-import { dummyProducts } from "../LandingPage/dummyProducts";
 import MainLayout from "@/layouts/MainLayout";
 import CountryDropdown from "../CountryDropdown";
 import { countries } from "../countries";
 import Button from "../UI/Button";
-import Modal from "../UI/Modal";
 import { useState } from "react";
 import { useUser } from "@/context/user";
 import { useCartStore } from "@/stores/cart";
 import Input from "../UI/Input";
+import { useRouter } from "next/navigation";
 
 const Checkout: NextPage = () => {
   const contextUser = useUser();
+  const router = useRouter();
   const { cart } = useCartStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -65,7 +65,7 @@ const Checkout: NextPage = () => {
             size="large"
             color="green"
             fullWidth
-            // onClick={() => setIsModalOpen(true)}
+            onClick={() => router.push("/login")}
           >
             Login
           </Button>

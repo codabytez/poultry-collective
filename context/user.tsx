@@ -1,5 +1,5 @@
-"use client";
 /* eslint-disable react-hooks/rules-of-hooks */
+"use client";
 import {
   useContext,
   createContext,
@@ -7,23 +7,25 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { account, ID } from "@/config/appwriteConfig";
+import { account, ID } from "@/libs/AppwriteClient";
 import { useRouter } from "next/navigation";
 import { User, userContextProps } from "@/@types";
 import { NextPage } from "next";
 import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useCreateProfile from "@/hooks/useCreateProfile";
+import { usePathname } from "next/navigation";
+import Loader from "@/components/UI/Loader";
 
 const userContext = createContext<userContextProps | null>(null);
 
 const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const checkUser = async () => {
     try {
-      setLoading(true);
       let currentSession = null;
 
       try {
@@ -44,10 +46,10 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
         image: profile?.image,
       });
     } catch (e) {
-      throw e;
       setUser(null);
+      throw e;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -111,10 +113,12 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!loading && user === null) {
+    checkUser();
+
+    if (!isLoading && !user && pathname !== "/") {
       router.push("/login");
     }
-  }, [loading, router, user]);
+  }, []);
 
   return (
     <userContext.Provider
@@ -127,7 +131,13 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
         checkUser,
       }}
     >
-      {children}
+      {isLoading ? (
+        <div className="h-screen w-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      ) : (
+        children
+      )}
     </userContext.Provider>
   );
 };

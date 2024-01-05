@@ -1,4 +1,3 @@
-import { storage } from "@/libs/AppwriteClient";
 
 const useCreateBucketUrl = async (fileId: string) => {
   const url = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
@@ -12,10 +11,3 @@ const useCreateBucketUrl = async (fileId: string) => {
 
 export default useCreateBucketUrl;
 
-// https://cloud.appwrite.io/v1/storage/buckets/657dc2d1c018301db553/files/avf4hj1pj8a93gir75ijj/view?project=657d7d40ecfc0df965cc
-
-// https://cloud.appwrite.io/v1/storage/buckets/657dc2d1c018301db553/files/avf4hj1pj8a93gir75ijj/view?project=657d7d40ecfc0df965cc
-
-// https://cloud.appwrite.io/v1/storage/buckets/657dc2d1c018301db553/files/avf4hj1pj8a93gir75ijj/view?project=657d7d40ecfc0df965cc
-
-// https://cloud.appwrite.io/v1/storage/buckets/657dc2d1c018301db553/files/undefined/view?project=657d7d40ecfc0df965cc

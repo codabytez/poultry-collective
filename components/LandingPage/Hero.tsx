@@ -19,7 +19,7 @@ const Hero: NextPage = () => {
             Our platform caters to all businesses and individuals interested in
             large-scale buying and selling of poultry eggs
           </p>
-          <Link href="/signup">
+          <Link href="/signup" className="inline-block">
             <Button color="green" size="large">
               Get Started
             </Button>
