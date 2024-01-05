@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import { Add, Camera } from "iconsax-react";
+import { Add, Camera, Trash } from "iconsax-react";
 import { NextPage } from "next";
 import StarRating from "../UI/StarRating";
 import { useFormContext } from "@/context/seller";
@@ -13,10 +13,13 @@ import { useUser } from "@/context/user";
 import { useRouter } from "next/navigation";
 import { useProductStore } from "@/stores/product";
 import { useGeneralStore } from "@/stores/general";
+import Loader from "../UI/Loader";
+import { productDetailTypes } from "@/@types";
 
-const ProductListing: NextPage = () => {
+const ProductListing: NextPage<productDetailTypes> = ({ params }) => {
   const contextUser = useUser();
-  const { productsBySeller, setProductsBySeller } = useProductStore();
+  const { productsBySeller, setProductsBySeller, deleteProduct } =
+    useProductStore();
   const { bioAndBanner, setBioAndBanner } = useFormContext();
   const { businessInfo } = useFormContext();
   const { setIsModalOpen } = useGeneralStore();
@@ -31,9 +34,23 @@ const ProductListing: NextPage = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    setIsLoading(true);
+  const handleDelete = async (id: string, imageIds: string[]) => {
     if (contextUser?.user) {
+      try {
+        setIsLoading(true);
+        await deleteProduct(id, imageIds);
+        setProductsBySeller(contextUser.user?.id);
+      } catch (error) {
+        setError(error as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (contextUser?.user) {
+      setIsLoading(true);
       try {
         setProductsBySeller(contextUser.user.id);
       } catch (error) {
@@ -42,13 +59,13 @@ const ProductListing: NextPage = () => {
         setIsLoading(false);
       }
     }
-  }, [contextUser?.user, setProductsBySeller]);
+  }, []);
 
   return (
     <MainLayout>
       {isLoading ? (
         <div className="flex justify-center items-center h-screen">
-          <p>Loading...</p>
+          <Loader />
         </div>
       ) : (
         <>
@@ -88,7 +105,7 @@ const ProductListing: NextPage = () => {
                   {productsBySeller.map((product) => (
                     <div
                       key={product.$id}
-                      className="flex flex-col justify-center items-start gap-4 w-[427px] "
+                      className="flex flex-col justify-center items-start gap-4 w-[427px]  relative"
                     >
                       <div className="flex h-[300px] w-full justify-center items-start bg-no-repeat object-cover relative">
                         <img
@@ -117,6 +134,12 @@ const ProductListing: NextPage = () => {
                           </p>
                         </div>
                       </div>
+                      <Trash
+                        onClick={() =>
+                          handleDelete(product.$id, product.product_image)
+                        }
+                        className="absolute top-4 right-4"
+                      />
                     </div>
                   ))}
                 </div>

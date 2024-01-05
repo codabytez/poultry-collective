@@ -118,6 +118,7 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     if (!isLoading && !user && pathname !== "/") {
       router.push("/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

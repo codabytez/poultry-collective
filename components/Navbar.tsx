@@ -8,6 +8,7 @@ import { countries } from "./countries";
 import { ArrowDown2, Location, Shop } from "iconsax-react";
 import { useUser } from "@/context/user";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const Navbar: NextPage = () => {
   return (
@@ -39,6 +40,16 @@ export const Navbar: NextPage = () => {
 export const BottomNavbar: NextPage = () => {
   const contextUser = useUser();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleButtonClick = async () => {
+    setIsLoading(true);
+    if (contextUser?.user) {
+      await contextUser.logout();
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <div className="flex items-center justify-between gap-10 px-16 py-4 m-auto max-w-[1436px] bg-white">
@@ -69,13 +80,10 @@ export const BottomNavbar: NextPage = () => {
       </div>
 
       <Button
-        color="white"
-        size="small"
-        onClick={
-          contextUser?.user
-            ? () => contextUser.logout()
-            : () => router.push("/login")
-        }
+        variant="secondary"
+        size="sm"
+        isLoading={isLoading}
+        onClick={handleButtonClick}
       >
         {contextUser?.user ? "Logout" : "Login"}
       </Button>

@@ -1,4 +1,12 @@
-import { Account, Client, ID, Databases, Query, Storage } from "appwrite";
+import {
+  Account,
+  Client,
+  ID,
+  Databases,
+  Query,
+  Storage,
+  Teams,
+} from "appwrite";
 
 const client = new Client();
 
@@ -9,5 +17,5 @@ client
 const account = new Account(client);
 const database = new Databases(client);
 const storage = new Storage(client);
-
-export { client, account, database, storage, ID, Query };
+const team = new Teams(client);
+export { client, account, database, storage, ID, Query, team };

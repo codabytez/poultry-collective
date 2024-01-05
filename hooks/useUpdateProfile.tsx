@@ -15,3 +15,5 @@ const useUpdateProfile = async (userId: string, data: any) => {
     throw error;
   }
 };
+
+export default useUpdateProfile;

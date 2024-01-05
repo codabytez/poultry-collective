@@ -47,6 +47,7 @@ export type FormContextProps = {
 };
 
 export type User = {
+  role?: string;
   // $id: string;
   id: string;
   name: string;
@@ -137,12 +138,20 @@ export type DropdownProps = {
 
 // UI
 
-export type ButtonProps = DetailedHTMLProps<
+type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
-  color?: "white" | "green";
-  size?: "small" | "medium" | "large";
+  children: React.ReactNode;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  isLoading?: boolean;
+  disabled?: boolean;
+  href?: string;
+  spinnerColor?: string;
+  spinnerSize?: string | number;
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
 };
 

@@ -4,7 +4,7 @@ import whyusImg from "@/public/assets/whyUs_img.png";
 
 const Whyus: NextPage = () => {
   return (
-    <section className="mt-[102px] mb-[65px]">
+    <section className="mt-[102px] mb-[65px] px-5">
       <div className="bg-light-green-shade py-14 px-16 pr-32 flex items-center justify-center gap-[106px]">
         <Image
           width={650}

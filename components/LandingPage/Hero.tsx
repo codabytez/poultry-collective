@@ -10,7 +10,7 @@ import Link from "next/link";
 const Hero: NextPage = () => {
   return (
     <section>
-      <div className="flex h-[calc(100vh-200px)] justify-center items-center gap-[75px] overflow-hidden">
+      <div className="flex h-[calc(100vh-200px)] justify-center items-center gap-[75px] overflow-hidden px-5">
         <div className="w-[565px]">
           <h1 className="text-H2-03 text-cod-gray-cg-600 pb-4">
             Buy and Sell Poultry Eggs with Ease, Anywhere, Anytime.

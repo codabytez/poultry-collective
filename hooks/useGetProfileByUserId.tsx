@@ -17,6 +17,7 @@ const useGetProfileByUserId = async (userId: string) => {
       name: documents[0]?.name,
       email: documents[0]?.email,
       image: documents[0]?.image,
+      role: documents[0]?.role,
     };
   } catch (e) {
     console.log(e);

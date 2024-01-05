@@ -16,7 +16,7 @@ const ShopasGuest: NextPage = () => {
   }, []);
 
   return (
-    <section className="overflow-hidden mx-auto max-w-[1313px]">
+    <section className="overflow-hidden mx-auto max-w-[1313px] px-5">
       <div className="flex flex-col pb-1 items-start gap-10 my-32">
         <h1 className="text-H2-03 text-cod-gray-cg-600">Shop as a Guest</h1>
         <div className="flex flex-wrap gap-x-4 gap-y-[60px]">

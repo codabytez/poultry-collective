@@ -10,7 +10,7 @@ export default function MainLayout({
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-[1440px] pb-24">{children}</main>
+      <main className="mx-auto max-w-[1440px] pb-24 ">{children}</main>
       <Footer />
     </>
   );

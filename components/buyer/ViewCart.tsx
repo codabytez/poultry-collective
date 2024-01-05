@@ -36,7 +36,7 @@ const ViewCart: NextPage = () => {
           !cart.some((cartItem) => cartItem.product_id === product.$id)
       )
     );
-  }, [allProducts, cart]);
+  }, [cart]);
 
   const handleDelete = (id: string) => {
     removeFromCart(id);

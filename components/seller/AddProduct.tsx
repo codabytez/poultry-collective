@@ -112,7 +112,7 @@ const AddProduct: NextPage<{
   };
 
   return (
-    <div className="w-[962px] h-[929px] m-auto flex flex-col justify-start items-center bg-white pt-14">
+    <div className="w-[962px] h-[90vh] max-h-[700px] m-auto flex flex-col justify-start items-center bg-white pt-14 overflow-y-auto">
       <h3 className="text-H3-03 font-normal text-cod-gray-cg-600 pb-6">
         Add your product
       </h3>

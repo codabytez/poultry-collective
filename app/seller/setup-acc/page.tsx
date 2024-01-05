@@ -13,7 +13,7 @@ const SetupAccPage: NextPage = () => {
 
   const handleNext = () => {
     if (step === 3) {
-      router.push("/seller/profile/1");
+      router.push("/seller/");
       return;
     }
 
