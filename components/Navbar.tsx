@@ -48,6 +48,7 @@ export const BottomNavbar: NextPage = () => {
       await contextUser.logout();
     } else {
       router.push("/login");
+      setIsLoading(false);
     }
   };
 
@@ -84,6 +85,7 @@ export const BottomNavbar: NextPage = () => {
         size="sm"
         isLoading={isLoading}
         onClick={handleButtonClick}
+        spinnerColor="#009E60"
       >
         {contextUser?.user ? "Logout" : "Login"}
       </Button>

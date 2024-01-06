@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import Logo from "./Logo";
 import Button from "./UI/Button";
+import { Input } from "./UI/Input";
 
 const Footer: NextPage = () => {
   return (
@@ -20,16 +21,15 @@ const Footer: NextPage = () => {
             </div>
             <div className="flex flex-col justify-start">
               <div className="flex gap-6">
-                <input
-                  className="flex w-[412px] h-[44px] py-1 pr-[52px] pl-2 items-center gap-2 outline-none border-2 border-white bg-transparent text-H6-03 text-white placeholder:text-white"
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Enter your email address"
-                />
-                <Button color="white" size="medium">
-                  Subscribe
-                </Button>
+                <div className="w-[400px]">
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    variant="primary"
+                  />
+                </div>
+                <Button variant="secondary">Subscribe</Button>
               </div>
               <p className="text-[10px] font-medium leading-[19px] text-cod-gray-cg-300">
                 Join 1,387 others levelling up their business every week

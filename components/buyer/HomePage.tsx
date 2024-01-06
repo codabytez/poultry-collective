@@ -33,6 +33,8 @@ const HomePage: NextPage = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -46,7 +48,7 @@ const HomePage: NextPage = () => {
               No Products Available
             </h4>
             <Link href="/">
-              <Button color="green" size="large" fullWidth>
+              <Button size="lg" fullWidth>
                 Go to Homepage
               </Button>
             </Link>

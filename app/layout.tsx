@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
+import UserProvider from "@/context/user";
+import { FormProvider } from "@/context/seller";
 import { Red_Hat_Display } from "next/font/google";
 import "./globals.css";
-import { FormProvider } from "@/context/seller";
-import UserProvider from "@/context/user";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import type { Metadata } from "next";
 
 const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
@@ -22,11 +24,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <FormProvider>
-        <body className={redHatDisplay.variable}>
+      <body className={redHatDisplay.variable}>
+        <FormProvider>
           <UserProvider>{children}</UserProvider>
-        </body>
-      </FormProvider>
+        </FormProvider>
+        <ToastContainer />
+      </body>
     </html>
   );
 }

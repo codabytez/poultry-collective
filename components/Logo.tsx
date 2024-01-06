@@ -9,7 +9,7 @@ const Logo: NextPage<{ fill?: string }> = ({ fill = "#009E60" }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g id="Horizontal Logo 1 1" clip-path="url(#clip0_2033_13199)">
+      <g id="Horizontal Logo 1 1" clipPath="url(#clip0_2033_13199)">
         <g id="Layer 2">
           <g id="Layer 1">
             <path

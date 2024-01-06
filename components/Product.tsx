@@ -9,14 +9,18 @@ import Modal from "./UI/Modal";
 import { useCartStore } from "@/stores/cart";
 import { useGeneralStore } from "@/stores/general";
 import { useUser } from "@/context/user";
-
+import { notify } from "./UI/Toast";
 import CartModal from "./buyer/CartModal";
 import { useRouter } from "next/navigation";
 import { LoadingSkeleton } from "./UI/LoadingSkeleton";
+import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
+import { set } from "react-hook-form";
 
 const Product: NextPage<ProductProps> = (props) => {
   const contextUser = useUser();
   const Router = useRouter();
+  const { addProductQuantity, removeProductQuantity } =
+    useUpdateProductQuantity();
   const { isModalOpen, setIsModalOpen } = useGeneralStore();
   const { cart, addToCart, removeFromCart, removeTempItem, loadUserCart } =
     useCartStore();
@@ -30,36 +34,63 @@ const Product: NextPage<ProductProps> = (props) => {
     quantity_available,
     product_weight,
     product_price,
+    product_id,
     $id,
   } = props;
+  const [availableQuantity, setAvailableQuantity] =
+    useState(quantity_available);
 
   const onAddToCart = async () => {
     setIsLoading(true);
     if (!contextUser.user) return Router.push("/login");
+
+    const existingItem = cart.find((item) => item.product_id === props.$id);
+    if (existingItem) {
+      notify({
+        message: "Item already in cart.",
+        type: "error",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
+      await removeProductQuantity(
+        props.$id,
+        String(Number(quantity_available) - 1)
+      );
+
       addToCart({
         user_id,
         $id,
-        quantity_available,
+        quantity: "1",
         product_weight,
         product_price,
         product_name,
         product_image: product_image[0],
       });
-      setIsModalOpen(true);
+      setAvailableQuantity(quantity_available);
       if (contextUser.user) return loadUserCart(contextUser.user.id);
     } catch (error) {
       console.error("Error adding to cart:", error);
 
       throw new Error("Failed to add the item to the cart. Please try again.");
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsModalOpen(true);
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     setIsLoading(true);
     try {
+      await addProductQuantity(
+        props.$id,
+        String(Number(quantity_available) + 1)
+      );
+      setAvailableQuantity(quantity_available);
       removeTempItem(id);
       removeFromCart(id);
     } catch (error) {
@@ -81,7 +112,7 @@ const Product: NextPage<ProductProps> = (props) => {
     <>
       <div className="flex flex-col justify-center items-start gap-4 relative w-[427px] transition-all">
         <div
-          className="relative w-[427px] h-[300px] transition-all hover:scale-105 cursor-pointer duration-300"
+          className="relative w-[427px] h-[300px] transition-all hover:opacity-80 cursor-pointer duration-300"
           onClick={() => Router.push(`/buyer/product/${$id}`)}
         >
           <img
@@ -93,7 +124,7 @@ const Product: NextPage<ProductProps> = (props) => {
             {farm_name}
           </p>
           <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute right-0 bottom-0">
-            In stock: {quantity_available}
+            In stock: {availableQuantity}
           </p>
           <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute left-0 bottom-0">
             Weight: {product_weight} kg
@@ -103,7 +134,7 @@ const Product: NextPage<ProductProps> = (props) => {
           <h3>{product_name}</h3>
           <p>Price: ${Number(product_price).toLocaleString()}</p>
         </div>
-        <Button size="lg" onClick={onAddToCart}>
+        <Button size="lg" onClick={onAddToCart} isLoading={isLoading}>
           Add to Cart
         </Button>
         <Modal>

@@ -15,32 +15,41 @@ html {
   scroll-snap-type: y mandatory;
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: #000;
-  transition: white 5000s ease-in-out 0s;
-  /* box-shadow: inset 0 0 20px 20px #23232329; */
+select.hide-caret {
+  appearance: none;
 }
 
-.select-wrapper {
-  position: relative;
+input[type="number"]::-webkit-inner-spin-button {
+  display: none;
 }
 
-.select-wrapper::after {
-  content: url("../public/assets/dropdown.svg"); /* Replace with the path to your SVG */
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+/* Fallback for other browsers */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
-.select-wrapper select {
-  appearance: none; /* Removes the default select arrow in most browsers */
-  -webkit-appearance: none; /* Removes the default select arrow in Chrome and Safari */
-  -moz-appearance: none; /* Removes the default select arrow in Firefox */
-  background: transparent; /* Makes the select element transparent so the custom arrow is visible */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0d5c3d;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00100a;
+}
+
+::selection {
+  color: white;
+  background: #0d5c3d;
 }

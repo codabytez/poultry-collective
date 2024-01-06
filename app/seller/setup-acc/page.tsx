@@ -50,7 +50,7 @@ const SetupAccPage: NextPage = () => {
         </div>
 
         <div className="w-[400px] mx-auto flex flex-col gap-6">
-          <Button color="green" size="large" fullWidth onClick={handleNext}>
+          <Button size="lg" fullWidth onClick={handleNext}>
             {step === 3
               ? "Finish Setup"
               : step === 2
@@ -58,7 +58,12 @@ const SetupAccPage: NextPage = () => {
               : "Save & Continue"}
           </Button>
           {step !== 1 && (
-            <Button color="white" size="large" fullWidth onClick={handleSkip}>
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+              onClick={handleSkip}
+            >
               Skip
             </Button>
           )}

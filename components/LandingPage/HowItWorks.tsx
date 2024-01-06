@@ -40,9 +40,7 @@ const HowItWorks: NextPage = () => {
           </div>
         </div>
         <Link href="/signup">
-          <Button color="green" size="large">
-            Get Started
-          </Button>
+          <Button size="lg">Get Started</Button>
         </Link>
       </div>
     </section>

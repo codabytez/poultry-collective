@@ -20,9 +20,7 @@ const Hero: NextPage = () => {
             large-scale buying and selling of poultry eggs
           </p>
           <Link href="/signup" className="inline-block">
-            <Button color="green" size="large">
-              Get Started
-            </Button>
+            <Button size="lg">Get Started</Button>
           </Link>
         </div>
 

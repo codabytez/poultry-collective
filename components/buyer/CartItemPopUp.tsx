@@ -41,8 +41,6 @@ const CartItemPopUp: NextPage<cartItemProps> = (props) => {
       <img
         src={imageUrl}
         alt={product_name}
-        // width={150}
-        // height={150}
         className="h-[150px] w-[150px] object-cover"
       />
 
@@ -55,7 +53,11 @@ const CartItemPopUp: NextPage<cartItemProps> = (props) => {
         </h5>
         <h4>#{Number(price).toLocaleString()}</h4>
       </div>
-      <Trash size={32} color="#292D32" onClick={() => onDelete($id)} />
+      <Trash
+        size={32}
+        className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-4"
+        onClick={() => onDelete($id)}
+      />
     </div>
   );
 };

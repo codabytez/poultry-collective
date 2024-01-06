@@ -23,7 +23,11 @@ const CheckoutProduct: NextPage<cartItemProps> = (props) => {
 
   return (
     <div className="flex py-14 pr-28 pl-8 items-center gap-10 rounded bg-light-green-shade">
-      <img src={imageUrl} alt={product_name} className="w-[261px] h-[210px]" />
+      <img
+        src={imageUrl}
+        alt={product_name}
+        className="w-[261px] h-[210px] object-cover"
+      />
 
       <div className="flex flex-col items-start gap-4">
         <h3 className=" text-cod-gray-cg-600 text-H4-03 font-normal">

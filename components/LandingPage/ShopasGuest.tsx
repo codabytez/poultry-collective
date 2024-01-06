@@ -8,11 +8,12 @@ import { LoadingSkeleton } from "../UI/LoadingSkeleton";
 const ShopasGuest: NextPage = () => {
   const { allProducts, setAllProducts } = useProductStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     setAllProducts();
     setIsLoading(false);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -20,15 +21,13 @@ const ShopasGuest: NextPage = () => {
       <div className="flex flex-col pb-1 items-start gap-10 my-32">
         <h1 className="text-H2-03 text-cod-gray-cg-600">Shop as a Guest</h1>
         <div className="flex flex-wrap gap-x-4 gap-y-[60px]">
-          {!isLoading ? (
-            allProducts
-              .slice(0, 6)
-              .map((product) => <Product key={product.$id} {...product} />)
-          ) : (
-            <>
-              <LoadingSkeleton />
-            </>
-          )}
+          {!isLoading
+            ? allProducts
+                .slice(0, 6)
+                .map((product) => <Product key={product.$id} {...product} />)
+            : Array.from({ length: 6 }).map((_, i) => (
+                <LoadingSkeleton key={i} />
+              ))}
         </div>
       </div>
     </section>

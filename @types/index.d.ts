@@ -101,6 +101,7 @@ export type ProductProps = {
   product_weight: string;
   product_details: string;
   imageUrl?: string;
+  product_id?: string;
   // onAddToCart: (item: ProductProps) => void; // Add this line
 };
 
@@ -138,7 +139,7 @@ export type DropdownProps = {
 
 // UI
 
-type ButtonProps = DetailedHTMLProps<
+export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
@@ -155,6 +156,25 @@ type ButtonProps = DetailedHTMLProps<
   fullWidth?: boolean;
 };
 
+export type Variant = "primary" | "secondary" | "tertiary" | "default";
+
+export type Size = "sm" | "md" | "lg";
+
+export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: Array<{ value: string; label: string; disabled?: boolean }>;
+  isLoading?: boolean;
+  disabled?: boolean;
+  href?: string;
+  caretColor?: string;
+  caretSize?: string | number;
+  leftIcon?: React.ReactNode;
+  optionColor?: string;
+  variant?: Variant;
+  inputSize?: Size;
+  fullWidth?: boolean;
+};
+
 export type InputProps = {
   label?: string;
   register?: any;
@@ -166,6 +186,28 @@ export type InputProps = {
   onChange?: any;
   fullWidth?: boolean;
   inputType?: "input" | "textarea";
+  rows?: number;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  disabled?: boolean;
+  inputSize?: Size;
+  variant?: Variant;
+  isLoading?: boolean;
+  iconColor?: string;
+  iconSize?: number;
+};
+
+export type ToastProps = {
+  message: string;
+  position?: ToastPosition;
+  autoClose?: number | false;
+  hideProgressBar?: boolean;
+  closeOnClick?: boolean;
+  pauseOnHover?: boolean;
+  draggable?: boolean;
+  progress?: number | undefined;
+  type?: TypeOptions;
+  theme?: Theme;
 };
 
 export type PaginationProps = {

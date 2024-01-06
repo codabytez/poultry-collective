@@ -17,7 +17,7 @@ const ViewCart: NextPage = () => {
   const contextUser = useUser();
   const Router = useRouter();
   const { setIsModalOpen } = useGeneralStore();
-
+  const [isLoading, setIsLoading] = useState(false);
   const { cart, loadUserCart, removeFromCart } = useCartStore();
   const { allProducts } = useProductStore();
   const [viewOthers, setViewOthers] = useState<ProductProps[]>([]);
@@ -36,6 +36,7 @@ const ViewCart: NextPage = () => {
           !cart.some((cartItem) => cartItem.product_id === product.$id)
       )
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart]);
 
   const handleDelete = (id: string) => {
@@ -43,6 +44,7 @@ const ViewCart: NextPage = () => {
   };
 
   const handleProceedToCheckout = () => {
+    setIsLoading(true);
     return Router.push("/buyer/checkout");
   };
 
@@ -50,7 +52,7 @@ const ViewCart: NextPage = () => {
     <MainLayout>
       <h2 className="text-H2-03 text-cod-gray-cg-600 m-10">My Cart</h2>
 
-      <div className="grid grid-cols-2 gap-4 w-max max-w-[1312px]">
+      <div className="flex flex-wrap gap-4 px-4">
         {cart.map((product: cartItemProps) => (
           <CartItem key={product.$id} {...product} onDelete={handleDelete} />
         ))}
@@ -58,17 +60,17 @@ const ViewCart: NextPage = () => {
       <div className="max-w-[1312px]">
         <div className="w-[460px] mt-20 mb-36 mx-auto">
           <Button
-            color="green"
-            size="large"
+            size="lg"
             fullWidth
             onClick={handleProceedToCheckout}
+            isLoading={isLoading}
           >
             Proceed to Checkout
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-x-3 w-max mb-28">
+      <div className="flex flex-wrap gap-x-4 px-4 w-max mb-28">
         {viewOthers.slice(0, 3).map((product: ProductProps) => (
           <Product key={product.$id} {...product} />
         ))}

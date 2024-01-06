@@ -209,7 +209,7 @@ const AddProduct: NextPage<{
           />
         </div>
 
-        <Button color="green" size="large" fullWidth type="submit">
+        <Button size="lg" fullWidth type="submit">
           Save Details
         </Button>
       </form>

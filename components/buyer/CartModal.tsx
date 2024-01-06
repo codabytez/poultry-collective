@@ -26,8 +26,22 @@ const CartModal: NextPage<CartModalProps> = ({ items, onDelete }) => {
       console.log(error);
     } finally {
       setIsLoading(false);
+      setIsModalOpen(false);
     }
-    setIsModalOpen(false);
+  };
+
+  const handleCheckout = async () => {
+    setIsLoading(true);
+
+    try {
+      router.push("/buyer/checkout");
+      if (contextUser?.user) loadUserCart(contextUser.user.id);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setIsModalOpen(false);
+    }
   };
 
   if (items.length === 0) {
@@ -37,10 +51,10 @@ const CartModal: NextPage<CartModalProps> = ({ items, onDelete }) => {
           Your Cart is Empty
         </h4>
         <Button
-          color="green"
-          size="large"
+          size="lg"
           fullWidth
           onClick={() => setIsModalOpen(false)}
+          isLoading={isLoading}
         >
           Continue Shopping
         </Button>
@@ -61,12 +75,12 @@ const CartModal: NextPage<CartModalProps> = ({ items, onDelete }) => {
           <CartItemPopUp key={item.$id} {...item} onDelete={onDelete} />
         ))}
       </div>
-      <div className="flex justify-between gap-10 w-[200px] flex-1 mt-7">
-        <Button color="green" size="large" fullWidth onClick={handleViewCart}>
+      <div className="flex justify-evenly gap-10 flex-1 mt-7">
+        <Button size="lg" onClick={handleViewCart}>
           View Cart
         </Button>
 
-        <Button color="white" size="large" fullWidth>
+        <Button size="lg" onClick={handleCheckout}>
           Checkout
         </Button>
       </div>

@@ -39,23 +39,23 @@ const Modal: NextPage<ModalProps> = ({ children }) => {
             <path
               d="M19.9987 37.1673C29.1654 37.1673 36.6654 29.6673 36.6654 20.5007C36.6654 11.334 29.1654 3.83398 19.9987 3.83398C10.832 3.83398 3.33203 11.334 3.33203 20.5007C3.33203 29.6673 10.832 37.1673 19.9987 37.1673Z"
               stroke="#292D32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M15.2852 25.2165L24.7185 15.7832"
               stroke="#292D32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M24.7185 25.2165L15.2852 15.7832"
               stroke="#292D32"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </button>

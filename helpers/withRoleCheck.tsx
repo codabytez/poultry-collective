@@ -20,7 +20,7 @@ function withRoleCheck(WrappedComponent: NextPage, allowedRoles: string[]) {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const userProfile = await useGetProfileByUserId(user.id);
             if (userProfile) {
-              setUserRole(userProfile.role);
+              setUserRole(userProfile?.role);
             }
           } catch (error) {
             console.log("error", error);

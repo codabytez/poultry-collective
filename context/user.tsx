@@ -34,7 +34,8 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
         console.log("User is not logged in");
       }
 
-      if (!currentSession) return;
+      if (!currentSession && pathname !== "/" && pathname !== "/signup")
+        return router.push("/login");
 
       const newUser = (await account.get()) as any;
       const profile = await useGetProfileByUserId(newUser.$id);
@@ -49,13 +50,13 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
       setUser(null);
       throw e;
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 1000);
     }
   };
 
   useEffect(() => {
     checkUser();
-  }, []);
+  }, [pathname]);
 
   const register = async (email: string, password: string, name: string) => {
     try {
@@ -95,6 +96,8 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
       router.refresh();
     } catch (e) {
       throw e;
+    } finally {
+      router.replace("/login");
     }
   };
 
@@ -133,7 +136,7 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
       }}
     >
       {isLoading ? (
-        <div className="h-screen w-screen flex justify-center items-center">
+        <div className="h-screen w-screen flex justify-center items-center bg-red-600">
           <Loader />
         </div>
       ) : (

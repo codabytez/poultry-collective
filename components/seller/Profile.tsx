@@ -6,7 +6,7 @@ import { Camera, Image as Icon } from "iconsax-react";
 import MainLayout from "@/layouts/MainLayout";
 import Image from "next/image";
 import StarRating from "../UI/StarRating";
-import Input from "../UI/Input";
+import { Input } from "../UI/Input";
 import Button from "../UI/Button";
 
 const Profile: NextPage = () => {
@@ -176,7 +176,7 @@ const Profile: NextPage = () => {
             />
 
             <div className="w-[400px]">
-              <Button color="green" size="large" fullWidth>
+              <Button size="lg" fullWidth>
                 Proceed to Product Listing
               </Button>
             </div>

@@ -28,19 +28,21 @@ const CartItem: NextPage<cartItemProps> = (props) => {
       <img
         src={imageUrl}
         alt={product_name}
-        width={261}
-        height={210}
         className="h-[210px] w-[261px] object-cover shrink-0"
       />
       <div className="inline-flex flex-col h-[122.5px] items-start justify-end shrink-0 text-H4-03 text-cod-gray-cg-600">
         <h4>
-          {weight} {product_name.split(" ").pop()}
+          {weight}kg {product_name.split(" ").pop()}
         </h4>
         <h5 className=" text-H5-03 font-semibold">{quantity} Crate(s)</h5>
-        <h4>#{price}</h4>
+        <h4>${Number(price).toString()}</h4>
       </div>
 
-      <Trash color="#292D32" onClick={() => onDelete($id)} />
+      <Trash
+        size={32}
+        className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-6"
+        onClick={() => onDelete($id)}
+      />
     </div>
   );
 };

@@ -23,7 +23,7 @@ export const useCartStore = create<CartStore>()(
         addToCart: async ({
           user_id,
           $id,
-          quantity_available,
+          quantity,
           product_weight,
           product_price,
           product_name,
@@ -32,7 +32,7 @@ export const useCartStore = create<CartStore>()(
           const result = await useAddToCart(
             user_id,
             $id,
-            quantity_available,
+            quantity,
             product_weight,
             product_price,
             product_name,

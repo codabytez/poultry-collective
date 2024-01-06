@@ -8,14 +8,49 @@ import Button from "../UI/Button";
 import { useState } from "react";
 import { useUser } from "@/context/user";
 import { useCartStore } from "@/stores/cart";
-import Input from "../UI/Input";
+import { Input, SelectInput } from "../UI/Input";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const Checkout: NextPage = () => {
   const contextUser = useUser();
   const router = useRouter();
   const { cart } = useCartStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [city, setCity] = useState("");
+  const [address, setAddress] = useState("");
+  const [country, setCountry] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
+
+  const checkoutSchema = z.object({
+    city: z.string().min(2, { message: "City is required" }),
+    address: z.string().min(2, { message: "Address is required" }),
+    country: z.string().min(2, { message: "Country is required" }),
+    email: z.string().email({ message: "Email is required" }),
+    phone: z.string().min(2, { message: "Phone is required" }),
+    cardName: z.string().min(2, { message: "Card name is required" }),
+    cardNumber: z.string().min(2, { message: "Card number is required" }),
+    expiryDate: z.string().min(2, { message: "Expiry date is required" }),
+    cvv: z.string().min(2, { message: "CVV is required" }),
+  });
+
+  const {
+    register: registerCheckout,
+    handleSubmit,
+    setError,
+    reset,
+    clearErrors,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(checkoutSchema),
+  });
 
   const subtotal = cart.reduce((total, item) => {
     return total + Number(item.price) * Number(item.quantity);
@@ -61,12 +96,7 @@ const Checkout: NextPage = () => {
           <p className="text-SP-01 text-center mb-8">
             Please, login to continue
           </p>
-          <Button
-            size="large"
-            color="green"
-            fullWidth
-            onClick={() => router.push("/login")}
-          >
+          <Button size="lg" fullWidth onClick={() => router.push("/login")}>
             Login
           </Button>
         </div>
@@ -95,7 +125,7 @@ const Checkout: NextPage = () => {
                   Subtotal
                 </p>
                 <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                  #{subtotal.toLocaleString()}
+                  ${subtotal.toLocaleString()}
                 </p>
               </div>
 
@@ -104,7 +134,7 @@ const Checkout: NextPage = () => {
                   Shipping
                 </p>
                 <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                  # {shippingFee.toLocaleString()}
+                  $ {shippingFee.toLocaleString()}
                 </p>
               </div>
 
@@ -113,7 +143,7 @@ const Checkout: NextPage = () => {
                   Total
                 </h4>
                 <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold">
-                  # {(subtotal + shippingFee).toLocaleString()}
+                  $ {(subtotal + shippingFee).toLocaleString()}
                 </h4>
               </div>
             </div>
@@ -128,7 +158,7 @@ const Checkout: NextPage = () => {
                 Please, enter your correct details
               </p>
               <div className="w-[500px] flex flex-col gap-5 mt-5">
-                <CountryDropdown countries={countries} fullWidth />
+                <SelectInput options={countries} fullWidth />
 
                 <Input type="text" name="city" placeholder="City" fullWidth />
 
@@ -169,7 +199,7 @@ const Checkout: NextPage = () => {
 
             <div className="mt-8">
               <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-2">
-                Delivery Fees: #{deliveryFee.toLocaleString()}
+                Delivery Fees: ${deliveryFee.toLocaleString()}
               </h4>
               <h6 className="text-cod-gray-cg-600 text-H6-03 w-[342.32px]">
                 Delivery fees are determind by product quantity, weight and your
@@ -210,7 +240,7 @@ const Checkout: NextPage = () => {
               </div>
             </div>
             <div className=" mt-24">
-              <Button size="large" color="green" fullWidth>
+              <Button size="lg" fullWidth>
                 Pay Now
               </Button>
             </div>
