@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Button from "../UI/Button";
-import Link from "next/link";
 
 const GetStarted: NextPage = () => {
   return (
@@ -13,11 +12,11 @@ const GetStarted: NextPage = () => {
           Our platform is geared towards individuals and large scale enterprises
           interested in the buying and selling of poultry produce.
         </p>
-        <Link href="/signup" className="w-[400px]">
-          <Button size="lg" fullWidth>
+        <div className="w-[400px]">
+          <Button href="/signup" size="lg" fullWidth>
             Get Started
           </Button>
-        </Link>
+        </div>
       </div>
     </section>
   );

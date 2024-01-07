@@ -9,7 +9,6 @@ import { useProductStore } from "@/stores/product";
 import { useRouter } from "next/navigation";
 import Loader from "../UI/Loader";
 import Button from "../UI/Button";
-import Link from "next/link";
 import withRoleCheck from "@/helpers/withRoleCheck";
 
 const HomePage: NextPage = () => {
@@ -28,12 +27,15 @@ const HomePage: NextPage = () => {
   const currentItems = allProducts.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
-    if (!contextUser?.user) return router.replace("/login");
-    setAllProducts();
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    const fetchAllProducts = async () => {
+      if (!contextUser?.user) return router.replace("/login");
+      await setAllProducts();
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    };
 
+    fetchAllProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -47,11 +49,9 @@ const HomePage: NextPage = () => {
             <h4 className="text-H4-03 font-normal text-cod-gray-cg-600 mb-3.5 ml-2.5">
               No Products Available
             </h4>
-            <Link href="/">
-              <Button size="lg" fullWidth>
-                Go to Homepage
-              </Button>
-            </Link>
+            <Button href="/" size="lg" fullWidth>
+              Go to Homepage
+            </Button>
           </div>
         </div>
       ) : (
@@ -64,7 +64,7 @@ const HomePage: NextPage = () => {
 
             <div className="flex flex-wrap gap-x-4 gap-y-[60px]">
               {currentItems.map((product) => (
-                <Product key={product.$id} {...product} />
+                <Product key={product.$updatedAt} {...product} />
               ))}
             </div>
           </section>

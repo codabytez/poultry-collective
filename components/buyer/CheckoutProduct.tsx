@@ -31,7 +31,7 @@ const CheckoutProduct: NextPage<cartItemProps> = (props) => {
 
       <div className="flex flex-col items-start gap-4">
         <h3 className=" text-cod-gray-cg-600 text-H4-03 font-normal">
-          {`${weight} ${product_name.split(" ").pop()}`}
+          {`${weight} ${product_name && product_name.split(" ").pop()}`}
 
           <span className="text-cod-gray-cg-600 text-SP-03 font-normal inline-block pl-2">
             {quantity} creates

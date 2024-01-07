@@ -6,7 +6,7 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
 type ProfileStore = {
   currentProfile: profileProps | null;
-  setCurrentProfile: (userId: string) => void;
+  setCurrentProfile: (userId: string) => Promise<void>;
 };
 
 export const useProfileStore = create<ProfileStore>()(

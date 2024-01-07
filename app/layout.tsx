@@ -2,9 +2,11 @@ import UserProvider from "@/context/user";
 import { FormProvider } from "@/context/seller";
 import { Red_Hat_Display } from "next/font/google";
 import "./globals.css";
+import "./nprogress.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import type { Metadata } from "next";
+import { Next13NProgress } from "nextjs13-progress";
 
 const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
@@ -29,6 +31,13 @@ export default function RootLayout({
           <UserProvider>{children}</UserProvider>
         </FormProvider>
         <ToastContainer />
+        <Next13NProgress
+          color="#0d5c3d"
+          startPosition={0.3}
+          stopDelayMs={50}
+          height={3}
+          showOnShallow={true}
+        />
       </body>
     </html>
   );

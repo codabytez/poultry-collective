@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import Button from "../UI/Button";
-import { Input } from "../UI/Input";
+import { Input, SelectInput } from "../UI/Input";
 import Loader from "../UI/Loader";
 import MainLayout from "@/layouts/MainLayout";
 import Product from "../Product";
@@ -14,30 +14,40 @@ import { useUser } from "@/context/user";
 import { useRouter } from "next/navigation";
 import { notify } from "../UI/Toast";
 import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
+import { LoadingSkeleton } from "../UI/LoadingSkeleton";
 
 const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
   const contextUser = useUser();
   const Router = useRouter();
   const { removeProductQuantity } = useUpdateProductQuantity();
-  const { productsById, setProductsById, allProducts } = useProductStore();
+  const { productsById, setProductsById, allProducts, setAllProducts } =
+    useProductStore();
   const [isLoading, setIsLoading] = useState(false);
   const [loader, setLoader] = useState(false);
   const { addToCart, cart, loadUserCart } = useCartStore();
   const [enteredQuantity, setEnteredQuantity] = useState("");
+  const [areProductsLoading, setAreProductsLoading] = useState(true);
 
   useEffect(() => {
-    if (contextUser.user) {
-      setIsLoading(true);
-      try {
-        setProductsById(params.productid);
-      } catch (error) {
-        throw new Error("Failed to load product.");
-      } finally {
-        setIsLoading(false);
+    const fetchProducts = async () => {
+      if (contextUser.user) {
+        setIsLoading(true);
+        setAreProductsLoading(true);
+        try {
+          await setProductsById(params.productid);
+          await setAllProducts();
+        } catch (error) {
+          throw new Error("Failed to load product.");
+        } finally {
+          setIsLoading(false);
+          setAreProductsLoading(false);
+        }
       }
-    }
+    };
+
+    fetchProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, []);
 
   const onAddToCart = async () => {
     setLoader(true);
@@ -52,6 +62,7 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
         message: "Item already in cart.",
         type: "error",
       });
+      setEnteredQuantity("");
       setLoader(false);
       return;
     }
@@ -64,21 +75,26 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
         )
       );
 
-      addToCart({
+      await addToCart({
         user_id: contextUser.user.id,
         $id,
-        quantity: "1",
+        quantity: enteredQuantity,
         product_weight,
         product_price,
         product_name,
         product_image: product_image[0],
       });
       if (contextUser.user) return loadUserCart(contextUser.user.id);
+      notify({
+        message: "Item added to cart.",
+        type: "success",
+      });
     } catch (error) {
       console.error("Error adding to cart:", error);
 
       throw new Error("Failed to add the item to the cart. Please try again.");
     } finally {
+      setEnteredQuantity("");
       setLoader(false);
     }
   };
@@ -112,12 +128,24 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
           <div className="w-[425px] flex flex-col gap-5">
             <h3 className="text-H3-03 text-cod-gray-cg">Select Quantity</h3>
 
-            <Input
-              type="text"
-              placeholder="Enter quantity"
+            <SelectInput
               fullWidth
+              value={enteredQuantity}
               onChange={(e: any) => setEnteredQuantity(e.target.value)}
               disabled={loader}
+              options={[
+                { value: "1", label: "1" },
+                { value: "2", label: "2" },
+                { value: "3", label: "3" },
+                { value: "4", label: "4" },
+                { value: "5", label: "5" },
+                { value: "6", label: "6" },
+                { value: "7", label: "7" },
+                { value: "8", label: "8" },
+                { value: "9", label: "9" },
+                { value: "10", label: "10" },
+              ]}
+              optionPlaceholder="Select Quantity"
             />
 
             <Button
@@ -136,11 +164,22 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
       <section className="flex flex-col gap-10 mb-20 m-auto">
         <h3 className="text-H3-03 text-cod-gray-cg w-full">See Other Items</h3>
 
-        <div className="flex flex-wrap gap-4">
-          {allProducts.slice(0, 3).map((item) => (
-            <Product key={item.id} {...item} />
-          ))}
-        </div>
+        {areProductsLoading || allProducts.length === 0 ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <div key={index} className="flex flex-wrap gap-4">
+              <LoadingSkeleton />
+            </div>
+          ))
+        ) : (
+          <div className="flex flex-wrap gap-4">
+            {allProducts
+              .filter((item) => item.$id !== params.productid) // Exclude the current product
+              .slice(0, 3) // Get the first 3 products
+              .map((item) => (
+                <Product key={item.$id} {...item} />
+              ))}
+          </div>
+        )}
       </section>
     </MainLayout>
   );

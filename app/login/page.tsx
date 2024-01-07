@@ -5,7 +5,7 @@ import { BottomNavbar } from "@/components/Navbar";
 const Login: NextPage = () => {
   return (
     <div>
-      <div className="sticky top-0 z-50 bg-white w-full">
+      <div className="sticky top-0 z-50 bg-white">
         <BottomNavbar />
       </div>
       <LoginForm />

@@ -1,6 +1,7 @@
+"use client";
 import { ButtonProps } from "@/@types";
 import { NextPage } from "next";
-import Link from "next/link";
+import { Link } from "nextjs13-progress";
 
 const Button: NextPage<ButtonProps> = ({
   variant = "primary",
@@ -21,6 +22,10 @@ const Button: NextPage<ButtonProps> = ({
       "text-white bg-main-green-mg hover:bg-[#009E60] active:bg-main-green-mg-200 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400 ",
     secondary:
       "text-main-green-mg bg-white border-main-green-mg hover:text-white hover:border-[#009E6066] hover:bg-[#009E6066] active:bg-[#009E6066] active:text-cod-gray-cg-400 disabled:border-cod-gray-cg-300 disabled:text-cod-gray-cg-300 disabled:bg-white",
+    "link-secondary":
+      "inline-flex py-3 p-6 justify-center items-center gap-2 rounded-lg border-0 border-transparent",
+    "link-primary":
+      "text-cod-gray text-base leading-5 font-normal border-0 border-transparent hover:text-main-green-mg transition-all",
   };
 
   const sizeClasses = {

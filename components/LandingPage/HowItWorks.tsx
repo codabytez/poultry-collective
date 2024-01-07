@@ -39,9 +39,7 @@ const HowItWorks: NextPage = () => {
             </p>
           </div>
         </div>
-        <Link href="/signup">
-          <Button size="lg">Get Started</Button>
-        </Link>
+          <Button href="/signup" size="lg">Get Started</Button>
       </div>
     </section>
   );

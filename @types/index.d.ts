@@ -102,7 +102,6 @@ export type ProductProps = {
   product_details: string;
   imageUrl?: string;
   product_id?: string;
-  // onAddToCart: (item: ProductProps) => void; // Add this line
 };
 
 export type testimonyProps = {
@@ -151,7 +150,7 @@ export type ButtonProps = DetailedHTMLProps<
   href?: string;
   spinnerColor?: string;
   spinnerSize?: string | number;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "link-primary" | "link-secondary";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
 };
@@ -173,6 +172,10 @@ export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   variant?: Variant;
   inputSize?: Size;
   fullWidth?: boolean;
+  optionPlaceholder?: string;
+  error?: string;
+  register?: any;
+  name?: string;
 };
 
 export type InputProps = {
@@ -221,22 +224,29 @@ export type ModalProps = {
   children: ReactNode;
 };
 
-export interface cartItemProps {
-  $id: string;
-  product_name: string;
-  price: string;
-  quantity: string;
-  image: string;
-  weight: string;
-  user_id: string;
+export interface cartProps {
+  $id?: string;
+  product_name?: string;
+  price?: string;
+  quantity?: string;
+  image?: string;
+  weight?: string;
+  user_id?: string;
+  product_id?: string;
   product_details?: string;
   farm_name?: string;
-  onDelete: (id: string) => void;
+  product_id?: string;
 }
 
+export type cartItemProps = cartProps & {
+  fetchProductQuantity?: () => Promise<void>;
+};
+
 export type CartModalProps = {
-  items: cartItemProps[];
-  onDelete: (id: string) => void;
+  items: any;
+  onDelete?: (id: string) => Promise<void>;
+  fetchProductQuantity?: () => Promise<void>;
+  $id?: string;
 };
 
 export type StarRatingProps = {

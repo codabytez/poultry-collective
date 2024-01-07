@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import Product from "../Product";
 import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/product";
-import { useUser } from "@/context/user";
 import { LoadingSkeleton } from "../UI/LoadingSkeleton";
 
 const ShopasGuest: NextPage = () => {

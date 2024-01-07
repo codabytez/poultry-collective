@@ -5,9 +5,9 @@ import { Eye, EyeSlash } from "iconsax-react";
 import React, { useState } from "react";
 
 const variantClasses = {
-  default: "text-cod-gray-cg-400 bg-light-green-shade",
-  primary: "border-solid border-white border-2 text-white",
-  secondary: "border-0 bg-secondary-1 text-dark-gray",
+  default: "text-cod-gray-cg-400 bg-light-green-shade border-transparent",
+  primary: "border-solid !border-white border-2 text-white",
+  secondary: "border-0 text-dark-gray",
   tertiary: "border-0 text-white",
 };
 
@@ -36,6 +36,10 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   variant = "default",
   inputSize = "sm",
   fullWidth = false,
+  optionPlaceholder,
+  name,
+  register,
+  error,
   ...props
 }) => {
   const variantClass = getVariantClass(variant);
@@ -49,16 +53,25 @@ export const SelectInput: React.FC<SelectInputProps> = ({
       } h-[48px]  text-dark-100 hide-caret transition-all select-none focus-within:border-main-green-mg ${classNames}  ${
         disabled && "bg-[#A5B4FC] opacity-[.8] border-[1px] cursor-not-allowed"
       }`}
+      style={{
+        border: error ? "1px solid #EF4444" : "1px solid transparent",
+      }}
     >
       {leftIcon && <div className="absolute top-2.5 left-2">{leftIcon}</div>}
       <select
+        {...(register ? register(name) : {})}
         onChange={onChange}
-        className={`w-full border-none outline-none hide-caret ${
+        className={`w-full border-none outline-none hide-caret bg-transparent ${
           leftIcon ? "pl-7" : ""
         } ${disabled ? "cursor-not-allowed" : ""}}`}
         {...(props as any)}
         disabled={disabled}
       >
+        {optionPlaceholder && (
+          <option className={`${optionColor}`} value="" disabled selected>
+            {optionPlaceholder}
+          </option>
+        )}
         {options.map((op: any, idx: any) => (
           <option
             key={idx}
@@ -195,7 +208,11 @@ export function Input({
           input:-webkit-autofill,
           input:-webkit-autofill:hover,
           input:-webkit-autofill:focus,
-          input:-webkit-autofill:active {
+          input:-webkit-autofill:active,
+          textarea:-webkit-autofill,
+          textarea:-webkit-autofill:hover,
+          textarea:-webkit-autofill:focus,
+          textarea:-webkit-autofill:active {
             -webkit-background-clip: text;
             -webkit-text-fill-color: ${variant === "default"
               ? "#6C757D"

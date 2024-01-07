@@ -27,6 +27,7 @@ const Footer: NextPage = () => {
                     name="email"
                     placeholder="Enter your email address"
                     variant="primary"
+                    fullWidth
                   />
                 </div>
                 <Button variant="secondary">Subscribe</Button>

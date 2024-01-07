@@ -5,7 +5,6 @@ import Image from "next/image";
 import brandPattern from "@/public/assets/BrandPattern-Green.svg";
 import dashboardMac from "@/public/assets/dashboard_iMac.svg";
 import cartMac from "@/public/assets/cart_iMac.svg";
-import Link from "next/link";
 
 const Hero: NextPage = () => {
   return (
@@ -19,9 +18,9 @@ const Hero: NextPage = () => {
             Our platform caters to all businesses and individuals interested in
             large-scale buying and selling of poultry eggs
           </p>
-          <Link href="/signup" className="inline-block">
-            <Button size="lg">Get Started</Button>
-          </Link>
+          <Button href="/signup" size="lg">
+            Get Started
+          </Button>
         </div>
 
         <div className="flex items-center gap-[73px] w-[672px] h-[515px] relative">
