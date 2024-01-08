@@ -1,21 +1,25 @@
 import { database, ID } from "@/libs/AppwriteClient";
 
-const useCreateProfile = async (
+const useCreateSellerProfile = async (
   userId: string,
   name: string,
-  email: string,
-  image: string
+  address: string,
+  city: string,
+  phone_number: string,
+  banner: string
 ) => {
   try {
     const res = await database.createDocument(
       String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),
-      String(process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID_PROFILE),
+      String(process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID_SELLER_PROFILE),
       ID.unique(),
       {
         user_id: userId,
-        email: email,
-        name: name,
-        image: image,
+        business_name: name,
+        address,
+        city,
+        phone_number,
+        banner,
       }
     );
     return res;
@@ -25,4 +29,4 @@ const useCreateProfile = async (
   }
 };
 
-export default useCreateProfile;
+export default useCreateSellerProfile;

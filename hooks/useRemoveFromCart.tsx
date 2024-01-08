@@ -9,7 +9,6 @@ const useRemoveFromCart = async (productId: string) => {
     );
     return result;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

@@ -27,7 +27,6 @@ const useAddToCart = async (
     );
     return res;
   } catch (error) {
-    console.error("Error adding to cart:", error);
     throw new Error("Failed to add the item to the cart. Please try again.");
   }
 };

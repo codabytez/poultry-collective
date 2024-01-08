@@ -13,7 +13,6 @@ const useUpdateProductQuantity = () => {
         }
       );
     } catch (error) {
-      console.error(error);
       throw error;
     }
   };
@@ -29,7 +28,6 @@ const useUpdateProductQuantity = () => {
         }
       );
     } catch (error) {
-      console.error(error);
       throw error;
     }
   };

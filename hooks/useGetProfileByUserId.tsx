@@ -20,7 +20,7 @@ const useGetProfileByUserId = async (userId: string) => {
       role: documents[0]?.role,
     };
   } catch (e) {
-    console.log(e);
+    throw e;
     return null;
   }
 };

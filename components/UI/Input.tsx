@@ -169,7 +169,7 @@ export function Input({
               onChange={onChange}
               className={`w-full outline-none hide-caret ${
                 disabled ?? isLoading
-                  ? "cursor-not-allowed bg-[#A5B4FC]"
+                  ? "cursor-not-allowed bg-transparent"
                   : "bg-transparent"
               } ${leftIcon ? "pl-1" : ""} `}
               placeholder={placeholder ?? "placeholder"}
@@ -190,7 +190,7 @@ export function Input({
             {...(register ? register(name) : {})}
             className={`w-full outline-none hide-caret resize-none ${
               disabled ?? isLoading
-                ? "cursor-not-allowed bg-[#A5B4FC]"
+                ? "cursor-not-allowed bg-transparent"
                 : "bg-transparent"
             } ${leftIcon ? "pl-1" : ""} `}
             placeholder={placeholder ?? "placeholder"}

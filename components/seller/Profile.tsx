@@ -1,190 +1,181 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
+import { Add, Camera, Trash } from "iconsax-react";
 import { NextPage } from "next";
-import { ChangeEvent, useState } from "react";
-import { useFormContext } from "@/context/seller";
-import { Camera, Image as Icon } from "iconsax-react";
-import MainLayout from "@/layouts/MainLayout";
-import Image from "next/image";
 import StarRating from "../UI/StarRating";
-import { Input } from "../UI/Input";
-import Button from "../UI/Button";
+import Modal from "../UI/Modal";
+import { useState, useEffect } from "react";
+import MainLayout from "@/layouts/MainLayout";
+import AddProduct from "./AddProduct";
+import { useUser } from "@/context/user";
+import { useRouter } from "next/navigation";
+import { useProductStore } from "@/stores/product";
+import { useGeneralStore } from "@/stores/general";
+import Loader from "../UI/Loader";
+import { productDetailTypes } from "@/@types";
+import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
+import { useSellerProfileStore } from "@/stores/sellerProfile";
+import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 
-const Profile: NextPage = () => {
-  const { businessInfo, setBusinessInfo } = useFormContext();
-  const { bioAndBanner, setBioAndBanner } = useFormContext();
-  const { bankDetails, setBankDetails } = useFormContext();
+const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
+  const contextUser = useUser();
+  const { productsBySeller, setProductsBySeller, deleteProduct } =
+    useProductStore();
+  const [userBanner, setUserBanner] = useState("");
+  const { currentSellerProfile, setCurrentSellerProfile } =
+    useSellerProfileStore();
+  const { setIsModalOpen } = useGeneralStore();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleChangeBanner = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target as HTMLInputElement;
+  useEffect(() => {
+    const fetchSellerProfile = async () => {
+      if (contextUser.user) {
+        try {
+          setIsLoading(true);
+          await setCurrentSellerProfile(contextUser.user.id);
+
+          const url = await useCreateBucketUrl(currentSellerProfile?.banner);
+          setUserBanner(url);
+          await setProductsBySeller(contextUser.user.id);
+        } catch (error) {
+          throw error;
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchSellerProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = async (id: string, imageIds: string[]) => {
+    if (contextUser?.user) {
+      try {
+        setIsLoading(true);
+        await deleteProduct(id, imageIds);
+        setProductsBySeller(contextUser.user?.id);
+      } catch (error) {
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
     <MainLayout>
-      <div>
-        <div className=" w-11/12 mx-auto mt-10 relative">
-          <div
-            className="w-full h-[300px]"
-            style={{
-              background: `linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url('${
-                bioAndBanner.bannerImage.preview ||
-                "https://picsum.photos/id/28/1300/300.jpg"
-              }'), lightgray 50% / cover no-repeat`,
-            }}
-          />
-
-          <div className="inline-flex flex-col justify-center items-start gap-8 absolute top-20 left-6">
-            <h2 className="text-H2-03 font-medium text-cod-gray-cg-100">
-              {businessInfo.name || "Business Name"}
-            </h2>
-
-            <StarRating />
-          </div>
-
-          <div className="inline-flex p-4 items-start gap-2 bg-offwhite absolute right-6 top-6">
-            <Camera size={24} color="#292D32" />
-            <p className="text-SP-03 font-normal text-cod-gray-cg-600">
-              Change Banner
-            </p>
-          </div>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
         </div>
-
-        <div className="rounded bg-white shadow-xl shadow-cod-gray-cg/5 w-11/12 mt-[60px] mx-auto flex justify-between gap-10 p-16 pb-24">
-          <div className="flex flex-col gap-10 items-start justify-start">
-            <Input
-              label="Business Name"
-              type="text"
-              placeholder="Business Name"
-              value={businessInfo.name}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBusinessInfo({ ...businessInfo, name: e.target.value })
-              }
-            />
-
-            <Input
-              label="Address"
-              type="text"
-              inputType="textarea"
-              placeholder="Address"
-              value={businessInfo.address}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBusinessInfo({ ...businessInfo, address: e.target.value })
-              }
-            />
-
-            <Input
-              label="Phone Number"
-              type="text"
-              placeholder="Phone Number"
-              value={businessInfo.phoneNumber}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBusinessInfo({
-                  ...businessInfo,
-                  phoneNumber: e.target.value,
-                })
-              }
-            />
-
-            <Input
-              label="City/Town"
-              type="text"
-              placeholder="City/Town"
-              value={businessInfo.city}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBusinessInfo({
-                  ...businessInfo,
-                  city: e.target.value,
-                })
-              }
-            />
-
-            <Input
-              label="Bio"
-              type="text"
-              inputType="textarea"
-              placeholder="Bio"
-              value={bioAndBanner.bio}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBioAndBanner({ ...bioAndBanner, bio: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="flex flex-col gap-10 items-start justify-start">
-            <div className="flex w-full flex-col gap-2">
-              <p className="text-SC-03 text-cod-gray-cg-400 capitalize">
-                ID Card
-              </p>
-              <label
-                htmlFor="validIdImage"
-                className="flex items-start gap-9 p-3 w-[400px] h-[97px] bg-light-green-shade"
-              >
-                <>
-                  <Icon size="32" color="#CED4DA" />
-
-                  <p className="text-SP-03 text-cod-gray-cg-600 font-normal">
-                    {bankDetails.validIdImage.raw ? (
-                      bankDetails.validIdImage.raw?.name
-                    ) : (
-                      <>
-                        Upload a valid ID
-                        <span className="text-cod-gray-cg-400 ">
-                          {" "}
-                          Max size 2MB
-                        </span>
-                      </>
-                    )}
-                  </p>
-                </>
-              </label>
-              <input
-                className="hidden"
-                type="file"
-                placeholder="Valid ID Image"
-                name="validIdImage"
-                id="validIdImage"
-                accept="image/*"
-                disabled
+      ) : (
+        <>
+          <div>
+            <div className=" w-11/12 mx-auto mt-10 relative">
+              <div
+                className="w-full h-[300px]"
+                style={{
+                  background: `linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url('${userBanner}'), lightgray 50% / cover no-repeat`,
+                }}
               />
+
+              <div className="inline-flex flex-col justify-center items-start gap-8 absolute top-20 left-6">
+                <h2 className="text-H2-03 font-medium text-cod-gray-cg-100">
+                  {currentSellerProfile.business_name}
+                </h2>
+
+                <StarRating />
+              </div>
+
+              <div className="inline-flex p-4 items-start gap-2 bg-offwhite absolute right-6 top-6">
+                <Camera size={24} color="#292D32" />
+                <p className="text-SP-03 font-normal text-cod-gray-cg-600">
+                  Change Banner
+                </p>
+              </div>
             </div>
+            {productsBySeller.length > 0 && (
+              <div className="my-20 w-11/12 m-auto">
+                <h2 className="text-start text-cod-gray-cg text-H2-03 pb-8">
+                  Listed Products
+                </h2>
+                <div className="flex justify-start items-start gap-4 gap-y-10 flex-wrap">
+                  {productsBySeller.map((product) => (
+                    <div
+                      key={product.$id}
+                      className="flex flex-col justify-center items-start gap-4 w-[427px]  relative"
+                    >
+                      <div className="flex h-[300px] w-full justify-center items-start bg-no-repeat object-cover relative">
+                        <img
+                          src={product.imageUrl}
+                          alt={product.product_name}
+                          className="w-full h-full object-cover object-center"
+                        />
 
-            <Input
-              label="Bank Name"
-              type="text"
-              placeholder="Bank Name"
-              value={bankDetails.bankName}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBankDetails({
-                  ...bankDetails,
-                  bankName: e.target.value,
-                })
-              }
-            />
+                        <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute right-0 bottom-0">
+                          In stock: {product.quantity_available}
+                        </p>
 
-            <Input
-              label="Account Number"
-              type="text"
-              placeholder="Account Number"
-              value={bankDetails.accountNumber}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setBankDetails({
-                  ...bankDetails,
-                  accountNumber: e.target.value,
-                })
-              }
-            />
+                        <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute left-0 bottom-0">
+                          Weight: {product.product_weight}kg
+                        </p>
+                      </div>
 
-            <div className="w-[400px]">
-              <Button size="lg" fullWidth>
-                Proceed to Product Listing
-              </Button>
+                      <div className="flex  justify-between items-center w-[427px]">
+                        <p className="text-H5-03 text-cod-gray-cg font-normal">
+                          {product.product_name}
+                        </p>
+
+                        <div className="flex items-center gap-2">
+                          <p className="text-H5-03 text-cod-gray-cg font-normal">
+                            N {Number(product.product_price).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      <Trash
+                        onClick={() =>
+                          handleDelete(product.$id, product.product_image)
+                        }
+                        className="absolute top-4 right-4"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex w-10/12 h-[400px] items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
+              <button
+                onClick={handleOpenModal}
+                className="flex justify-center items-center gap-2"
+              >
+                <p className="text-H4-03 text-main-green-mg font-normal">
+                  Add a product
+                </p>
+                <Add size={24} color="#0D5C3D" />
+              </button>
             </div>
           </div>
-        </div>
-      </div>
+          <Modal>
+            <AddProduct
+              farmName={currentSellerProfile.business_name}
+              onCloseModal={handleCloseModal}
+            />
+          </Modal>
+        </>
+      )}
     </MainLayout>
   );
 };
 
-export default Profile;
+export default SellerProfile;

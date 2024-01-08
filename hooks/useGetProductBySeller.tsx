@@ -7,10 +7,8 @@ const useGetProductBySeller = async (userId: string) => {
       String(process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID_PRODUCTS),
       [Query.equal("user_id", userId), Query.orderDesc("$id")]
     );
-    console.log("userID:", userId);
     return result.documents;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

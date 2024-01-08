@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { NextPage } from "next";
-import Input from "../UI/Input";
+import {Input} from "../UI/Input";
 import { useState } from "react";
 import { Image as ImgIcon, CloseCircle } from "iconsax-react";
 import Image from "next/image";

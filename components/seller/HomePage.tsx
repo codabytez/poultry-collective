@@ -1,24 +1,109 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { NextPage } from "next";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { useFormContext } from "@/context/seller";
 import { Camera, Image as Icon } from "iconsax-react";
 import MainLayout from "@/layouts/MainLayout";
 import Image from "next/image";
 import StarRating from "../UI/StarRating";
-import Input from "../UI/Input";
+import { Input } from "../UI/Input";
 import Button from "../UI/Button";
 import withRoleCheck from "@/helpers/withRoleCheck";
+import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
+import { useUser } from "@/context/user";
+import useChangeSellerBanner from "@/hooks/useChangeSellerBanner";
+import useUpdateSellerBanner from "@/hooks/useUpdateSellerBanner";
+import useUpdateSellerBio from "@/hooks/useUpdateSellerBio";
+import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
+import useUpdateSellerBankDetails from "@/hooks/useUpdateSellerBankDetails";
+import { useSellerProfileStore } from "@/stores/sellerProfile";
+import useUpdateSellerProfile from "@/hooks/useUpdateSellerProfile";
+import { useRouter } from "next/navigation";
+import nProgress from "nprogress";
 
 const SellerHomePage: NextPage = () => {
+  const contextUser = useUser();
+  const router = useRouter();
+  const { currentSellerProfile, setCurrentSellerProfile } =
+    useSellerProfileStore();
   const { businessInfo, setBusinessInfo } = useFormContext();
   const { bioAndBanner, setBioAndBanner } = useFormContext();
   const { bankDetails, setBankDetails } = useFormContext();
+  const [userBanner, setUserBanner] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangeBanner = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target as HTMLInputElement;
+  useEffect(() => {
+    const getProfile = async () => {
+      if (!contextUser?.user?.id) throw new Error("User not found");
+      await setCurrentSellerProfile(contextUser?.user?.id);
+      const url = await useCreateBucketUrl(currentSellerProfile?.banner);
+      setUserBanner(url);
+      setBusinessInfo({
+        name: currentSellerProfile?.business_name,
+        address: currentSellerProfile?.address,
+        phoneNumber: currentSellerProfile?.phone_number,
+        city: currentSellerProfile?.city,
+      });
+      setBioAndBanner({
+        bio: currentSellerProfile?.bio,
+      });
+      setBankDetails({
+        bankName: currentSellerProfile?.bank_name,
+        accountNumber: currentSellerProfile?.account_number,
+      });
+    };
+    getProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleProceedToProductListing = async () => {
+    try {
+      setIsLoading(true);
+      nProgress.start();
+      if (!contextUser?.user?.id) throw new Error("User not found");
+      const sellerProfile = await useGetSellerProfileByUserId(
+        contextUser?.user?.id
+      );
+
+      if (!sellerProfile) throw new Error("Seller profile not found");
+
+      if (bioAndBanner.bannerImage.raw) {
+        const res = await useChangeSellerBanner(
+          bioAndBanner.bannerImage.raw,
+          String(process.env.NEXT_PUBLIC_DEFAULT_SELLER_AVATAR)
+        );
+        bioAndBanner.bannerImage &&
+          (await useUpdateSellerBanner(sellerProfile?.id, res));
+      }
+
+      await setCurrentSellerProfile(contextUser?.user?.id);
+
+      bioAndBanner.bio &&
+        (await useUpdateSellerBio(sellerProfile?.id, bioAndBanner.bio));
+      bankDetails &&
+        (await useUpdateSellerBankDetails(
+          sellerProfile?.id,
+          bankDetails.bankName,
+          bankDetails.accountNumber
+        ));
+      businessInfo &&
+        (await useUpdateSellerProfile(
+          sellerProfile?.id,
+          businessInfo.name,
+          businessInfo.address,
+          businessInfo.phoneNumber,
+          businessInfo.city
+        ));
+      router.push(`/seller/profile/${sellerProfile?.id}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        nProgress.done();
+      }, 2000);
+    }
   };
 
   return (
@@ -28,16 +113,13 @@ const SellerHomePage: NextPage = () => {
           <div
             className="w-full h-[300px]"
             style={{
-              background: `linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url('${
-                bioAndBanner.bannerImage.preview ||
-                "https://picsum.photos/id/28/1300/300.jpg"
-              }'), lightgray 50% / cover no-repeat`,
+              background: `linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url('${userBanner}'), lightgray 50% / cover no-repeat`,
             }}
           />
 
           <div className="inline-flex flex-col justify-center items-start gap-8 absolute top-20 left-6">
             <h2 className="text-H2-03 font-medium text-cod-gray-cg-100">
-              {businessInfo.name || "Business Name"}
+              {currentSellerProfile.business_name}
             </h2>
 
             <StarRating />
@@ -52,8 +134,10 @@ const SellerHomePage: NextPage = () => {
         </div>
 
         <div className="rounded bg-white shadow-xl shadow-cod-gray-cg/5 w-11/12 mt-[60px] mx-auto flex justify-between gap-10 p-16 pb-24">
-          <div className="flex flex-col gap-10 items-start justify-start">
+          <div className="flex flex-col gap-10 items-start justify-start w-[400px]">
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Business Name"
               type="text"
               placeholder="Business Name"
@@ -64,6 +148,8 @@ const SellerHomePage: NextPage = () => {
             />
 
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Address"
               type="text"
               inputType="textarea"
@@ -75,6 +161,8 @@ const SellerHomePage: NextPage = () => {
             />
 
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Phone Number"
               type="text"
               placeholder="Phone Number"
@@ -88,6 +176,7 @@ const SellerHomePage: NextPage = () => {
             />
 
             <Input
+              fullWidth
               label="City/Town"
               type="text"
               placeholder="City/Town"
@@ -101,6 +190,8 @@ const SellerHomePage: NextPage = () => {
             />
 
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Bio"
               type="text"
               inputType="textarea"
@@ -151,6 +242,8 @@ const SellerHomePage: NextPage = () => {
             </div>
 
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Bank Name"
               type="text"
               placeholder="Bank Name"
@@ -164,6 +257,8 @@ const SellerHomePage: NextPage = () => {
             />
 
             <Input
+              fullWidth
+              disabled={isLoading}
               label="Account Number"
               type="text"
               placeholder="Account Number"
@@ -177,7 +272,13 @@ const SellerHomePage: NextPage = () => {
             />
 
             <div className="w-[400px]">
-              <Button size="lg" fullWidth>
+              <Button
+                size="lg"
+                fullWidth
+                isLoading={isLoading}
+                onClick={handleProceedToProductListing}
+                disabled={isLoading}
+              >
                 Proceed to Product Listing
               </Button>
             </div>

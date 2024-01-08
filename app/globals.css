@@ -19,6 +19,11 @@ select.hide-caret {
   appearance: none;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none !important;
+}
+
 input[type="number"]::-webkit-inner-spin-button {
   display: none;
 }

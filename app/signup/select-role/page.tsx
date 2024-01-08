@@ -6,15 +6,19 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/UI/Button";
 import useUpdateProfile from "@/hooks/useUpdateProfile";
 import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "@/components/UI/Loader";
+import { notify } from "@/components/UI/Toast";
+import nProgress from "nprogress";
 
-const SelectRolePage: NextPage = () => {
+const SelectRolePage: React.FC = () => {
   const contextUser = useUser();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
 
   useEffect(() => {
+    nProgress.start();
     if (contextUser?.user) {
       (async () => {
         try {
@@ -31,6 +35,7 @@ const SelectRolePage: NextPage = () => {
           console.log("error", error);
         } finally {
           setIsLoading(false);
+          nProgress.done();
         }
       })();
     }
@@ -38,6 +43,8 @@ const SelectRolePage: NextPage = () => {
   }, [contextUser?.user]);
 
   const handleRoleSelect = async (role: string) => {
+    nProgress.start();
+    setBtnDisabled(true);
     if (!contextUser?.user) router.push("/signup");
     if (contextUser?.user) {
       try {
@@ -46,7 +53,14 @@ const SelectRolePage: NextPage = () => {
       } catch (error) {
         console.log("error", error);
       } finally {
-        router.push(`/${role}`);
+        role === "buyer"
+          ? router.replace("/buyer")
+          : role === "seller"
+          ? router.replace("/seller/setup-acc")
+          : notify({
+              message: "Something went wrong",
+              type: "error",
+            });
       }
     }
   };
@@ -66,6 +80,8 @@ const SelectRolePage: NextPage = () => {
               size="lg"
               onClick={() => handleRoleSelect("buyer")}
               fullWidth
+              disabled={btnDisabled}
+              isLoading={btnDisabled}
             >
               Buy
             </Button>
@@ -74,6 +90,8 @@ const SelectRolePage: NextPage = () => {
               size="lg"
               onClick={() => handleRoleSelect("seller")}
               fullWidth
+              disabled={btnDisabled}
+              isLoading={btnDisabled}
             >
               Sell
             </Button>

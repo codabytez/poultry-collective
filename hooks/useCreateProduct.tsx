@@ -52,7 +52,6 @@ const useCreateProduct = async (
       }
     );
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

@@ -31,9 +31,9 @@ const Button: NextPage<ButtonProps> = ({
   const sizeClasses = {
     sm: "py-2 px-4 border border-b-4",
 
-    md: "py-3 px-6 rounded border-2",
+    md: "py-3 px-6 rounded border-2 border-b-4",
 
-    lg: "py-4 px-8 border-2",
+    lg: "py-4 px-8 border-2 border-b-4",
   };
 
   const classNames = `relative flex items-center justify-center gap-5 ${

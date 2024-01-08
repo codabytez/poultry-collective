@@ -4,7 +4,7 @@ import { useFormContext } from "@/context/seller";
 import { Image as Icon } from "iconsax-react";
 import Image from "next/image";
 import { useState } from "react";
-import Input from "../UI/Input";
+import { Input } from "../UI/Input";
 
 const Step2: NextPage = () => {
   const { bioAndBanner, setBioAndBanner } = useFormContext();
@@ -46,13 +46,13 @@ const Step2: NextPage = () => {
         ...prev,
         [e.target.name]: e.target.value,
       }));
-      console.log(bioAndBanner);
     }
   };
 
   return (
     <div className="flex flex-col items-start gap-8">
       <Input
+        fullWidth
         type="text"
         placeholder="Bio"
         value={bioAndBanner.bio}

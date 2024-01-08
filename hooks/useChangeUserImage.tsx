@@ -42,7 +42,6 @@ const useChangeUserImage = async (
     }
     return result.$id;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

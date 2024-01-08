@@ -4,7 +4,7 @@ import { useFormContext } from "@/context/seller";
 import { useState } from "react";
 import { Image as Icon } from "iconsax-react";
 import Image from "next/image";
-import Input from "../UI/Input";
+import { Input, SelectInput } from "../UI/Input";
 
 const Step3: NextPage = () => {
   const { bankDetails, setBankDetails } = useFormContext();
@@ -41,19 +41,18 @@ const Step3: NextPage = () => {
         }));
         URL.revokeObjectURL(objectUrl); // Revoke the URL after it's used
       }
-      console.log(bankDetails);
     } else {
       setBankDetails((prev: string[]) => ({
         ...prev,
         [e.target.name]: e.target.value,
       }));
-      console.log(bankDetails);
     }
   };
 
   return (
     <div className="flex flex-col items-start gap-6">
       <Input
+        fullWidth
         type="text"
         placeholder="Bank Name"
         value={bankDetails.bankName}
@@ -62,6 +61,7 @@ const Step3: NextPage = () => {
       />
 
       <Input
+        fullWidth
         type="text"
         placeholder="Account Number"
         value={bankDetails.accountNumber}
@@ -69,20 +69,19 @@ const Step3: NextPage = () => {
         name="accountNumber"
       />
 
-      <select
-        className="flex p-3 justify-center items-center text-SP-03 font-normal text-cod-gray-cg-400 placeholder:text-cod-gray-cg-400 bg-light-green-shade outline-0 w-[400px]"
+      <SelectInput
+        fullWidth
         name="validId"
         value={bankDetails.validId}
         onChange={handleChange}
-      >
-        <option value="" disabled>
-          Valid ID
-        </option>
-        <option value="Drivers License">Driver&apos;s License</option>
-        <option value="Voters ID">Voter&apos;s ID</option>
-        <option value="National ID">National ID</option>
-        <option value="Passport">Passport</option>
-      </select>
+        optionPlaceholder="Valid ID"
+        options={[
+          { value: "Drivers License", label: "Driver's License" },
+          { value: "Voters ID", label: "Voter's ID" },
+          { value: "National ID", label: "National ID" },
+          { value: "Passport", label: "Passport" },
+        ]}
+      />
 
       <label
         htmlFor="validIdImage"

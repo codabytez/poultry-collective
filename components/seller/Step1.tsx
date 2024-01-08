@@ -1,7 +1,7 @@
 "use client";
 import { NextPage } from "next";
 import { useFormContext } from "@/context/seller";
-import Input from "../UI/Input";
+import { Input } from "../UI/Input";
 
 const Step1: NextPage = () => {
   const { businessInfo, setBusinessInfo } = useFormContext();
@@ -13,11 +13,11 @@ const Step1: NextPage = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    console.log(businessInfo);
   };
   return (
-    <div className="flex flex-col items-start gap-6">
+    <div className="flex flex-col items-start gap-6 w-[400px]">
       <Input
+        fullWidth
         type="text"
         placeholder="Business Name"
         value={businessInfo.name}
@@ -26,6 +26,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        fullWidth
         type="text"
         placeholder="Phone Number"
         value={businessInfo.phoneNumber}
@@ -34,6 +35,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        fullWidth
         type="text"
         placeholder="Address"
         value={businessInfo.address}
@@ -43,6 +45,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        fullWidth
         type="text"
         placeholder="City/Town"
         value={businessInfo.city}

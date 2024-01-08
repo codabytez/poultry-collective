@@ -19,7 +19,6 @@ const useDeleteProduct = async (productId: string, currentImages: string[]) => {
       )
     );
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

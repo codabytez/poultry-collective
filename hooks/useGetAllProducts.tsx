@@ -9,7 +9,6 @@ const useGetAllProducts = async () => {
 
     return result.documents;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
