@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import { Add, Camera, Trash } from "iconsax-react";
+import { Add, Camera, Export, Trash } from "iconsax-react";
 import { NextPage } from "next";
 import StarRating from "../UI/StarRating";
 import Modal from "../UI/Modal";
@@ -16,28 +16,65 @@ import Loader from "../UI/Loader";
 import { productDetailTypes } from "@/@types";
 import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
 import { useSellerProfileStore } from "@/stores/sellerProfile";
-import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
+import SellerBanner from "./SellerBanner";
+import { notify } from "../UI/Toast";
+import useGetProductBySeller from "@/hooks/useGetProductBySeller";
 
-const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
+type Props = {
+  params: { id: string };
+};
+
+const SellerProfile: NextPage<Props> = ({ params }) => {
   const contextUser = useUser();
+  const router = useRouter();
   const { productsBySeller, setProductsBySeller, deleteProduct } =
     useProductStore();
+  const [sellerProducts, setSellerProducts] = useState<any[]>([]);
   const [userBanner, setUserBanner] = useState("");
-  const { currentSellerProfile, setCurrentSellerProfile } =
-    useSellerProfileStore();
+  const {
+    currentSellerProfile,
+    setCurrentSellerProfile,
+    setSellerIdBySellerId,
+  } = useSellerProfileStore();
   const { setIsModalOpen } = useGeneralStore();
   const [isLoading, setIsLoading] = useState(true);
+
+  const isCurrentUser = contextUser?.user?.id === currentSellerProfile?.user_id;
+
+  const handleShareProfile = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/seller/profile/${currentSellerProfile?.$id}`
+    );
+    notify({
+      message: "Link copied to clipboard",
+      type: "success",
+      pauseOnHover: false,
+      autoClose: 2000,
+    });
+  };
 
   useEffect(() => {
     const fetchSellerProfile = async () => {
       if (contextUser.user) {
         try {
           setIsLoading(true);
-          await setCurrentSellerProfile(contextUser.user.id);
+          await setSellerIdBySellerId(params?.id);
 
-          const url = await useCreateBucketUrl(currentSellerProfile?.banner);
-          setUserBanner(url);
-          await setProductsBySeller(contextUser.user.id);
+          // Fetch the updated currentSellerProfile from your state
+          const updatedSellerProfile = currentSellerProfile;
+
+          if (updatedSellerProfile) {
+            const products = await useGetProductBySeller(
+              updatedSellerProfile.$id
+            );
+            const productsWithUrls = await Promise.all(
+              products.map(async (product) => {
+                const url = await useCreateBucketUrl(product.product_image[0]);
+                return { ...product, imageUrl: url };
+              })
+            );
+            setSellerProducts(productsWithUrls);
+          }
         } catch (error) {
           throw error;
         } finally {
@@ -48,7 +85,7 @@ const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
 
     fetchSellerProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [params]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -63,7 +100,7 @@ const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
       try {
         setIsLoading(true);
         await deleteProduct(id, imageIds);
-        setProductsBySeller(contextUser.user?.id);
+        setProductsBySeller(currentSellerProfile?.$id);
       } catch (error) {
         throw error;
       } finally {
@@ -80,37 +117,38 @@ const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
         </div>
       ) : (
         <>
+          {isCurrentUser && (
+            <div className="flex justify-end w-11/12 mx-auto mt-10 relative">
+              <button
+                onClick={handleShareProfile}
+                className="flex justify-center items-center gap-2"
+              >
+                <span className="text-H6-03 text-main-green-mg font-normal">
+                  Share Store Link
+                </span>
+                <Export color="#0D5C3D" />
+              </button>
+            </div>
+          )}
           <div>
-            <div className=" w-11/12 mx-auto mt-10 relative">
-              <div
-                className="w-full h-[300px]"
-                style={{
-                  background: `linear-gradient(0deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.40) 100%), url('${userBanner}'), lightgray 50% / cover no-repeat`,
-                }}
-              />
-
-              <div className="inline-flex flex-col justify-center items-start gap-8 absolute top-20 left-6">
-                <h2 className="text-H2-03 font-medium text-cod-gray-cg-100">
-                  {currentSellerProfile.business_name}
-                </h2>
-
-                <StarRating />
-              </div>
-
-              <div className="inline-flex p-4 items-start gap-2 bg-offwhite absolute right-6 top-6">
-                <Camera size={24} color="#292D32" />
-                <p className="text-SP-03 font-normal text-cod-gray-cg-600">
-                  Change Banner
+            <SellerBanner
+              isCurrentUser={isCurrentUser}
+              seller={currentSellerProfile}
+            />
+            {!isCurrentUser && sellerProducts.length === 0 && (
+              <div className="flex justify-center items-center h-[400px]">
+                <p className="text-H4-03 text-cod-gray-cg font-normal">
+                  No products listed yet
                 </p>
               </div>
-            </div>
-            {productsBySeller.length > 0 && (
+            )}
+            {sellerProducts && sellerProducts.length > 0 && (
               <div className="my-20 w-11/12 m-auto">
                 <h2 className="text-start text-cod-gray-cg text-H2-03 pb-8">
                   Listed Products
                 </h2>
                 <div className="flex justify-start items-start gap-4 gap-y-10 flex-wrap">
-                  {productsBySeller.map((product) => (
+                  {sellerProducts.map((product) => (
                     <div
                       key={product.$id}
                       className="flex flex-col justify-center items-start gap-4 w-[427px]  relative"
@@ -142,36 +180,43 @@ const SellerProfile: NextPage<productDetailTypes> = ({ params }) => {
                           </p>
                         </div>
                       </div>
-                      <Trash
-                        onClick={() =>
-                          handleDelete(product.$id, product.product_image)
-                        }
-                        className="absolute top-4 right-4"
-                      />
+                      {isCurrentUser && (
+                        <Trash
+                          onClick={() =>
+                            handleDelete(product.$id, product.product_image)
+                          }
+                          className="absolute top-4 right-4"
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="flex w-10/12 h-[400px] items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
-              <button
-                onClick={handleOpenModal}
-                className="flex justify-center items-center gap-2"
-              >
-                <p className="text-H4-03 text-main-green-mg font-normal">
-                  Add a product
-                </p>
-                <Add size={24} color="#0D5C3D" />
-              </button>
-            </div>
+            {isCurrentUser && (
+              <div className="flex w-10/12 h-[400px] mt-20 items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
+                <button
+                  onClick={handleOpenModal}
+                  className="flex justify-center items-center gap-2"
+                >
+                  <p className="text-H4-03 text-main-green-mg font-normal">
+                    Add a product
+                  </p>
+                  <Add size={24} color="#0D5C3D" />
+                </button>
+              </div>
+            )}
           </div>
-          <Modal>
-            <AddProduct
-              farmName={currentSellerProfile.business_name}
-              onCloseModal={handleCloseModal}
-            />
-          </Modal>
+          {isCurrentUser && (
+            <Modal>
+              <AddProduct
+                farmName={currentSellerProfile.business_name}
+                sellerId={currentSellerProfile.$id}
+                onCloseModal={handleCloseModal}
+              />
+            </Modal>
+          )}
         </>
       )}
     </MainLayout>

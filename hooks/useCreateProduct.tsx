@@ -8,7 +8,8 @@ const useCreateProduct = async (
   productDetails: string,
   price: string,
   QuantityAvailable: string,
-  productWeight: string
+  productWeight: string,
+  sellerId: string
 ) => {
   const imageIds = files.map(
     () =>
@@ -49,6 +50,7 @@ const useCreateProduct = async (
         product_weight: productWeight,
         created_at: new Date().toISOString(),
         farm_name: farmName,
+        seller_id: sellerId,
       }
     );
   } catch (error) {

@@ -9,6 +9,7 @@ import { Trash } from "iconsax-react";
 import useGetProductById from "@/hooks/useGetProductById";
 import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
 import nProgress from "nprogress";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const CartItemPopUp: NextPage<CartModalProps> = ({
   items,
@@ -28,8 +29,7 @@ const CartItemPopUp: NextPage<CartModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { addProductQuantity, removeProductQuantity } =
     useUpdateProductQuantity();
-  const {  removeFromCart, removeTempItem } =
-    useCartStore();
+  const { removeFromCart, removeTempItem } = useCartStore();
 
   useEffect(() => {
     const fetchUrl = async () => {
@@ -45,7 +45,7 @@ const CartItemPopUp: NextPage<CartModalProps> = ({
 
   const handleDelete = async () => {
     setIsLoading(true);
-nProgress.start();
+    nProgress.start();
 
     try {
       if (!product_id) {
@@ -106,18 +106,14 @@ nProgress.start();
               {weight}kg {product_name && product_name.split(" ").pop()}
             </h4>
             <h5 className="text-H5-03 font-semibold text-cod-gray-cg-600">
-              {quantity} Crate(s)
+              {quantity} {Number(quantity) > 1 ? "crates" : "crate"}
             </h5>
             <h4>#{Number(price).toLocaleString()}</h4>
           </div>
           <Trash
             size={32}
             className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-4"
-            onClick={() => {
-              console.log("item", items);
-              console.log("id to be deleted", $id);
-              handleDelete();
-            }}
+            onClick={handleDelete}
           />
         </div>
       )}

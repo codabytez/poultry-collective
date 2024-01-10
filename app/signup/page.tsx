@@ -1,7 +1,11 @@
-'use client'
-import { NextPage } from "next";
+import { NextPage, Metadata } from "next";
 import SignUpForm from "@/components/SignUpForm";
 import { BottomNavbar } from "@/components/Navbar";
+
+export const metadata: Metadata = {
+  title: "Create Account",
+  description: "Create New Account",
+};
 
 const SignUp: NextPage = () => {
   return (

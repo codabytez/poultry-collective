@@ -1,30 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/app/hooks/useAuth";
+import { useUser } from "@/context/user";
 import Image from "next/image";
 import verifiedImg from "@/public/assets/verified.gif";
 import Button from "@/components/UI/Button";
 
 const VerifyPage = () => {
   const router = useRouter();
-  const { account } = useAuth();
+  const contextUser = useUser();
   const [isVerified, setIsVerified] = useState(false);
-
-  useEffect(() => {
-    const { userId, secret } = router.query ?? {};
-
-    if (account && userId && secret) {
-      account
-        .updateVerification(userId as string, secret as string)
-        .then((response: any) => {
-          console.log(response);
-          setIsVerified(true); // Set isVerified to true after successful verification
-          router.push("/"); // Redirect to home page after verification
-        })
-        .catch(console.error);
-    }
-  }, [account, router]);
 
   // Render a success message if the user is verified
   if (isVerified) {
@@ -41,12 +26,7 @@ const VerifyPage = () => {
         </div>
         <Image src={verifiedImg} alt="verified" />
 
-        <Button
-          color="green"
-          size="medium"
-          fullWidth
-          onClick={() => router.push("/")}
-        >
+        <Button size="md" fullWidth onClick={() => router.push("/")}>
           Continue
         </Button>
       </div>
@@ -66,5 +46,3 @@ const VerifyPage = () => {
     </div>
   );
 };
-
-export default VerifyPage;

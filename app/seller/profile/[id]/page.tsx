@@ -7,7 +7,7 @@ import useGetSellerProfileById from "@/hooks/useGetSellerProfileById";
 
 type Props = {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata({
@@ -25,7 +25,7 @@ export async function generateMetadata({
   };
 }
 
-const SellerProfilePage: NextPage<productDetailTypes> = ({ params }) => {
+const SellerProfilePage: NextPage<Props> = ({ params }) => {
   return <SellerProfile params={params} />;
 };
 

@@ -176,9 +176,13 @@ export type SelectInputProps = SelectHTMLAttributes<HTMLSelectElement> & {
   error?: string;
   register?: any;
   name?: string;
+  onBlur?: any;
 };
 
-export type InputProps = {
+export type InputProps = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
   label?: string;
   register?: any;
   error?: any;
@@ -198,6 +202,8 @@ export type InputProps = {
   isLoading?: boolean;
   iconColor?: string;
   iconSize?: number;
+  onBlur?: any;
+  showMaxLength?: boolean;
 };
 
 export type ToastProps = {
@@ -255,6 +261,8 @@ export type StarRatingProps = {
   color?: string;
   size?: number;
   onSetRating?: (rating: number) => void;
+  isCurrentUser?: boolean;
+  seller?: any;
 };
 
 export type StarProps = {
@@ -264,6 +272,7 @@ export type StarProps = {
   onHoverOut: () => void;
   color: string;
   size: number;
+  half?: boolean;
 };
 ///////////////////////
 //////////////////////

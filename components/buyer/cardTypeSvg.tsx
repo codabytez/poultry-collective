@@ -21,7 +21,7 @@ export const MasterCardIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1637)">
+    <g clipPath="url(#clip0_9_1637)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#311E02"
@@ -55,7 +55,7 @@ export const VisaIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1678)">
+    <g clipPath="url(#clip0_9_1678)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#0C1727"
@@ -113,10 +113,10 @@ export const VerveIcon = () => (
         stroke="none"
         strokeWidth="1"
         fill="none"
-        fill-rule="evenodd"
+        fillRule="evenodd"
       >
         {" "}
-        <g id="verve" fill-rule="nonzero">
+        <g id="verve" fillRule="nonzero">
           {" "}
           <rect
             id="Rectangle-path"
@@ -184,7 +184,7 @@ export const MaestroIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1646)">
+    <g clipPath="url(#clip0_9_1646)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#002333"
@@ -218,7 +218,7 @@ export const AmericanExpressIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1636)">
+    <g clipPath="url(#clip0_9_1636)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#08122B"
@@ -244,7 +244,7 @@ export const JCBIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1633)">
+    <g clipPath="url(#clip0_9_1633)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#001E33"
@@ -315,7 +315,7 @@ export const UnionPayIcon = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_9_1648)">
+    <g clipPath="url(#clip0_9_1648)">
       <path
         d="M0 2C0 0.895431 0.895431 0 2 0H22C23.1046 0 24 0.895431 24 2V14C24 15.1046 23.1046 16 22 16H2C0.89543 16 0 15.1046 0 14V2Z"
         fill="#2E050B"

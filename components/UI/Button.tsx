@@ -19,21 +19,21 @@ const Button: NextPage<ButtonProps> = ({
 }) => {
   const variantClasses = {
     primary:
-      "text-white bg-main-green-mg hover:bg-[#009E60] active:bg-main-green-mg-200 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400 ",
+      "text-white border-2 bg-main-green-mg hover:bg-[#009E60] active:bg-main-green-mg-200 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400 ",
     secondary:
-      "text-main-green-mg bg-white border-main-green-mg hover:text-white hover:border-[#009E6066] hover:bg-[#009E6066] active:bg-[#009E6066] active:text-cod-gray-cg-400 disabled:border-cod-gray-cg-300 disabled:text-cod-gray-cg-300 disabled:bg-white",
+      "text-main-green-mg border border-b-4 bg-white border-main-green-mg hover:text-white hover:border-[#009E6066] hover:bg-[#009E6066] active:bg-[#009E6066] active:text-cod-gray-cg-400 disabled:border-cod-gray-cg-300 disabled:text-cod-gray-cg-300 disabled:bg-white",
     "link-secondary":
-      "inline-flex py-3 p-6 justify-center items-center gap-2 rounded-lg border-0 border-transparent",
+      "inline-flex py-3 p-6 justify-center items-center rounded-lg border-0 border-transparent",
     "link-primary":
       "text-cod-gray text-base leading-5 font-normal border-0 border-transparent hover:text-main-green-mg transition-all",
   };
 
   const sizeClasses = {
-    sm: "py-2 px-4 border border-b-4",
+    sm: "py-2 px-4 border",
 
-    md: "py-3 px-6 rounded border-2 border-b-4",
+    md: "py-3 px-6 ",
 
-    lg: "py-4 px-8 border-2 border-b-4",
+    lg: "py-4 px-8 ",
   };
 
   const classNames = `relative flex items-center justify-center gap-5 ${

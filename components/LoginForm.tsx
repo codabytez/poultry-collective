@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Image from "next/image";
 import { Google } from "iconsax-react";
 import loginImg from "@/public/assets/login_eggs.png";
-import Link from "next/link";
+import { Link } from "nextjs13-progress";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,23 +11,26 @@ import Button from "./UI/Button";
 import { NextPage } from "next";
 import { Input } from "./UI/Input";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@/context/user";
 import { notify } from "./UI/Toast";
 import Loader from "./UI/Loader";
 import nProgress from "nprogress";
+import { FcGoogle } from "react-icons/fc";
+import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
+import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 
 const LoginForm: NextPage = () => {
   const router = useRouter();
   const contextUser = useUser();
-  const [email, setEmail] = useState<string | "">("");
-  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userLoading, setUserLoading] = useState<boolean>(false);
 
   const loginSchema = z.object({
-    email: z.string(),
-    password: z.string(),
+    email: z.string().email({ message: "Invalid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
   });
 
   const {
@@ -40,20 +44,13 @@ const LoginForm: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async () => {
-    if (email === "" || password === "") {
-      setError("email", {
-        message: "Please enter your email and password",
-      });
-      setError("password", {
-        message: "Please enter your email and password",
-      });
-      return;
-    }
+  const onSubmit = async (data: any) => {
+    const { email, password } = data;
     nProgress.start();
     setIsLoading(true);
     try {
       await contextUser.login(email, password);
+      reset();
     } catch (error) {
       // Check the error message to set the appropriate form error
       const errorMessage = (error as Error).message;
@@ -61,13 +58,6 @@ const LoginForm: NextPage = () => {
         setError("email", {
           message: "Invalid credentials. Please check the email and password.",
         });
-        notify({
-          message: "Invalid credentials. Please check the email and password.",
-          type: "error",
-          theme: "colored",
-          pauseOnHover: false,
-        });
-      } else if (errorMessage.includes("password")) {
         setError("password", {
           message:
             "P! Invalid credentials. Please check the email and password.",
@@ -77,12 +67,40 @@ const LoginForm: NextPage = () => {
           type: "error",
           theme: "colored",
           pauseOnHover: false,
+          autoClose: 2000,
+        });
+      } else if (errorMessage.includes("password")) {
+        setError("email", {
+          message: "Invalid credentials. Please check the email and password.",
+        });
+        setError("password", {
+          message:
+            "P! Invalid credentials. Please check the email and password.",
+        });
+        notify({
+          message: "Invalid credentials. Please check the email and password.",
+          type: "error",
+          theme: "colored",
+          pauseOnHover: false,
+          autoClose: 2000,
         });
       }
     } finally {
-      setEmail("");
-      setPassword("");
-      reset();
+      setTimeout(() => {
+        setIsLoading(false);
+        nProgress.done();
+      }, 2000);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    nProgress.start();
+    setIsLoading(true);
+    try {
+      await contextUser.signInWithGoogle();
+    } catch (error) {
+      console.log(error);
+    } finally {
       setTimeout(() => {
         setIsLoading(false);
         nProgress.done();
@@ -91,10 +109,23 @@ const LoginForm: NextPage = () => {
   };
 
   useEffect(() => {
-    if (contextUser.user) {
-      setUserLoading(true);
-      router.push("/");
-    }
+    const checkUser = async () => {
+      if (contextUser.user) {
+        setUserLoading(true);
+        const userProfile = await useGetProfileByUserId(contextUser?.user?.id);
+        if (userProfile?.role === "buyer") router.push("/buyer");
+        if (userProfile?.role === "seller") {
+          const sellerProfile = await useGetSellerProfileByUserId(
+            contextUser?.user?.id
+          );
+          if (sellerProfile?.id)
+            router.push(`/seller/profile/${sellerProfile.id}`);
+          else router.push("/seller");
+        } else router.push("/buyer");
+      }
+    };
+
+    checkUser();
   }, [contextUser, router]);
 
   return (
@@ -129,10 +160,6 @@ const LoginForm: NextPage = () => {
                   placeholder="e.g jackbauer24@ctu.email.com"
                   register={formRegister}
                   name="email"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setEmail(e.target.value);
-                    clearErrors("email");
-                  }}
                   error={errors.email}
                   disabled={isLoading}
                   fullWidth
@@ -144,14 +171,11 @@ const LoginForm: NextPage = () => {
                     placeholder="e.g REnee24*****"
                     register={formRegister}
                     name="password"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setPassword(e.target.value);
-                      clearErrors("password");
-                    }}
                     error={errors.password}
                     disabled={isLoading}
                     fullWidth
                   />
+                  {/* @ts-ignore */}
                   <Link
                     className="text-SC-03 font-normal text-cod-gray-cg-400"
                     href="/"
@@ -178,15 +202,15 @@ const LoginForm: NextPage = () => {
                   variant="secondary"
                   size="sm"
                   fullWidth
-                  //   onClick={signInWithGoogle}
+                  onClick={signInWithGoogle}
                   disabled={isLoading}
                 >
-                  <Google color="#0d5c3d" />
+                  <FcGoogle color="#0d5c3d" />
                   <span>Use your Google Account</span>
                 </Button>
 
                 <p className="text-SP-03 font-normal text-cod-gray-cg-400">
-                  Do you already have an account?{" "}
+                  Do you already have an account? {/* @ts-ignore */}
                   <Link className="underline" href="/signup">
                     Sign Up
                   </Link>

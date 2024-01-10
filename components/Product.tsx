@@ -21,15 +21,11 @@ import { Link } from "nextjs13-progress";
 const Product: NextPage<ProductProps> = (props) => {
   const contextUser = useUser();
   const Router = useRouter();
-  const { setProductsById, allProducts } = useProductStore();
-  const { addProductQuantity, removeProductQuantity } =
-    useUpdateProductQuantity();
+  const { removeProductQuantity } = useUpdateProductQuantity();
   const { isModalOpen, setIsModalOpen } = useGeneralStore();
-  const { cart, addToCart, removeFromCart, removeTempItem, loadUserCart } =
-    useCartStore();
+  const { cart, addToCart, loadUserCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const {
-    user_id,
     product_image,
     imageUrl,
     product_name,
@@ -40,9 +36,21 @@ const Product: NextPage<ProductProps> = (props) => {
     product_id,
     $id,
   } = props;
-  const [localQuantityAvailable, setLocalQuantityAvailable] =
-    useState<any>(quantity_available);
+
+  const [localQuantityAvailable, setLocalQuantityAvailable] = useState<
+    string | null
+  >(quantity_available);
   const addQty = 1;
+
+  useEffect(() => {
+    if (!isModalOpen && contextUser?.user) {
+      loadUserCart(contextUser?.user?.id);
+    }
+  }, [isModalOpen, loadUserCart, contextUser?.user]);
+
+  if (Number(localQuantityAvailable) < 3) {
+    return null;
+  }
 
   const fetchProductQuantity = async () => {
     try {
@@ -53,11 +61,9 @@ const Product: NextPage<ProductProps> = (props) => {
       }
       if (product) {
         setLocalQuantityAvailable(product.quantity_available);
-        console.log("product", product);
-        console.log("all products", allProducts);
       }
     } catch (error) {
-      console.error("error", error);
+      throw error;
     }
   };
 
@@ -75,28 +81,16 @@ const Product: NextPage<ProductProps> = (props) => {
       return;
     }
 
-    console.log(
-      props.product_name,
-      "before quantity",
-      quantity_available,
-      addQty
-    );
-
     try {
       await removeProductQuantity(
         props.$id,
         String(Number(quantity_available) - Number(addQty))
       );
-      console.log(
-        props.product_name,
-        "after quantity",
-        quantity_available,
-        addQty
-      );
+
       await fetchProductQuantity();
 
       await addToCart({
-        user_id,
+        user_id: contextUser?.user?.id,
         $id,
         quantity: String(addQty),
         product_weight,
@@ -106,8 +100,6 @@ const Product: NextPage<ProductProps> = (props) => {
       });
       if (contextUser.user) return loadUserCart(contextUser.user.id);
     } catch (error) {
-      console.error("Error adding to cart:", error);
-
       throw new Error("Failed to add the item to the cart. Please try again.");
     } finally {
       setTimeout(() => {
@@ -116,12 +108,6 @@ const Product: NextPage<ProductProps> = (props) => {
       }, 2000);
     }
   };
-
-  useEffect(() => {
-    if (!isModalOpen && contextUser?.user) {
-      loadUserCart(contextUser?.user?.id);
-    }
-  }, [isModalOpen, loadUserCart, contextUser?.user]);
 
   return (
     <>

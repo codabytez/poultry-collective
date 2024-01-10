@@ -17,7 +17,7 @@ const Modal: NextPage<ModalProps> = ({ children }) => {
 
   return (
     <div
-      className="fixed inset-x-0 top-[100px] flex justify-center pt-10 z-50 overflow-y-scroll"
+      className="fixed inset-x-0 top-[100px] flex justify-center pt-10 z-50 overflow-y-scroll w-screen"
       onClick={() => setIsModalOpen(false)}
     >
       <div

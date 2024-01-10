@@ -6,8 +6,11 @@ import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import { useState, useEffect } from "react";
 import Loader from "@/components/UI/Loader";
 
-function withRoleCheck(WrappedComponent: NextPage, allowedRoles: string[]) {
-  return function RoleCheck(props: any) {
+function withRoleCheck<P extends object>(
+  WrappedComponent: NextPage<P>,
+  allowedRoles: string[]
+) {
+  return function RoleCheck(props: P) {
     const router = useRouter();
     const { user } = useUser();
     const [userRole, setUserRole] = useState<string>("");

@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { cartItemProps } from "@/@types";
 import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
 import { useEffect, useState } from "react";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const CheckoutProduct: NextPage<cartItemProps> = (props) => {
   const { image, product_name, weight, quantity, price } = props;
@@ -34,7 +35,7 @@ const CheckoutProduct: NextPage<cartItemProps> = (props) => {
           {`${weight} ${product_name && product_name.split(" ").pop()}`}
 
           <span className="text-cod-gray-cg-600 text-SP-03 font-normal inline-block pl-2">
-            {quantity} creates
+            {quantity} {Number(quantity) > 1 ? "crates" : "crate"}
           </span>
         </h3>
 

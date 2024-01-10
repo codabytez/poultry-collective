@@ -2,6 +2,7 @@
 import { NextPage } from "next";
 import { useFormContext } from "@/context/seller";
 import { Input } from "../UI/Input";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const Step1: NextPage = () => {
   const { businessInfo, setBusinessInfo } = useFormContext();
@@ -42,6 +43,8 @@ const Step1: NextPage = () => {
         onChange={handleChange}
         name="address"
         inputType="textarea"
+        maxLength={50}
+        showMaxLength={true}
       />
 
       <Input
@@ -51,6 +54,8 @@ const Step1: NextPage = () => {
         value={businessInfo.city}
         onChange={handleChange}
         name="city"
+        maxLength={20}
+        showMaxLength={true}
       />
     </div>
   );

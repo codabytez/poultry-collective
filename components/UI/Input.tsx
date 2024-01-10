@@ -37,6 +37,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   inputSize = "sm",
   fullWidth = false,
   optionPlaceholder,
+  onBlur,
   name,
   register,
   error,
@@ -66,6 +67,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
         } ${disabled ? "cursor-not-allowed" : ""}}`}
         {...(props as any)}
         disabled={disabled}
+        onBlur={onBlur}
       >
         {optionPlaceholder && (
           <option className={`${optionColor}`} value="" disabled selected>
@@ -116,10 +118,13 @@ export function Input({
   disabled,
   onChange,
   placeholder,
+  onBlur,
   variant = "default",
   inputSize = "sm",
   inputType = "input",
   fullWidth = false,
+  maxLength,
+  showMaxLength = false,
   rows,
   ...props
 }: InputProps) {
@@ -156,7 +161,9 @@ export function Input({
         {inputType === "input" ? (
           <>
             <input
-              {...(register ? register(name) : {})}
+              {...(register ? register(name) : { value, onChange })}
+              {...(onChange && { onChange })}
+              {...(value && { value })}
               type={
                 type === "password"
                   ? showPassword
@@ -165,8 +172,7 @@ export function Input({
                   : type
               }
               name={name}
-              value={value}
-              onChange={onChange}
+              maxLength={maxLength}
               className={`w-full outline-none hide-caret ${
                 disabled ?? isLoading
                   ? "cursor-not-allowed bg-transparent"
@@ -176,7 +182,12 @@ export function Input({
               disabled={isLoading ?? disabled}
               {...props}
             />
-            {type === "password" && ( // add this block
+            {showMaxLength && (
+              <p
+                style={{ position: "absolute", bottom: 0, right: 0 }}
+              >{`${value?.length}/${maxLength}`}</p>
+            )}
+            {type === "password" && (
               <div
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
@@ -187,7 +198,7 @@ export function Input({
           </>
         ) : (
           <textarea
-            {...(register ? register(name) : {})}
+            {...(register ? register(name) : { value, onChange })}
             className={`w-full outline-none hide-caret resize-none ${
               disabled ?? isLoading
                 ? "cursor-not-allowed bg-transparent"
@@ -196,13 +207,17 @@ export function Input({
             placeholder={placeholder ?? "placeholder"}
             disabled={isLoading ?? disabled}
             name={name}
-            value={value}
-            onChange={onChange}
+            maxLength={maxLength}
             {...props}
             style={{
               height: rows ? `${rows - 32}px` : "100px",
             }}
           />
+        )}
+        {showMaxLength && (
+          <p
+            style={{ position: "absolute", bottom: 0, right: 0 }}
+          >{`${value?.length}/${maxLength}`}</p>
         )}
         <style jsx>{`
           input:-webkit-autofill,
@@ -217,7 +232,6 @@ export function Input({
             -webkit-text-fill-color: ${variant === "default"
               ? "#6C757D"
               : "#fff"};
-            //this transition actually does nothing, its a fallback for older chrome browswers
             transition: background-color 5000s ease-in-out 0s;
             box-shadow: inset 0 0 20px 20px transparent;
           }

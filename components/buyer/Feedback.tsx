@@ -7,12 +7,16 @@ import { notify } from "../UI/Toast";
 import Loader from "../UI/Loader";
 import { useRouter } from "next/navigation";
 import nProgress from "nprogress";
+import withRoleCheck from "@/helpers/withRoleCheck";
+import { NextPage } from "next";
 
-const Feedback: React.FC<{
+interface FeedbackProps {
   feedback: boolean | null;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ feedback, isOpen, setIsOpen }) => {
+}
+
+const Feedback: NextPage<FeedbackProps> = ({ feedback, isOpen, setIsOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -39,19 +43,20 @@ const Feedback: React.FC<{
     }
   };
 
-
   return (
-    <>{
-      isOpen ?
+    <>
+      {isOpen ? (
         <div className="fixed top-0 left-0 w-full h-full bg-white flex justify-center items-center z-50 overflow-hidden">
-          {isLoading ? <Loader /> :
+          {isLoading ? (
+            <Loader />
+          ) : (
             <div className="w-[638px] shadow-[0px_4px_4px_rgba(0_0_0_0.25)] h-[612px] rounded-xl bg-white flex flex-col gap-10 justify-center items-center">
               <h4 className="text-H3-03 text-cod-gray-cg-600 font-semibold">
                 {feedback
                   ? "Your order was successful "
                   : "Your order was unsuccessful "}
               </h4>
-              <div className='w-[180px] h-[180px] flex justify-center items-center relative'>
+              <div className="w-[180px] h-[180px] flex justify-center items-center relative">
                 <Image
                   src={feedback ? successFeedback : errorFeedback}
                   alt={feedback ? "success" : "error"}
@@ -79,11 +84,12 @@ const Feedback: React.FC<{
                   {feedback ? "Save Receipt" : "Contact Support"}
                 </Button>
               </div>
-            </div>}
-        </div> : null
-    }</>
-
+            </div>
+          )}
+        </div>
+      ) : null}
+    </>
   );
 };
 
-export default Feedback;
+export default withRoleCheck(Feedback, ["buyer"]);

@@ -24,6 +24,7 @@ import {
   VerveIcon,
   VisaIcon,
 } from "./cardTypeSvg";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 creditCardType.addCard({
   niceType: "Verve",
@@ -53,16 +54,9 @@ creditCardType.changeOrder("verve", 0);
 
 const Checkout: NextPage = () => {
   const contextUser = useUser();
-  const router = useRouter();
   const { cart, deleteAllCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
-  const [country, setCountry] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [cardType, setCardType] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -96,7 +90,7 @@ const Checkout: NextPage = () => {
       }, "Card type is not valid"),
     expiryDate: z
       .string()
-      .min(5, "Expiry date must be at least 4 characters long"),
+      .min(4, "Expiry date must be at least 4 characters long"),
     cvv: z
       .string()
       .min(2, { message: "CVV is required" })
@@ -107,7 +101,9 @@ const Checkout: NextPage = () => {
     register: registerCheckout,
     handleSubmit,
     setError,
+    setValue,
     reset,
+    watch,
     clearErrors,
     formState: { errors },
   } = useForm({
@@ -124,28 +120,17 @@ const Checkout: NextPage = () => {
       return setIsOpen(true);
     } else {
       setFeedback(true);
-      if (!contextUser.user) {
-        return;
-      }
+      setIsOpen(true);
+      if (!contextUser.user) return;
+
       try {
         await deleteAllCart(contextUser?.user?.id);
-        console.log("deleted");
+        setIsOpen(true);
         reset();
-        setCity("");
-        setAddress("");
-        setCountry("");
-        setEmail("");
-        setPhone("");
-        setCardName("");
-        setCardNumber("");
-        setCardType("");
-        setExpiryDate("");
-        setCvv("");
       } catch (error) {
-        console.log(error);
+        throw error;
       } finally {
         setIsLoading(false);
-        return setIsOpen(true);
       }
     }
   };
@@ -187,8 +172,6 @@ const Checkout: NextPage = () => {
   if (!contextUser.user) {
     return (
       <MainLayout>
-
-
         <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)]">
           <h3 className="text-H3-03 font-semibold text-center mb-4">
             You are not logged in
@@ -196,7 +179,7 @@ const Checkout: NextPage = () => {
           <p className="text-SP-03 text-center mb-8">
             Please, login to continue
           </p>
-          <Button size="lg" fullWidth onClick={() => router.push("/login")}>
+          <Button size="lg" href="/login">
             Login
           </Button>
         </div>
@@ -218,7 +201,7 @@ const Checkout: NextPage = () => {
             Go to Shop
           </Button>
         </div>
-      ) :
+      ) : (
         <>
           <form
             className="mb-16 flex gap-24"
@@ -227,7 +210,7 @@ const Checkout: NextPage = () => {
           >
             <section className="w-[652px] shrink-0 flex flex-col gap-6 ">
               {cart.map((product) => (
-                <CheckoutProduct key={product.id} {...product} />
+                <CheckoutProduct key={product.$id} {...product} />
               ))}
             </section>
 
@@ -286,13 +269,13 @@ const Checkout: NextPage = () => {
                       fullWidth
                       placeholder="Country"
                       register={registerCheckout}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setCountry(e.target.value);
-                        clearErrors("country");
-                      }}
                       name="country"
                       error={errors.country}
                       disabled={isLoading}
+                      onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                        setValue("country", e.target.value);
+                        clearErrors("country");
+                      }}
                     />
 
                     <Input
@@ -301,11 +284,6 @@ const Checkout: NextPage = () => {
                       placeholder="City"
                       fullWidth
                       register={registerCheckout}
-                      value={city}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setCity(e.target.value);
-                        clearErrors("city");
-                      }}
                       error={errors.city}
                       disabled={isLoading}
                     />
@@ -317,11 +295,6 @@ const Checkout: NextPage = () => {
                       inputType="textarea"
                       fullWidth
                       register={registerCheckout}
-                      value={address}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setAddress(e.target.value);
-                        clearErrors("address");
-                      }}
                       error={errors.address}
                       disabled={isLoading}
                     />
@@ -343,11 +316,6 @@ const Checkout: NextPage = () => {
                       placeholder="Email Address"
                       fullWidth
                       register={registerCheckout}
-                      value={email}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setEmail(e.target.value);
-                        clearErrors("email");
-                      }}
                       error={errors.email}
                       disabled={isLoading}
                     />
@@ -358,11 +326,6 @@ const Checkout: NextPage = () => {
                       placeholder="Phone Number"
                       fullWidth
                       register={registerCheckout}
-                      value={phone}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setPhone(e.target.value);
-                        clearErrors("phone");
-                      }}
                       error={errors.phone}
                       disabled={isLoading}
                     />
@@ -374,8 +337,8 @@ const Checkout: NextPage = () => {
                     Delivery Fees: ${deliveryFee.toLocaleString()}
                   </h4>
                   <h6 className="text-cod-gray-cg-600 text-H6-03 w-[342.32px]">
-                    Delivery fees are determind by product quantity, weight and your
-                    location distance.
+                    Delivery fees are determind by product quantity, weight and
+                    your location distance.
                   </h6>
                 </div>
               </div>
@@ -392,11 +355,6 @@ const Checkout: NextPage = () => {
                     placeholder="Name on Card"
                     fullWidth
                     register={registerCheckout}
-                    value={cardName}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      setCardName(e.target.value);
-                      clearErrors("cardName");
-                    }}
                     error={errors.cardName}
                     disabled={isLoading}
                   />
@@ -437,7 +395,9 @@ const Checkout: NextPage = () => {
                         if (cardType[0]) {
                           setCardType(cardType[0].type);
                         }
-                        value = value.replace(/\W/gi, "").replace(/(.{4})/g, "$1 ");
+                        value = value
+                          .replace(/\W/gi, "")
+                          .replace(/(.{4})/g, "$1 ");
                       } else {
                         setCardType("");
                       }
@@ -514,10 +474,11 @@ const Checkout: NextPage = () => {
               </div>
             </section>
           </form>
-          <Feedback isOpen={isOpen} setIsOpen={setIsOpen} feedback={feedback} />
-        </>}
+        </>
+      )}
+      <Feedback isOpen={isOpen} setIsOpen={setIsOpen} feedback={feedback} />
     </MainLayout>
   );
 };
 
-export default Checkout;
+export default withRoleCheck(Checkout, ["buyer"]);

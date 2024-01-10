@@ -15,6 +15,7 @@ import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useCreateProfile from "@/hooks/useCreateProfile";
 import { usePathname } from "next/navigation";
 import Loader from "@/components/UI/Loader";
+import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 
 const userContext = createContext<userContextProps | null>(null);
 
@@ -72,9 +73,11 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
 
       await checkUser();
 
-      router.push("/select-role");
+      router.push("/signup/select-role");
     } catch (e) {
-      throw e;
+      if ((e as { code?: number }).code === 409)
+        throw { message: "Email already exists.", code: 409 };
+      throw new Error("Error creating user. Please try again.");
     }
   };
 
@@ -83,7 +86,16 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     try {
       await account.createEmailSession(email, password);
       await checkUser();
-      router.push("/");
+      if (user?.id) {
+        const userProfile = await useGetProfileByUserId(user?.id);
+        if (userProfile?.role === "buyer") router.push("/buyer");
+        if (userProfile?.role === "seller") {
+          const sellerProfile = await useGetSellerProfileByUserId(user?.id);
+          if (sellerProfile?.id)
+            router.push(`/seller/profile/${sellerProfile.id}`);
+          else router.push("/seller");
+        } else router.push("/buyer");
+      }
     } catch (e) {
       throw e;
     }
@@ -103,13 +115,22 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      account.createOAuth2Session(
+      await account.createOAuth2Session(
         "google",
         "http://localhost:3000/",
         "http://localhost:3000/login"
       );
       await checkUser();
-      router.push("/");
+      if (user?.id) {
+        const userProfile = await useGetProfileByUserId(user?.id);
+        if (userProfile?.role === "buyer") router.push("/buyer");
+        if (userProfile?.role === "seller") {
+          const sellerProfile = await useGetSellerProfileByUserId(user?.id);
+          if (sellerProfile?.id)
+            router.push(`/seller/profile/${sellerProfile.id}`);
+          else router.push("/seller");
+        } else router.push("/buyer");
+      }
     } catch (e) {
       throw e;
     }

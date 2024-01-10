@@ -11,6 +11,7 @@ import { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import nProgress from "nprogress";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const CartItem: NextPage<cartItemProps> = (props) => {
   const {
@@ -97,7 +98,9 @@ const CartItem: NextPage<cartItemProps> = (props) => {
             <h4>
               {weight}kg {product_name && product_name.split(" ").pop()}
             </h4>
-            <h5 className=" text-H5-03 font-semibold">{quantity} Crate(s)</h5>
+            <h5 className=" text-H5-03 font-semibold">
+              {quantity} {Number(quantity) > 1 ? "crates" : "crate"}
+            </h5>
             <h4>${Number(price).toString()}</h4>
           </div>
 

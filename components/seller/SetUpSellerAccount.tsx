@@ -113,22 +113,23 @@ const SetupAccPage: NextPage = () => {
           contextUser?.user?.id
         );
 
-        if (sellerProfile) {
-          await useUpdateSellerBankDetails(
-            sellerProfile?.id,
-            bankDetails.bankName,
-            bankDetails.accountNumber
-          );
-        }
+        if (!sellerProfile) throw new Error("Seller profile not found");
+
+        await useUpdateSellerBankDetails(
+          sellerProfile?.id,
+          bankDetails.bankName,
+          bankDetails.accountNumber
+        );
 
         await setCurrentSellerProfile(contextUser?.user?.id);
 
         console.log(currentSellerProfile);
+
+        router.push("/seller");
       } catch (e) {
         console.log(e);
       } finally {
         setTimeout(() => {
-          router.push("/seller/");
           setLoading(false);
           nProgress.done();
         }, 2000);

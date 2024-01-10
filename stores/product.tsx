@@ -12,7 +12,7 @@ type ProductStore = {
   productsBySeller: any[];
   productsById: any | null;
   setAllProducts: () => Promise<void>;
-  setProductsBySeller: (userId: string) => Promise<void>;
+  setProductsBySeller: (SellerId: string) => Promise<void>;
   setProductsById: (productId: string) => Promise<void>;
   deleteProduct: (productId: string, currentImages: string[]) => Promise<void>;
 };
@@ -36,8 +36,8 @@ export const useProductStore = create<ProductStore>()(
           set({ allProducts: result });
         },
 
-        setProductsBySeller: async (userId: string) => {
-          const products = await useGetProductBySeller(userId);
+        setProductsBySeller: async (SellerId: string) => {
+          const products = await useGetProductBySeller(SellerId);
           const productsWithUrls = await Promise.all(
             products.map(async (product) => {
               const url = await useCreateBucketUrl(product.product_image[0]);

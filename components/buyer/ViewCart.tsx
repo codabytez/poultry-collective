@@ -10,6 +10,7 @@ import { useCartStore } from "@/stores/cart";
 import { useProductStore } from "@/stores/product";
 import { useGeneralStore } from "@/stores/general";
 import { useUser } from "@/context/user";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const ViewCart: NextPage = () => {
   const contextUser = useUser();
@@ -33,7 +34,7 @@ const ViewCart: NextPage = () => {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart]);
+  }, []);
 
   return (
     <MainLayout>
@@ -74,4 +75,4 @@ const ViewCart: NextPage = () => {
   );
 };
 
-export default ViewCart;
+export default withRoleCheck(ViewCart, ["buyer"]);

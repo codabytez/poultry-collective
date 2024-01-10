@@ -9,6 +9,7 @@ import { useGeneralStore } from "@/stores/general";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user";
 import nProgress from "nprogress";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const CartModal: NextPage<CartModalProps> = ({
   items,
@@ -61,6 +62,7 @@ const CartModal: NextPage<CartModalProps> = ({
           size="lg"
           onClick={() => setIsModalOpen(false)}
           isLoading={isLoading}
+          disabled={isLoading}
         >
           Continue Shopping
         </Button>
@@ -86,11 +88,21 @@ const CartModal: NextPage<CartModalProps> = ({
         ))}
       </div>
       <div className="flex justify-evenly gap-10 flex-1 mt-7">
-        <Button size="lg" onClick={handleViewCart}>
+        <Button
+          size="lg"
+          isLoading={isLoading}
+          disabled={isLoading}
+          onClick={handleViewCart}
+        >
           View Cart
         </Button>
 
-        <Button size="lg" onClick={handleCheckout}>
+        <Button
+          size="lg"
+          isLoading={isLoading}
+          disabled={isLoading}
+          onClick={handleCheckout}
+        >
           Checkout
         </Button>
       </div>

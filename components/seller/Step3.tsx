@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Image as Icon } from "iconsax-react";
 import Image from "next/image";
 import { Input, SelectInput } from "../UI/Input";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const Step3: NextPage = () => {
   const { bankDetails, setBankDetails } = useFormContext();

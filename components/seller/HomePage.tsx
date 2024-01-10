@@ -68,20 +68,20 @@ const SellerHomePage: NextPage = () => {
 
       if (!sellerProfile) throw new Error("Seller profile not found");
 
-      if (bioAndBanner.bannerImage.raw) {
-        const res = await useChangeSellerBanner(
-          bioAndBanner.bannerImage.raw,
-          String(process.env.NEXT_PUBLIC_DEFAULT_SELLER_AVATAR)
-        );
-        bioAndBanner.bannerImage &&
-          (await useUpdateSellerBanner(sellerProfile?.id, res));
-      }
+      // if (bioAndBanner.bannerImage.raw) {
+      //   const res = await useChangeSellerBanner(
+      //     bioAndBanner.bannerImage.raw,
+      //     String(process.env.NEXT_PUBLIC_DEFAULT_SELLER_AVATAR)
+      //   );
+      //   bioAndBanner.bannerImage &&
+      //     (await useUpdateSellerBanner(sellerProfile?.id, res));
+      // }
 
       await setCurrentSellerProfile(contextUser?.user?.id);
 
       bioAndBanner.bio &&
         (await useUpdateSellerBio(sellerProfile?.id, bioAndBanner.bio));
-      bankDetails &&
+      bankDetails.bankName &&
         (await useUpdateSellerBankDetails(
           sellerProfile?.id,
           bankDetails.bankName,
@@ -216,8 +216,8 @@ const SellerHomePage: NextPage = () => {
                   <Icon size="32" color="#CED4DA" />
 
                   <p className="text-SP-03 text-cod-gray-cg-600 font-normal">
-                    {bankDetails.validIdImage.raw ? (
-                      bankDetails.validIdImage.raw?.name
+                    {bankDetails?.validIdImage?.raw ? (
+                      bankDetails?.validIdImage?.raw?.name
                     ) : (
                       <>
                         Upload a valid ID

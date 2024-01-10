@@ -1,6 +1,11 @@
-import { NextPage } from "next";
+import { NextPage, Metadata } from "next";
 import LoginForm from "@/components/LoginForm";
 import { BottomNavbar } from "@/components/Navbar";
+
+export const meta: Metadata = {
+  title: "Login Page",
+  description: "Login to your account",
+};
 
 const Login: NextPage = () => {
   return (

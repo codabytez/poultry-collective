@@ -5,6 +5,7 @@ import { Image as Icon } from "iconsax-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Input } from "../UI/Input";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const Step2: NextPage = () => {
   const { bioAndBanner, setBioAndBanner } = useFormContext();
@@ -40,7 +41,6 @@ const Step2: NextPage = () => {
         }));
         URL.revokeObjectURL(objectUrl); // Revoke the URL after it's used
       }
-      console.log(bioAndBanner);
     } else {
       setBioAndBanner((prev: string[]) => ({
         ...prev,
@@ -59,6 +59,8 @@ const Step2: NextPage = () => {
         onChange={handleChange}
         name="bio"
         inputType="textarea"
+        maxLength={50}
+        showMaxLength={true}
       />
 
       <label

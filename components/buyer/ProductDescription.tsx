@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { notify } from "../UI/Toast";
 import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
 import { LoadingSkeleton } from "../UI/LoadingSkeleton";
+import withRoleCheck from "@/helpers/withRoleCheck";
 
 const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
   const contextUser = useUser();
@@ -173,8 +174,8 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
         ) : (
           <div className="flex flex-wrap gap-4">
             {allProducts
-              .filter((item) => item.$id !== params.productid) // Exclude the current product
-              .slice(0, 3) // Get the first 3 products
+              .filter((item) => item.$id !== params.productid)
+              .slice(0, 3)
               .map((item) => (
                 <Product key={item.$id} {...item} />
               ))}
@@ -185,4 +186,4 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
   );
 };
 
-export default ProductDescription;
+export default withRoleCheck(ProductDescription, ["buyer"]);

@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Image from "next/image";
-import { Google } from "iconsax-react";
 import signupImg from "@/public/assets/signup_eggs.png";
-import Link from "next/link";
+import { Link } from "nextjs13-progress";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,18 +12,16 @@ import { Input } from "./UI/Input";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useUser } from "@/context/user";
-import { CustomError } from "@/@types";
 import { notify } from "./UI/Toast";
 import Loader from "./UI/Loader";
 import nProgress from "nprogress";
+import { FcGoogle } from "react-icons/fc";
+import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
+import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 
 const SignUpForm: NextPage = () => {
   const router = useRouter();
   const contextUser = useUser();
-  const [fullName, setFullName] = useState<string | "">("");
-  const [email, setEmail] = useState<string | "">("");
-  const [password, setPassword] = useState<string | "">("");
-  const [confirmPassword, setConfirmPassword] = useState<string | "">("");
   const [isLoading, setIsLoading] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -61,21 +59,28 @@ const SignUpForm: NextPage = () => {
     formState: { errors },
     reset,
     clearErrors,
+    setError,
   } = useForm({
     resolver: zodResolver(signUpSchema),
   });
 
   type FormData = z.infer<typeof signUpSchema>;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
+    const { fullName, email, password, confirmPassword } = data as FormData;
+    if (password !== confirmPassword) {
+      setError("confirmPassword", {
+        message: "Passwords do not match",
+      });
+      return;
+    }
     setIsLoading(true);
     nProgress.start();
     try {
       await contextUser.register(email, password, fullName);
-      router.push("/");
       reset();
     } catch (error) {
-      if ((error as CustomError).type === "user_already_exists") {
+      if ((error as { message?: string; code?: number }).code === 409) {
         notify({
           message: "User already exists",
           type: "error",
@@ -83,10 +88,13 @@ const SignUpForm: NextPage = () => {
           pauseOnHover: false,
         });
         reset();
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setFullName("");
+      } else {
+        notify({
+          message: "An error occurred. Please try again.",
+          type: "error",
+          theme: "colored",
+          pauseOnHover: false,
+        });
       }
     } finally {
       setTimeout(() => {
@@ -96,11 +104,44 @@ const SignUpForm: NextPage = () => {
     }
   };
 
-  useEffect(() => {
-    if (contextUser.user) {
-      setUserLoading(true);
-      router.push("/");
+  const signInWithGoogle = async () => {
+    try {
+      setIsLoading(true);
+      nProgress.start();
+      await contextUser.signInWithGoogle();
+    } catch (error) {
+      notify({
+        message: "An error occurred. Please try again.",
+        type: "error",
+        theme: "colored",
+        pauseOnHover: false,
+      });
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        nProgress.done();
+      }, 1000);
     }
+  };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      if (contextUser.user) {
+        setUserLoading(true);
+        const userProfile = await useGetProfileByUserId(contextUser?.user?.id);
+        if (userProfile?.role === "buyer") router.push("/buyer");
+        if (userProfile?.role === "seller") {
+          const sellerProfile = await useGetSellerProfileByUserId(
+            contextUser?.user?.id
+          );
+          if (sellerProfile?.id)
+            router.push(`/seller/profile/${sellerProfile.id}`);
+          else router.push("/seller");
+        } else router.push("/signup/select-role");
+      }
+    };
+
+    checkUser();
   }, [contextUser, router]);
 
   return (
@@ -136,11 +177,6 @@ const SignUpForm: NextPage = () => {
                   name="fullName"
                   type="text"
                   placeholder="e.g John Doe"
-                  value={fullName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setFullName(e.target.value);
-                    clearErrors("fullName");
-                  }}
                   disabled={isLoading}
                   fullWidth
                 />
@@ -152,11 +188,6 @@ const SignUpForm: NextPage = () => {
                   name="email"
                   type="email"
                   placeholder="e.g jackbauer24@ctu.email.com"
-                  value={email}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setEmail(e.target.value);
-                    clearErrors("email");
-                  }}
                   disabled={isLoading}
                   fullWidth
                 />
@@ -168,10 +199,6 @@ const SignUpForm: NextPage = () => {
                   name="password"
                   type="password"
                   placeholder="e.g REnee24*****"
-                  value={password}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
                   disabled={isLoading}
                   fullWidth
                 />
@@ -183,11 +210,6 @@ const SignUpForm: NextPage = () => {
                   name="confirmPassword"
                   type="password"
                   placeholder="e.g REnee24*****"
-                  value={confirmPassword}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setConfirmPassword(e.target.value);
-                    clearErrors("confirmPassword");
-                  }}
                   disabled={isLoading}
                   fullWidth
                 />
@@ -238,14 +260,14 @@ const SignUpForm: NextPage = () => {
                   size="sm"
                   fullWidth
                   disabled={isLoading}
-                  //   onClick={signInWithGoogle}
+                  onClick={signInWithGoogle}
                 >
-                  <Google color="#0d5c3d" />
+                  <FcGoogle />
                   <span>Use your Google Account</span>
                 </Button>
 
                 <p className="text-SP-03 font-normal text-cod-gray-cg-400">
-                  Do you already have an account?{" "}
+                  Do you already have an account? {/* @ts-ignore */}
                   <Link className="underline" href="/login">
                     Login
                   </Link>
