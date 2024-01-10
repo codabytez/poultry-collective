@@ -2,7 +2,7 @@ import { NextPage, Metadata } from "next";
 import LoginForm from "@/components/LoginForm";
 import { BottomNavbar } from "@/components/Navbar";
 
-export const meta: Metadata = {
+export const metadata: Metadata = {
   title: "Login Page",
   description: "Login to your account",
 };

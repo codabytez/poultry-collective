@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import type { Metadata } from "next";
 import { Next13NProgress } from "nextjs13-progress";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
           height={3}
           showOnShallow={true}
         />
+        <SpeedInsights />
       </body>
     </html>
   );

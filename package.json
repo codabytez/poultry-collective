@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
+    "@vercel/speed-insights": "^1.0.2",
     "appwrite": "^13.0.1",
     "credit-card-type": "^10.0.0",
     "cropperjs": "^1.6.1",
