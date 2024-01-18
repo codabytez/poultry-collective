@@ -114,8 +114,9 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   };
 
   const signInWithGoogle = async () => {
+    const currentDomain = process.env.NEXT_PUBLIC_WEBSITE_URL;
     try {
-      await account.createOAuth2Session("google", "", "");
+      await account.createOAuth2Session("google", `${currentDomain}`, `${currentDomain}/login`);
       await checkUser();
       if (user?.id) {
         const userProfile = await useGetProfileByUserId(user?.id);
