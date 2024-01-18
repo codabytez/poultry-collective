@@ -11,6 +11,7 @@ import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 import nProgress from "nprogress";
 import { useCartStore } from "@/stores/cart";
+import { Link } from "nextjs13-progress";
 
 export const Navbar: NextPage = () => {
   const contextUser = useUser();
@@ -60,17 +61,18 @@ export const Navbar: NextPage = () => {
               Start Selling
             </h5>
           </Button>
-          <div className="border-main-green-mg relative">
+          {/* @ts-ignore */}
+          <Link
+            href="/buyer/viewcart"
+            className="border-main-green-mg relative"
+          >
             {contextUser?.user && (
-              <Button
-                href="/buyer/viewcart"
-                className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-main-green-mg text-white text-xs flex justify-center items-center"
-              >
+              <Button className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-main-green-mg text-white text-xs flex justify-center items-center">
                 {cart?.length}
               </Button>
             )}
             <ShoppingCart color="#0D5C3D" />
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -98,19 +100,21 @@ export const BottomNavbar: NextPage = () => {
 
   return (
     <div className="flex items-center justify-between gap-10 px-16 py-4 m-auto max-w-[1436px] bg-white">
-      <Logo />
+      {/* @ts-ignore */}
+      <Link href="/">
+        <Logo />
+      </Link>
       <div className="flex gap-16 text-H6-01 text-base text-cod-gray-cg-500">
-        <Button variant="link-primary" href="/buyer">
+        <Button variant="link-primary" href="#shopAsGuest">
           Product
         </Button>
 
-        <Button variant="link-primary" href="/">
+        <Button variant="link-primary" href="#howItWorks">
           How It Works
         </Button>
         <div className="flex justify-center items-center gap-1 hover:text-main-green-mg transition-all cursor-pointer">
-          <Button variant="link-primary" href="/">
+          <Button variant="link-primary" href="#help">
             Help
-            <ArrowDown2 color="#292D32" />
           </Button>
         </div>
       </div>

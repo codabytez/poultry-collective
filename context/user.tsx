@@ -115,11 +115,7 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
 
   const signInWithGoogle = async () => {
     try {
-      await account.createOAuth2Session(
-        "google",
-        "http://localhost:3000/",
-        "http://localhost:3000/login"
-      );
+      await account.createOAuth2Session("google", "", "");
       await checkUser();
       if (user?.id) {
         const userProfile = await useGetProfileByUserId(user?.id);

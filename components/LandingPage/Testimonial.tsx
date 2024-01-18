@@ -5,7 +5,10 @@ import { testimony } from "./testimony";
 const Testimonial: NextPage = () => {
   return (
     <>
-      <section className="mt-[150px] mb-16 py-16 bg-light-green-shade px-5">
+      <section
+        id="help"
+        className="mt-[150px] mb-16 py-16 bg-light-green-shade px-5"
+      >
         <h2 className="text-H2-03 text-cod-gray-cg text-center">
           Don’t take our word for it
         </h2>

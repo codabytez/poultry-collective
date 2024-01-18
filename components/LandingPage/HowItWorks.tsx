@@ -5,7 +5,7 @@ import { Moneys, ShoppingCart, UserEdit } from "iconsax-react";
 
 const HowItWorks: NextPage = () => {
   return (
-    <section className="px-16 w-full max-w-[1312px] m-auto">
+    <section id="howItWorks" className="px-16 w-full max-w-[1312px] m-auto">
       <div className=" m-auto bg-light-green-shade p-16 flex flex-col items-center justify-center gap-8">
         <h2 className=" text-H2-03 text-center">How it works</h2>
         <div className="flex flex-1 gap-6 m-auto justify-center">
@@ -39,7 +39,9 @@ const HowItWorks: NextPage = () => {
             </p>
           </div>
         </div>
-          <Button href="/signup" size="lg">Get Started</Button>
+        <Button href="/signup" size="lg">
+          Get Started
+        </Button>
       </div>
     </section>
   );
