@@ -50,8 +50,8 @@ const Feedback: NextPage<FeedbackProps> = ({ feedback, isOpen, setIsOpen }) => {
           {isLoading ? (
             <Loader />
           ) : (
-            <div className="w-[638px] shadow-[0px_4px_4px_rgba(0_0_0_0.25)] h-[612px] rounded-xl bg-white flex flex-col gap-10 justify-center items-center">
-              <h4 className="text-H3-03 text-cod-gray-cg-600 font-semibold">
+            <div className="w-full sm:w-[638px] shadow-[0px_4px_4px_rgba(0_0_0_0.25)] h-[612px] rounded-xl bg-white flex flex-col gap-10 justify-center items-center">
+              <h4 className="text-H4-03 sm:text-H3-03 text-cod-gray-cg-600 font-semibold text-center sm:text-start">
                 {feedback
                   ? "Your order was successful "
                   : "Your order was unsuccessful "}

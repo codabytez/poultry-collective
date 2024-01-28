@@ -27,14 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={redHatDisplay.variable}>
+      <body className={`min-w-[340px] ${redHatDisplay.variable}`}>
         <FormProvider>
           <UserProvider>{children}</UserProvider>
         </FormProvider>
         <ToastContainer />
         <Next13NProgress
           color="#0d5c3d"
-          startPosition={0.3}
+          startPosition={30}
           stopDelayMs={50}
           height={3}
           showOnShallow={true}

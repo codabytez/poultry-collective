@@ -20,8 +20,12 @@ const Button: NextPage<ButtonProps> = ({
   const variantClasses = {
     primary:
       "text-white border-2 bg-main-green-mg hover:bg-[#009E60] active:bg-main-green-mg-200 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400 ",
+    destructivePrimary:
+      "text-white border-2 bg-red-500/40 hover:bg-red-600/30 active:bg-red-400/40 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400 ",
     secondary:
       "text-main-green-mg border border-b-4 bg-white border-main-green-mg hover:text-white hover:border-[#009E6066] hover:bg-[#009E6066] active:bg-[#009E6066] active:text-cod-gray-cg-400 disabled:border-cod-gray-cg-300 disabled:text-cod-gray-cg-300 disabled:bg-white",
+    destructiveSecondary:
+      "text-red-500 border border-b-4 bg-white border-red-500/40 hover:text-white hover:border-red-600/40 hover:bg-red-600/30 active:bg-red-400/40 active:text-cod-gray-cg-500 disabled:border-cod-gray-cg-300 disabled:text-cod-gray-cg-300 disabled:bg-white",
     "link-secondary":
       "inline-flex py-3 p-6 justify-center items-center rounded-lg border-0 border-transparent",
     "link-primary":
@@ -36,7 +40,7 @@ const Button: NextPage<ButtonProps> = ({
     lg: "py-4 px-8 ",
   };
 
-  const classNames = `relative flex items-center justify-center gap-5 ${
+  const classNames = `relative transition-all duration-200 flex items-center justify-center gap-5 ${
     fullWidth ? "w-full" : "w-max"
   } h-auto font-sans ${variantClasses[variant]} ${sizeClasses[size]}`;
 

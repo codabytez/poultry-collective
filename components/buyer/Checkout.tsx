@@ -2,65 +2,29 @@
 import { NextPage } from "next";
 import CheckoutProduct from "./CheckoutProduct";
 import MainLayout from "@/layouts/MainLayout";
-import { countries } from "../countries";
 import Feedback from "./Feedback";
 import Button from "../UI/Button";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import { useUser } from "@/context/user";
 import { useCartStore } from "@/stores/cart";
-import { Input, SelectInput } from "../UI/Input";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import creditCardType from "credit-card-type";
-import {
-  AmericanExpressIcon,
-  DefaultIcon,
-  JCBIcon,
-  MaestroIcon,
-  MasterCardIcon,
-  UnionPayIcon,
-  VerveIcon,
-  VisaIcon,
-} from "./cardTypeSvg";
 import withRoleCheck from "@/helpers/withRoleCheck";
-
-creditCardType.addCard({
-  niceType: "Verve",
-  type: "verve",
-  patterns: [
-    50609960, 50609961, 50609962, 50609963, 50609964, 50609965, 50609966,
-    50609967, 50609968, 50609969, 650002, 650003, 650004, 650005, 650006,
-    650007, 650008, 650009, 650010, 650011, 650012, 650013, 650014, 650015,
-    650016, 650017, 650018, 650019, 650020, 650021, 650022, 650023, 650024,
-    650025, 650026, 650027, 650028, 650029, 650030, 650031, 650032, 650033,
-    650034, 650035, 650036, 650037, 650038, 650039, 650040, 650041, 650042,
-    650043, 650044, 650045, 650046, 650047, 650048, 650049, 650050, 650051,
-    650052, 650053, 650054, 650055, 650056, 650057, 650058, 650059, 650060,
-    650061, 650062, 650063, 650064, 650065, 650066, 650067, 650068, 650069,
-    650070, 650071, 650072, 650073, 650074, 650075, 650076, 650077, 650078,
-    650079,
-  ],
-  gaps: [4, 8, 12],
-  lengths: [16, 18, 19],
-  code: {
-    name: "CVV",
-    size: 3,
-  },
-});
-
-creditCardType.changeOrder("verve", 0);
+import CheckOutAddress from "./CheckOutAddress";
+import CheckOutOrderSummary from "./CheckOutOrderSummary";
+import CheckOutCardDetails from "./CheckOutCardDetails";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import Modal from "../UI/Modal";
+import { PaystackButton } from "react-paystack";
 
 const Checkout: NextPage = () => {
   const contextUser = useUser();
   const { cart, deleteAllCart } = useCartStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardType, setCardType] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [cvv, setCvv] = useState("");
   const [feedback, setFeedback] = useState<boolean | null>(null);
 
   const checkoutSchema = z.object({
@@ -110,29 +74,8 @@ const Checkout: NextPage = () => {
     resolver: zodResolver(checkoutSchema),
   });
 
-  const onSubmit = async (data: any) => {
-    setIsLoading(true);
-    const random = Math.round(Math.random());
-    console.log(random);
-    if (random === 0) {
-      setFeedback(false);
-      setIsLoading(false);
-      return setIsOpen(true);
-    } else {
-      setFeedback(true);
-      setIsOpen(true);
-      if (!contextUser.user) return;
-
-      try {
-        await deleteAllCart(contextUser?.user?.id);
-        setIsOpen(true);
-        reset();
-      } catch (error) {
-        throw error;
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  const onSubmit = () => {
+    setIsModalOpen(true);
   };
 
   const subtotal = cart.reduce((total, item) => {
@@ -169,6 +112,68 @@ const Checkout: NextPage = () => {
     return feePerKg * weight + feePerItem * quantity + feePerKm * distance;
   }
 
+  const paystackPublicKey = String(process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY);
+  const flutterwavePublicKey = String(
+    process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY
+  );
+  const email = String(watch("email"));
+  const amount = Number(subtotal + shippingFee + deliveryFee);
+
+  const componentProps = {
+    email,
+    amount: amount * 100,
+    publicKey: paystackPublicKey,
+
+    text: "Paystack",
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Phone",
+          variable_name: "phone-number",
+          value: String(watch("phone")),
+        },
+        {
+          display_name: "Full Name",
+          variable_name: "name",
+          value: String(watch("cardName")),
+        },
+      ],
+    },
+    onSuccess: () => {
+      if (contextUser.user) {
+        deleteAllCart(contextUser.user?.id);
+      }
+      setIsOpen(true);
+      setFeedback(true);
+      setIsModalOpen(false);
+    },
+    onClose: () => {
+      setIsOpen(true);
+      setFeedback(false);
+      setIsModalOpen(false);
+    },
+  };
+
+  const config = {
+    public_key: flutterwavePublicKey,
+    tx_ref: String(Date.now()),
+    amount,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      email,
+      phone_number: String(watch("phone")),
+      name: String(watch("cardName")),
+    },
+    customizations: {
+      title: "Poultry Collective",
+      description: "Payment for items in cart",
+      logo: "https://cloud.appwrite.io/v1/storage/buckets/657dc2d1c018301db553/files/65b56bef24ec2095f192/view?project=657d7d40ecfc0df965cc&mode=admin",
+    },
+  };
+
+  const initializePayment = useFlutterwave(config);
+
   if (!contextUser.user) {
     return (
       <MainLayout>
@@ -191,10 +196,10 @@ const Checkout: NextPage = () => {
     <MainLayout>
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)]">
-          <h3 className="text-H3-03 font-semibold text-center mb-4">
+          <h3 className="text-H5-03 md:text-H3-03 font-semibold text-center mb-4">
             Your cart is empty
           </h3>
-          <p className="text-SP-03 text-center mb-8">
+          <p className="text-SC-03 md:text-SP-03 text-center mb-8">
             Please, add some products to your cart
           </p>
           <Button size="lg" href="/buyer">
@@ -204,278 +209,84 @@ const Checkout: NextPage = () => {
       ) : (
         <>
           <form
-            className="mb-16 flex gap-24"
+            className="mb-16 mt-6 flex flex-col px-2 lg:flex-row gap-24 lg:gap-10 xl:gap-20"
             onSubmit={handleSubmit(onSubmit)}
             noValidate
           >
-            <section className="w-[652px] shrink-0 flex flex-col gap-6 ">
+            <section className="w-full sm:w-[652px] lg:w-max xl-w-full xl:basis-[47%] desktop:basis-auto desktop:w-[652px] shrink-0 order-2 lg:order-1 flex flex-col gap-6">
               {cart.map((product) => (
                 <CheckoutProduct key={product.$id} {...product} />
               ))}
             </section>
 
-            <section>
-              <div className="inline-flex flex-col pt-8 pr-40 pb-10 pl-8 items-start gap-7 rounded bg-light-green-shade w-[564px]">
-                <h4 className="w-[239px] text-cod-gray-cg-600 text-H4-03">
-                  Order Summary
-                </h4>
+            <section className="order-1 lg:order-2 px-6 lg:px-0 lg:basis-[60%] xl:basis-auto">
+              <CheckOutOrderSummary
+                subtotal={subtotal}
+                shippingFee={shippingFee}
+              />
+              <CheckOutAddress
+                registerCheckout={registerCheckout}
+                errors={errors}
+                setValue={setValue}
+                clearErrors={clearErrors}
+                isLoading={isLoading}
+                deliveryFee={deliveryFee}
+              />
 
-                <div className="flex flex-col gap-4">
-                  <div className="flex justify-start">
-                    <p className="text-cod-gray-cg-600 text-SP-03 font-semibold w-40">
-                      Subtotal
-                    </p>
-                    <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                      ${subtotal.toLocaleString()}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-start">
-                    <p className="text-cod-gray-cg-600 text-SP-03 font-semibold w-40">
-                      Shipping
-                    </p>
-                    <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                      $ {shippingFee.toLocaleString()}
-                    </p>
-                  </div>
-
-                  <div className="flex justify-start">
-                    <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold w-40">
-                      Total
-                    </h4>
-                    <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold">
-                      $ {(subtotal + shippingFee).toLocaleString()}
-                    </h4>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col bg-light-green-shade py-6 px-8 mt-20">
-                <div className="">
-                  <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-2">
-                    Delivery Address
-                  </h4>
-                  <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                    Please, enter your correct details
-                  </p>
-                  <div className="w-[500px] flex flex-col gap-5 mt-5">
-                    <SelectInput
-                      optionPlaceholder="Country"
-                      options={[
-                        { value: "Nigeria", label: "Nigeria" },
-                        { value: "Ghana", label: "Ghana" },
-                      ]}
-                      optionColor="text-[#6C757D]"
-                      fullWidth
-                      placeholder="Country"
-                      register={registerCheckout}
-                      name="country"
-                      error={errors.country}
-                      disabled={isLoading}
-                      onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                        setValue("country", e.target.value);
-                        clearErrors("country");
-                      }}
-                    />
-
-                    <Input
-                      type="text"
-                      name="city"
-                      placeholder="City"
-                      fullWidth
-                      register={registerCheckout}
-                      error={errors.city}
-                      disabled={isLoading}
-                    />
-
-                    <Input
-                      type="text"
-                      name="address"
-                      placeholder="Address"
-                      inputType="textarea"
-                      fullWidth
-                      register={registerCheckout}
-                      error={errors.address}
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-[60px]">
-                  <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-2">
-                    Contact Details
-                  </h4>
-                  <p className="text-cod-gray-cg-600 text-SP-03 font-semibold">
-                    Please, enter your correct details
-                  </p>
-
-                  <div className="w-[500px] flex flex-col gap-5 mt-5">
-                    <Input
-                      type="text"
-                      name="email"
-                      placeholder="Email Address"
-                      fullWidth
-                      register={registerCheckout}
-                      error={errors.email}
-                      disabled={isLoading}
-                    />
-
-                    <Input
-                      type="text"
-                      name="phone"
-                      placeholder="Phone Number"
-                      fullWidth
-                      register={registerCheckout}
-                      error={errors.phone}
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-2">
-                    Delivery Fees: ${deliveryFee.toLocaleString()}
-                  </h4>
-                  <h6 className="text-cod-gray-cg-600 text-H6-03 w-[342.32px]">
-                    Delivery fees are determind by product quantity, weight and
-                    your location distance.
-                  </h6>
-                </div>
-              </div>
-
-              <div className="w-[564px] rounded bg-light-green-shade py-6 px-8 mt-20">
-                <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-5">
-                  Card Details
-                </h4>
-
-                <div className="flex flex-col gap-8">
-                  <Input
-                    type="text"
-                    name="cardName"
-                    placeholder="Name on Card"
-                    fullWidth
-                    register={registerCheckout}
-                    error={errors.cardName}
-                    disabled={isLoading}
-                  />
-
-                  <Input
-                    type="text"
-                    name="cardNumber"
-                    placeholder="Card Number"
-                    fullWidth
-                    register={registerCheckout}
-                    leftIcon={
-                      cardType === "visa" ? (
-                        <VisaIcon />
-                      ) : cardType === "mastercard" ? (
-                        <MasterCardIcon />
-                      ) : cardType === "verve" ? (
-                        <VerveIcon />
-                      ) : cardType === "jcb" ? (
-                        <JCBIcon />
-                      ) : cardType === "american-express" ? (
-                        <AmericanExpressIcon />
-                      ) : cardType === "unionpay" ? (
-                        <UnionPayIcon />
-                      ) : cardType === "maestro" ? (
-                        <MaestroIcon />
-                      ) : (
-                        <DefaultIcon />
-                      )
-                    }
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      let value = e.target.value.replace(/\s/g, "");
-                      if (isNaN(Number(value)) || value.length > 16) {
-                        return;
-                      }
-
-                      if (value.length >= 4) {
-                        const cardType = creditCardType(value);
-                        if (cardType[0]) {
-                          setCardType(cardType[0].type);
-                        }
-                        value = value
-                          .replace(/\W/gi, "")
-                          .replace(/(.{4})/g, "$1 ");
-                      } else {
-                        setCardType("");
-                      }
-                      setCardNumber(value.trim());
-                      clearErrors("cardNumber");
-                    }}
-                    value={cardNumber}
-                    error={errors.cardNumber}
-                    disabled={isLoading}
-                  />
-
-                  <div className="flex gap-6">
-                    <Input
-                      type="text"
-                      name="expiryDate"
-                      placeholder="MM/YY"
-                      fullWidth
-                      register={registerCheckout}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        let value = e.target.value;
-                        const [month, year] = value.split("/");
-                        if (
-                          isNaN(Number(value.replace("/", ""))) ||
-                          month.length > 2 ||
-                          (year && year.length > 2)
-                        ) {
-                          return;
-                        }
-                        if (value.length === 2 && !value.includes("/")) {
-                          value += "/";
-                        }
-                        if (year && year.length === 2) {
-                          const expiryDate = new Date(
-                            parseInt("20" + year),
-                            parseInt(month) - 1
-                          );
-                          if (expiryDate < new Date()) {
-                            return;
-                          }
-                        }
-                        setExpiryDate(value);
-                        clearErrors("expiryDate");
-                      }}
-                      value={expiryDate}
-                      error={errors.expiryDate}
-                      disabled={isLoading}
-                    />
-
-                    <Input
-                      type="text"
-                      name="cvv"
-                      placeholder="CVV"
-                      fullWidth
-                      register={registerCheckout}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        let value = e.target.value;
-                        if (isNaN(Number(value)) || value.length > 3) {
-                          return;
-                        }
-                        setCvv(value);
-                        clearErrors("cvv");
-                      }}
-                      value={cvv}
-                      error={errors.cvv}
-                      disabled={isLoading}
-                    />
-                  </div>
-                </div>
-                <div className=" mt-24">
-                  <Button size="lg" type="submit" fullWidth>
-                    Pay Now
-                  </Button>
-                </div>
-              </div>
+              <CheckOutCardDetails
+                registerCheckout={registerCheckout}
+                errors={errors}
+                clearErrors={clearErrors}
+                isLoading={isLoading}
+              />
             </section>
           </form>
         </>
       )}
+      <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+        <div className="flex flex-col items-center justify-center h-[400px]">
+          <h3 className="text-H5-03 md:text-H3-03 font-semibold text-center mb-4">
+            Choose a payment method
+          </h3>
+          <p className="text-SC-03 md:text-SP-03 text-center mb-8">
+            Please, choose a payment method to continue
+          </p>
+          <div className="flex gap-8 mb-8">
+            <PaystackButton
+              className="text-white border-2 w-full bg-main-green-mg hover:bg-[#009E60] active:bg-main-green-mg-200 active:text-cod-gray-cg-500 disabled:bg-cod-gray-cg-300 disabled:text-cod-gray-cg-400  py-4 px-8 transition-all duration-200"
+              {...componentProps}
+            />
+
+            <Button
+              size="lg"
+              variant="secondary"
+              fullWidth
+              onClick={() => {
+                initializePayment({
+                  callback: (response: any) => {
+                    console.log(response);
+                    setIsModalOpen(false);
+                    if (response.status === "completed") {
+                      if (contextUser.user) {
+                        deleteAllCart(contextUser.user?.id);
+                      }
+                      setIsOpen(true);
+                      setFeedback(true);
+                    }
+                    closePaymentModal(); // this will close the modal programmatically
+                  },
+                  onClose: () => {
+                    console.log("Payment modal closed");
+                    setIsModalOpen(false);
+                  },
+                });
+              }}
+            >
+              Flutterwave
+            </Button>
+          </div>
+        </div>
+      </Modal>
       <Feedback isOpen={isOpen} setIsOpen={setIsOpen} feedback={feedback} />
     </MainLayout>
   );

@@ -8,6 +8,7 @@ const Logo: NextPage<{ fill?: string }> = ({ fill = "#009E60" }) => {
       viewBox="0 0 180 72"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="h-[50px] md:h-[72px]"
     >
       <g id="Horizontal Logo 1 1" clipPath="url(#clip0_2033_13199)">
         <g id="Layer 2">

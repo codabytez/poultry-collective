@@ -5,7 +5,6 @@ import Button from "../UI/Button";
 import CartItemPopUp from "./CartItemPopUp";
 import { useCartStore } from "@/stores/cart";
 import { useEffect, useState } from "react";
-import { useGeneralStore } from "@/stores/general";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/user";
 import nProgress from "nprogress";
@@ -14,8 +13,8 @@ import withRoleCheck from "@/helpers/withRoleCheck";
 const CartModal: NextPage<CartModalProps> = ({
   items,
   fetchProductQuantity,
+  setIsCartModalOpen,
 }) => {
-  const { setIsModalOpen } = useGeneralStore();
   const { cart, loadUserCart } = useCartStore();
   const router = useRouter();
   const contextUser = useUser();
@@ -32,7 +31,7 @@ const CartModal: NextPage<CartModalProps> = ({
       throw new Error("Error loading cart");
     } finally {
       setIsLoading(false);
-      setIsModalOpen(false);
+      setIsCartModalOpen && setIsCartModalOpen(false);
     }
   };
 
@@ -47,20 +46,20 @@ const CartModal: NextPage<CartModalProps> = ({
       throw new Error("Error loading cart");
     } finally {
       setIsLoading(false);
-      setIsModalOpen(false);
+      setIsCartModalOpen && setIsCartModalOpen(false);
       nProgress.done();
     }
   };
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[50vh] w-[476px] ">
+      <div className="flex flex-col items-center justify-center h-[50vh] sm:w-[476px] ">
         <h4 className="text-H4-03 font-normal text-cod-gray-cg-600 mb-3.5 ml-2.5">
           Your Cart is Empty
         </h4>
         <Button
           size="lg"
-          onClick={() => setIsModalOpen(false)}
+          onClick={() => setIsCartModalOpen && setIsCartModalOpen(false)}
           isLoading={isLoading}
           disabled={isLoading}
         >
@@ -88,21 +87,11 @@ const CartModal: NextPage<CartModalProps> = ({
         ))}
       </div>
       <div className="flex justify-evenly gap-10 flex-1 mt-7">
-        <Button
-          size="lg"
-          isLoading={isLoading}
-          disabled={isLoading}
-          onClick={handleViewCart}
-        >
+        <Button size="lg" disabled={isLoading} onClick={handleViewCart}>
           View Cart
         </Button>
 
-        <Button
-          size="lg"
-          isLoading={isLoading}
-          disabled={isLoading}
-          onClick={handleCheckout}
-        >
+        <Button size="lg" disabled={isLoading} onClick={handleCheckout}>
           Checkout
         </Button>
       </div>

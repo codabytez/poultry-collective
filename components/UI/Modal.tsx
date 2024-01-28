@@ -2,11 +2,12 @@
 import { MouseEvent } from "react";
 import { NextPage } from "next";
 import { ModalProps } from "@/@types";
-import { useGeneralStore } from "@/stores/general";
 
-const Modal: NextPage<ModalProps> = ({ children }) => {
-  const { isModalOpen, setIsModalOpen } = useGeneralStore();
-
+const Modal: NextPage<ModalProps> = ({
+  children,
+  isModalOpen,
+  setIsModalOpen,
+}) => {
   if (!isModalOpen) {
     return null;
   }
@@ -21,7 +22,7 @@ const Modal: NextPage<ModalProps> = ({ children }) => {
       onClick={() => setIsModalOpen(false)}
     >
       <div
-        className="modal-content bg-white p-4 rounded shadow-lg relative"
+        className="bg-white p-4 rounded shadow-lg relative"
         onClick={stopPropagation}
       >
         {children}

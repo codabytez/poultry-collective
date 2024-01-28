@@ -43,7 +43,7 @@ const config: Config = {
           500: "#F59E0B",
           600: "#D97706",
         },
-        "red-r": {
+        red: {
           50: "#FEF2F2",
           100: "#FEE2E2",
           200: "#FECACA",
@@ -140,6 +140,28 @@ const config: Config = {
             fontWeight: "500",
           },
         ],
+      },
+      animation: {
+        loading: "loading 1.5s ease-in-out infinite",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "loading-pulse":
+          "loading 1.5s ease-in-out infinite, pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      keyframes: {
+        loading: {
+          "0%": { "background-position": "-200px 0" },
+          "100%": { "background-position": "calc(200px + 100%) 0" },
+        },
+      },
+      backgroundImage: (theme) => ({
+        "gradient-animation":
+          "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
+      }),
+      backgroundSize: {
+        "200": "200px 100%",
+      },
+      screens: {
+        desktop: "1440px",
       },
     },
   },

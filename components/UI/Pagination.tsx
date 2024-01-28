@@ -30,7 +30,9 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className="flex p-1 justify-center items-center gap-1"
+          className={`flex py-2 px-4  justify-center items-center gap-1 rounded ${
+            currentPage === 1 ? "cursor-not-allowed" : "bg-main-green-mg/10"
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +51,7 @@ const Pagination: React.FC<PaginationProps> = ({
             />
           </svg>
           <span
-            className={`inline-flex text-center text-SC-03 ${
+            className={`sm:inline-flex text-center text-SC-03 hidden ${
               currentPage === 1 ? "text-cod-gray-cg-400" : "text-main-green-mg"
             }`}
           >
@@ -77,10 +79,14 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex p-1 justify-center items-center gap-1"
+          className={`flex py-2 px-4 justify-center items-center gap-1 rounded ${
+            currentPage === totalPages
+              ? "cursor-not-allowed"
+              : "bg-main-green-mg/10"
+          }`}
         >
           <span
-            className={`inline-flex text-center justify-center items-center text-SC-03 ${
+            className={`hidden sm:inline-flex text-center justify-center items-center text-SC-03 ${
               currentPage === totalPages
                 ? "text-cod-gray-cg-400"
                 : "text-main-green-mg"

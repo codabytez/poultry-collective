@@ -7,7 +7,6 @@ import Button from "./UI/Button";
 import { useEffect, useState } from "react";
 import Modal from "./UI/Modal";
 import { useCartStore } from "@/stores/cart";
-import { useGeneralStore } from "@/stores/general";
 import { useProductStore } from "@/stores/product";
 import { useUser } from "@/context/user";
 import { notify } from "./UI/Toast";
@@ -22,7 +21,6 @@ const Product: NextPage<ProductProps> = (props) => {
   const contextUser = useUser();
   const Router = useRouter();
   const { removeProductQuantity } = useUpdateProductQuantity();
-  const { isModalOpen, setIsModalOpen } = useGeneralStore();
   const { cart, addToCart, loadUserCart } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -33,7 +31,8 @@ const Product: NextPage<ProductProps> = (props) => {
     quantity_available,
     product_weight,
     product_price,
-    product_id,
+    isModalOpen,
+    setIsModalOpen,
     $id,
   } = props;
 
@@ -103,7 +102,7 @@ const Product: NextPage<ProductProps> = (props) => {
       throw new Error("Failed to add the item to the cart. Please try again.");
     } finally {
       setTimeout(() => {
-        setIsModalOpen(true);
+        setIsModalOpen && setIsModalOpen(true);
         setIsLoading(false);
       }, 2000);
     }
@@ -111,16 +110,16 @@ const Product: NextPage<ProductProps> = (props) => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-start gap-4 relative w-[427px] transition-all">
+      <div className="flex flex-col justify-center items-start gap-4 relative max-w-[427px] transition-all flex-1">
         {/* @ts-ignore */}
         <Link
-          className="relative w-[427px] h-[300px] transition-all hover:opacity-80 cursor-pointer duration-300"
+          className="relative max-w-[427px] h-[300px] transition-all hover:opacity-80 cursor-pointer duration-300"
           href={`/buyer/product/${props.$id}`}
         >
           <img
             src={imageUrl}
             alt={product_name}
-            className="h-full w-full object-cover "
+            className="h-full w-[427px] object-cover "
           />
           <p className="inline-flex p-2 items-start gap-2 bg-cod-gray-cg-200 text-black text-SC-03 font-normal absolute top-0 left-0">
             {farm_name}
@@ -139,7 +138,10 @@ const Product: NextPage<ProductProps> = (props) => {
         <Button size="lg" onClick={onAddToCart} isLoading={isLoading}>
           Add to Cart
         </Button>
-        <Modal>
+        <Modal
+          isModalOpen={isModalOpen || false}
+          setIsModalOpen={setIsModalOpen || (() => {})}
+        >
           <CartModal items={cart} fetchProductQuantity={fetchProductQuantity} />
         </Modal>
       </div>

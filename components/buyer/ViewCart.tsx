@@ -8,13 +8,11 @@ import { ProductProps, cartItemProps } from "@/@types";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/stores/cart";
 import { useProductStore } from "@/stores/product";
-import { useGeneralStore } from "@/stores/general";
 import { useUser } from "@/context/user";
 import withRoleCheck from "@/helpers/withRoleCheck";
 
 const ViewCart: NextPage = () => {
   const contextUser = useUser();
-  const { setIsModalOpen } = useGeneralStore();
   const { cart, loadUserCart } = useCartStore();
   const { allProducts } = useProductStore();
   const [viewOthers, setViewOthers] = useState<ProductProps[]>([]);
@@ -23,8 +21,8 @@ const ViewCart: NextPage = () => {
     if (contextUser.user) {
       loadUserCart(contextUser.user.id);
     }
-    setIsModalOpen(false);
-  }, [contextUser, loadUserCart, setIsModalOpen, cart, allProducts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setViewOthers(
@@ -34,7 +32,7 @@ const ViewCart: NextPage = () => {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cart]);
 
   return (
     <MainLayout>
@@ -49,22 +47,24 @@ const ViewCart: NextPage = () => {
         </div>
       ) : (
         <>
-          <h2 className="text-H2-03 text-cod-gray-cg-600 m-10">My Cart</h2>
+          <h2 className="text-H3-03 sm:text-H2-03 text-cod-gray-cg-600 m-10">
+            My Cart
+          </h2>
 
-          <div className="flex flex-wrap gap-4 px-4">
+          <div className="flex flex-wrap gap-6 px-4 justify-center sm:justify-start">
             {cart.map((product: cartItemProps) => (
               <CartItem key={product.$id} {...product} />
             ))}
           </div>
           <div className="max-w-[1312px]">
-            <div className="w-[460px] mt-20 mb-36 mx-auto">
+            <div className="w-max sm:w-[460px] mt-20 mb-36 mx-auto">
               <Button size="lg" fullWidth href="/buyer/checkout">
                 Proceed to Checkout
               </Button>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-4 px-4 w-max mb-28">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px] px-6">
             {viewOthers.slice(0, 3).map((product: ProductProps) => (
               <Product key={product.$id} {...product} />
             ))}

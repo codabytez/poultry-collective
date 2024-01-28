@@ -102,6 +102,8 @@ export type ProductProps = {
   product_details: string;
   imageUrl?: string;
   product_id?: string;
+  isModalOpen?: boolean;
+  setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type testimonyProps = {
@@ -150,7 +152,13 @@ export type ButtonProps = DetailedHTMLProps<
   href?: string;
   spinnerColor?: string;
   spinnerSize?: string | number;
-  variant?: "primary" | "secondary" | "link-primary" | "link-secondary";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "link-primary"
+    | "link-secondary"
+    | "destructivePrimary"
+    | "destructiveSecondary";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
 };
@@ -227,6 +235,8 @@ export type PaginationProps = {
 };
 
 export type ModalProps = {
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   children: ReactNode;
 };
 
@@ -252,6 +262,8 @@ export type CartModalProps = {
   items: any;
   onDelete?: (id: string) => Promise<void>;
   fetchProductQuantity?: () => Promise<void>;
+  isCartModalOpen?: boolean;
+  setIsCartModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   $id?: string;
 };
 

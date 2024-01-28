@@ -76,37 +76,37 @@ const CartItem: NextPage<cartItemProps> = (props) => {
   return (
     <>
       {isLoading ? (
-        <div className="w-[648px] h-[326px] rounded bg-light-green-shade py-14 px-8 flex gap-[74px] items-center relative">
-          <div className="h-[210px] w-[261px] bg-gray-300 animate-pulse"></div>
+        <div className="min-w-[300px] w-[70%] sm:w-[648px] sm:h-[326px] rounded bg-light-green-shade sm:py-14 sm:px-8 flex flex-col sm:flex-row gap-10 sm:gap-[74px] sm:items-center relative">
+          <div className="h-[210px] w-full sm:w-[261px] bg-gray-300 animate-pulse" />
 
-          <div className="inline-flex flex-col h-[122.5px] items-start justify-end animate-pulse">
-            <div className="h-6 w-32 bg-gray-300 animate-pulse"></div>
-            <div className="h-6 w-24 bg-gray-300 animate-pulse mt-2"></div>
-            <div className="h-6 w-20 bg-gray-300 animate-pulse mt-2"></div>
+          <div className="inline-flex flex-col h-[122.5px] items-start px-4 pb-4 sm:px-0 sm:pb-0 justify-end animate-pulse">
+            <div className="h-6 w-32 bg-gray-300 animate-pulse" />
+            <div className="h-6 w-24 bg-gray-300 animate-pulse mt-2" />
+            <div className="h-6 w-20 bg-gray-300 animate-pulse mt-2" />
           </div>
 
-          <div className="h-8 w-8 bg-gray-300 animate-pulse absolute right-6"></div>
+          <div className="h-8 w-8 bg-gray-300 animate-pulse absolute right-6 top-[70%] sm:top-20" />
         </div>
       ) : (
-        <div className="w-[648px] h-[326px] rounded bg-light-green-shade py-14 px-8 flex gap-[74px] items-center relative">
+        <div className="min-w-[300px] w-[70%] sm:w-[648px] sm:h-[326px] rounded bg-light-green-shade sm:py-14 sm:px-8 flex flex-col sm:flex-row gap-10 sm:gap-[74px] sm:items-center relative">
           <img
             src={imageUrl}
             alt={product_name}
-            className="h-[210px] w-[261px] object-cover shrink-0"
+            className="h-[210px] w-full sm:w-[261px] object-cover shrink-0"
           />
-          <div className="inline-flex flex-col h-[122.5px] items-start justify-end shrink-0 text-H4-03 text-cod-gray-cg-600">
+          <div className="inline-flex flex-col h-[122.5px] items-start px-4 pb-4 sm:px-0 sm:pb-0 justify-end shrink-0 text-H4-03 text-cod-gray-cg-600">
             <h4>
               {weight}kg {product_name && product_name.split(" ").pop()}
             </h4>
             <h5 className=" text-H5-03 font-semibold">
               {quantity} {Number(quantity) > 1 ? "crates" : "crate"}
             </h5>
-            <h4>${Number(price).toString()}</h4>
+            <h4>₦ {Number(price).toLocaleString()}</h4>
           </div>
 
           <Trash
             size={32}
-            className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-6"
+            className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-6 top-[70%] sm:top-20"
             onClick={() => product_id && handleDelete(product_id)}
           />
         </div>

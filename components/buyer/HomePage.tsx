@@ -10,17 +10,25 @@ import { useRouter } from "next/navigation";
 import Loader from "../UI/Loader";
 import Button from "../UI/Button";
 import withRoleCheck from "@/helpers/withRoleCheck";
+import { LoadingSkeleton } from "../UI/LoadingSkeleton";
 
 const HomePage: NextPage = () => {
   const contextUser = useUser();
   const router = useRouter();
   const { allProducts, setAllProducts } = useProductStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [isProductLoading, setIsProductLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const itemsPerPage = 12;
 
-  const paginate = (pageNumber: SetStateAction<number>) =>
+  const paginate = (pageNumber: SetStateAction<number>) => {
+    setIsProductLoading(true);
     setCurrentPage(pageNumber);
+    setTimeout(() => {
+      setIsProductLoading(false);
+    }, 2000);
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -57,15 +65,24 @@ const HomePage: NextPage = () => {
       ) : (
         <>
           <section className="flex flex-col mb-28 px-5">
-            <h1 className=" text-H2-03 text-cod-gray-cg-600 my-10">
+            <h1 className="text-H4-03 sm:text-H2-03 text-cod-gray-cg-600 my-10">
               Hi <span>{contextUser?.user?.name.split(" ")[0]}</span> Start
               Shopping
             </h1>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-[60px]">
-              {currentItems.map((product) => (
-                <Product key={product.$updatedAt} {...product} />
-              ))}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px]">
+              {currentItems.map((product, i) =>
+                isProductLoading ? (
+                  <LoadingSkeleton key={i} />
+                ) : (
+                  <Product
+                    key={product.$updatedAt}
+                    {...product}
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                )
+              )}
             </div>
           </section>
           {allProducts.length >= itemsPerPage && (

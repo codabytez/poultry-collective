@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import Button from "../UI/Button";
-import { Input, SelectInput } from "../UI/Input";
+import { SelectInput } from "../UI/Input";
 import Loader from "../UI/Loader";
 import MainLayout from "@/layouts/MainLayout";
 import Product from "../Product";
@@ -104,48 +104,55 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
     return <Loader />;
   }
 
+  const generateOptions = (totalQuantity: number) => {
+    const options = [];
+    const step = 2;
+    const maxQuantity = Math.min(totalQuantity, 10);
+
+    for (let i = step; i <= maxQuantity; i += step) {
+      options.push({ value: i.toString(), label: i.toString() });
+    }
+
+    return options;
+  };
+
+  const totalQuantity = productsById?.quantity_available;
+
+  const options = generateOptions(totalQuantity);
+
   return (
     <MainLayout>
-      <section className="max-w-[1312px] m-auto shrink-0 bg-light-green-shade p-14 h-[724px] flex gap-16 mb-16 ">
+      <section className="max-w-[1312px] m-auto shrink-0 bg-light-green-shade p-14 lg:h-[724px] flex flex-col lg:flex-row gap-8 sm:gap-16 mb-16">
         <div>
           <img
             src={productsById?.imageUrl}
             alt={productsById?.product_name}
-            className="w-[537px] h-[496px] object-cover"
+            className="w-full h-full lg:w-[537px] lg:h-[496px] object-cover"
           />
         </div>
 
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-8 lg:gap-24">
           <div>
-            <h3 className="text-H3-03 text-cod-gray-cg">
+            <h3 className="text-H5-03 md:text-H3-03 text-cod-gray-cg">
               {productsById?.product_name}
             </h3>
 
-            <h4 className="w-[590px] h-[183.5px] shrink-0 text-cod-gray-cg-500 text-H4-03 font-normal">
+            <h4 className="w-[90%] lg:w-[590px] lg:h-[183.5px] my-6 lg:my-0 shrink-0 text-cod-gray-cg-500 text-BC-03 md:text-H4-03 font-normal">
               {productsById?.product_details}
             </h4>
           </div>
 
-          <div className="w-[425px] flex flex-col gap-5">
-            <h3 className="text-H3-03 text-cod-gray-cg">Select Quantity</h3>
+          <div className="w-full sm:w-[425px] flex flex-col gap-5">
+            <h3 className="text-H5-03 md:text-H3-03 text-cod-gray-cg">
+              Select Quantity
+            </h3>
 
             <SelectInput
               fullWidth
               value={enteredQuantity}
               onChange={(e: any) => setEnteredQuantity(e.target.value)}
               disabled={loader}
-              options={[
-                { value: "1", label: "1" },
-                { value: "2", label: "2" },
-                { value: "3", label: "3" },
-                { value: "4", label: "4" },
-                { value: "5", label: "5" },
-                { value: "6", label: "6" },
-                { value: "7", label: "7" },
-                { value: "8", label: "8" },
-                { value: "9", label: "9" },
-                { value: "10", label: "10" },
-              ]}
+              options={options}
               optionPlaceholder="Select Quantity"
             />
 
@@ -162,25 +169,21 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-10 mb-20 m-auto">
-        <h3 className="text-H3-03 text-cod-gray-cg w-full">See Other Items</h3>
+      <section className="flex flex-col gap-10 mb-20 m-auto px-6">
+        <h3 className="text-H5-03 md:text-H3-03 text-cod-gray-cg w-full">
+          See Other Items
+        </h3>
 
-        {areProductsLoading || allProducts.length === 0 ? (
-          Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="flex flex-wrap gap-4">
-              <LoadingSkeleton />
-            </div>
-          ))
-        ) : (
-          <div className="flex flex-wrap gap-4">
-            {allProducts
-              .filter((item) => item.$id !== params.productid)
-              .slice(0, 3)
-              .map((item) => (
-                <Product key={item.$id} {...item} />
-              ))}
-          </div>
-        )}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px]">
+          {allProducts.length && areProductsLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <LoadingSkeleton key={index} />
+              ))
+            : allProducts
+                .filter((item) => item.$id !== params.productid)
+                .slice(0, 3)
+                .map((item) => <Product key={item.$id} {...item} />)}
+        </div>
       </section>
     </MainLayout>
   );

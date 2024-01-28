@@ -10,18 +10,18 @@ const Footer: NextPage = () => {
       <div className="max-w-[1291px] mx-auto">
         <div className="flex flex-col gap-10">
           <Logo fill="#FFF8F0" />
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col gap-5 lg:gap-2 lg:flex-row justify-between items-start">
             <div>
               <h6 className="text-H6-03 text-cod-gray-cg-50">
                 SUBSCRIBE TO OUR NEWS LETTER
               </h6>
-              <h5 className="text-H5-03 text-white">
+              <h5 className="text-BC-03 md:text-H5-03 text-white">
                 A monthly digest of the latest news, articles and resources.
               </h5>
             </div>
             <div className="flex flex-col justify-start">
               <div className="flex gap-6">
-                <div className="w-[400px]">
+                <div className="sm:w-[400px]">
                   <Input
                     type="email"
                     name="email"
@@ -41,9 +41,9 @@ const Footer: NextPage = () => {
 
         <div className="border-2 w-full max-w-[1291px] bg-white my-3 mb-[69px]" />
 
-        <div className="py-1 flex justify-between flex-1">
+        <div className="py-1 flex flex-col sm:flex-row gap-8 justify-between flex-1">
           <div className="flex flex-col gap-4 justify-start">
-            <p className="text-BC-03 text-offwhite capitalize">Company</p>
+            <p className="text-H5-03 text-offwhite capitalize">Company</p>
             <div className="flex flex-col gap-4 justify-start">
               <Link
                 className="text-BC-03 text-cod-gray-cg-300 capitalize hover:text-main-green-mg transition-all"
@@ -78,7 +78,7 @@ const Footer: NextPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 justify-start">
-            <p className="text-BC-03 text-offwhite capitalize">Product</p>
+            <p className="text-H5-03 text-offwhite capitalize">Product</p>
             <div className="flex flex-col gap-4 justify-start">
               <Link
                 className="text-BC-03 text-cod-gray-cg-300 capitalize hover:text-main-green-mg transition-all"
@@ -107,7 +107,7 @@ const Footer: NextPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 justify-start">
-            <p className="text-BC-03 text-offwhite capitalize">Support</p>
+            <p className="text-H5-03 text-offwhite capitalize">Support</p>
             <div className="flex flex-col gap-4 justify-start">
               <Link
                 className="text-BC-03 text-cod-gray-cg-300 capitalize hover:text-main-green-mg transition-all"
@@ -130,7 +130,7 @@ const Footer: NextPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 justify-start">
-            <p className="text-BC-03 text-offwhite capitalize">Social</p>
+            <p className="text-H5-03 text-offwhite capitalize">Social</p>
             <div className="flex flex-col gap-4 justify-start">
               <Link
                 className="text-BC-03 text-cod-gray-cg-300 capitalize hover:text-main-green-mg transition-all"

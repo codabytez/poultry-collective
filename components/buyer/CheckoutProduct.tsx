@@ -23,24 +23,24 @@ const CheckoutProduct: NextPage<cartItemProps> = (props) => {
   }, [image]);
 
   return (
-    <div className="flex py-14 pr-28 pl-8 items-center gap-10 rounded bg-light-green-shade">
+    <div className="flex flex-col sm:flex-row sm:py-14 sm:pr-28 sm:pl-8 lg:p-6 sm:items-center gap-10 rounded bg-light-green-shade">
       <img
         src={imageUrl}
         alt={product_name}
-        className="w-[261px] h-[210px] object-cover"
+        className="w-full sm:w-[261px] h-[300px] sm:h-[210px] object-cover"
       />
 
-      <div className="flex flex-col items-start gap-4">
+      <div className="flex flex-col items-start gap-4 px-6 sm:px-0">
         <h3 className=" text-cod-gray-cg-600 text-H4-03 font-normal">
-          {`${weight} ${product_name && product_name.split(" ").pop()}`}
+          {`${weight}kg ${product_name && product_name.split(" ").pop()}`}
 
           <span className="text-cod-gray-cg-600 text-SP-03 font-normal inline-block pl-2">
-            {quantity} {Number(quantity) > 1 ? "crates" : "crate"}
+            ({quantity} {Number(quantity) > 1 ? "crates" : "crate"})
           </span>
         </h3>
 
         <p className="text-cod-gray-cg-600 text-SP-03 leading-9">
-          {(Number(price) * Number(quantity)).toLocaleString()}
+          ₦ {(Number(price) * Number(quantity)).toLocaleString()}
         </p>
       </div>
     </div>

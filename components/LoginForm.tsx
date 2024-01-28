@@ -130,27 +130,27 @@ const LoginForm: NextPage = () => {
 
   return (
     <>
-      <section className="flex justify-center items-center min-h-screen my-10">
+      <section className="flex justify-center items-center min-h-[calc(100vh-190px)] my-10">
         {userLoading ? (
           <div className="w-full h-screen flex justify-center items-center">
             <Loader />
           </div>
         ) : (
-          <div className="flex gap-16 justify-center items-start h-max">
-            <Image src={loginImg} alt="login" />
+          <div className="flex px-6 lg:gap-16 justify-center items-start h-max">
+            <Image src={loginImg} className="hidden lg:flex" alt="login" />
 
             <div className="inline-flex flex-col items-start gap-2">
-              <h3 className="text-H3-03 text-cod-gray-cg-500 w-[543px]">
+              <h3 className="text-H4-03 md:text-H3-03 text-cod-gray-cg-500 sm:w-[543px]">
                 Hi, Welcome to Poultry Collective
               </h3>
 
-              <p className="text-H5-03 font-normal text-cod-gray-cg-400 w-[453px]">
+              <p className="text-BC-03 md:text-H5-03 font-normal text-cod-gray-cg-400 sm:w-[453px]">
                 Sign in with Poultry Collective and start buying and selling
                 fresh poultry produce.
               </p>
 
               <form
-                className="w-[400px] flex flex-col items-start gap-6 pt-5"
+                className="w-[90%] lg:w-[400px] flex flex-col items-start gap-6 pt-5"
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
               >
@@ -194,7 +194,7 @@ const LoginForm: NextPage = () => {
                 </Button>
               </form>
 
-              <div className="w-[400px] flex flex-col items-center justify-start gap-8 mt-6">
+              <div className="w-[90%] lg:w-[400px] flex flex-col items-center justify-start gap-8 mt-6">
                 <p className="text-SP-03 font-normal text-cod-gray-cg-400">
                   or
                 </p>
@@ -209,7 +209,7 @@ const LoginForm: NextPage = () => {
                   <span>Use your Google Account</span>
                 </Button>
 
-                <p className="text-SP-03 font-normal text-cod-gray-cg-400">
+                <p className="text-H6-03 sm:text-SP-03 font-normal text-cod-gray-cg-400">
                   Do you already have an account? {/* @ts-ignore */}
                   <Link className="underline" href="/signup">
                     Sign Up
