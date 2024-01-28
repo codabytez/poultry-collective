@@ -113,12 +113,13 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const currentDomain = process.env.NEXT_PUBLIC_BASE_URL;
   const signInWithGoogle = async () => {
     try {
       await account.createOAuth2Session(
         "google",
-        "https://poultrycollective.vercel.app",
-        "https://poultrycollective.vercel.app/login"
+        "`${currentDomain}`",
+        `${currentDomain}/login`
       );
       await checkUser();
       if (user?.id) {
