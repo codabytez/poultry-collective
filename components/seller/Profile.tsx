@@ -59,7 +59,6 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
           setIsLoading(true);
           await setSellerIdBySellerId(params?.id);
 
-          // Fetch the updated currentSellerProfile from your state
           const updatedSellerProfile = currentSellerProfile;
 
           if (updatedSellerProfile) {
