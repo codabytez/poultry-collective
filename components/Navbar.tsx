@@ -133,7 +133,7 @@ export const BottomNavbar: NextPage = () => {
         <div className="flex flex-col lg:flex-row justify-center lg:justify-end items-center gap-4 lg:gap-16 text-H6-01 text-base text-cod-gray-cg-500">
           <Button
             variant="link-primary"
-            href="/#shopAsGuest"
+            href="/buyer"
             onClick={() => setIsOpen(false)}
           >
             Product
@@ -167,13 +167,7 @@ export const BottomNavbar: NextPage = () => {
           }}
           spinnerColor={contextUser?.user ? "DC2626" : "#009E60"}
         >
-          {/* <p
-            className={
-              contextUser?.user ? "text-red-500" : "text-main-green-mg"
-            }
-          > */}
           {contextUser?.user ? "Logout" : "Login"}
-          {/* </p> */}
         </Button>
       </div>
     </div>

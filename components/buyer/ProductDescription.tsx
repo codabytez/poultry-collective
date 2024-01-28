@@ -131,13 +131,13 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-8 lg:gap-24">
+        <div className="flex flex-col gap-8 lg:gap-24 lg:basis-1/2">
           <div>
             <h3 className="text-H5-03 md:text-H3-03 text-cod-gray-cg">
               {productsById?.product_name}
             </h3>
 
-            <h4 className="w-[90%] lg:w-[590px] lg:h-[183.5px] my-6 lg:my-0 shrink-0 text-cod-gray-cg-500 text-BC-03 md:text-H4-03 font-normal">
+            <h4 className="w-[90%] xl:w-[590px] lg:h-[183.5px] py-6 lg:my-0 shrink-0 text-cod-gray-cg-500 text-BC-03 md:text-H4-03 font-normal">
               {productsById?.product_details}
             </h4>
           </div>

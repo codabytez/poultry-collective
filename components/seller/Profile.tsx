@@ -11,7 +11,6 @@ import AddProduct from "./AddProduct";
 import { useUser } from "@/context/user";
 import { useRouter } from "next/navigation";
 import { useProductStore } from "@/stores/product";
-import { useGeneralStore } from "@/stores/general";
 import Loader from "../UI/Loader";
 import { productDetailTypes } from "@/@types";
 import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
@@ -36,7 +35,7 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
     setCurrentSellerProfile,
     setSellerIdBySellerId,
   } = useSellerProfileStore();
-  const { setIsModalOpen } = useGeneralStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const isCurrentUser = contextUser?.user?.id === currentSellerProfile?.user_id;
@@ -209,7 +208,7 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
             )}
           </div>
           {isCurrentUser && (
-            <Modal>
+            <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
               <AddProduct
                 farmName={currentSellerProfile.business_name}
                 sellerId={currentSellerProfile.$id}
