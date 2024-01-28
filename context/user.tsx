@@ -113,8 +113,8 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     }
   };
 
+  const currentDomain = String(process.env.NEXT_PUBLIC_BASE_URL);
   const signInWithGoogle = async () => {
-    const currentDomain = String(process.env.NEXT_PUBLIC_BASE_URL);
     try {
       await account.createOAuth2Session(
         "google",
