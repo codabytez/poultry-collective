@@ -118,7 +118,7 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     try {
       await account.createOAuth2Session(
         "google",
-        "`${currentDomain}`",
+        `${currentDomain}`,
         `${currentDomain}/login`
       );
       await checkUser();
