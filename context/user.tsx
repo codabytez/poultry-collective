@@ -31,7 +31,7 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
       try {
         currentSession = await account.getSession("current");
       } catch (e) {
-        console.log("User is not logged in");
+        throw e;
       }
 
       if (!currentSession && pathname !== "/" && pathname !== "/signup")
@@ -123,13 +123,14 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
       await checkUser();
       if (user?.id) {
         const userProfile = await useGetProfileByUserId(user?.id);
+        if (!userProfile) return router.push("/signup/select-role");
         if (userProfile?.role === "buyer") router.push("/buyer");
         if (userProfile?.role === "seller") {
           const sellerProfile = await useGetSellerProfileByUserId(user?.id);
           if (sellerProfile?.id)
             router.push(`/seller/profile/${sellerProfile.id}`);
           else router.push("/seller");
-        } else router.push("/buyer");
+        }
       }
     } catch (e) {
       throw e;
