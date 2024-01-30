@@ -115,23 +115,11 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   const currentDomain = process.env.NEXT_PUBLIC_BASE_URL;
   const signInWithGoogle = async () => {
     try {
-      await account.createOAuth2Session(
+      account.createOAuth2Session(
         "google",
-        `${currentDomain}`,
+        `${currentDomain}/signup/select-role`,
         `${currentDomain}/login`
       );
-      await checkUser();
-      if (user?.id) {
-        const userProfile = await useGetProfileByUserId(user?.id);
-        if (!userProfile) return router.push("/signup/select-role");
-        if (userProfile?.role === "buyer") router.push("/buyer");
-        if (userProfile?.role === "seller") {
-          const sellerProfile = await useGetSellerProfileByUserId(user?.id);
-          if (sellerProfile?.id)
-            router.push(`/seller/profile/${sellerProfile.id}`);
-          else router.push("/seller");
-        }
-      }
     } catch (e) {
       throw e;
     }

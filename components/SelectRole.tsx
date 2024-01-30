@@ -12,6 +12,7 @@ import { notify } from "@/components/UI/Toast";
 import nProgress from "nprogress";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 import useDeleteAllCartByUserId from "@/hooks/useDeleteAllCartByUserId";
+import useCreateProfile from "@/hooks/useCreateProfile";
 
 const SelectRole: NextPage = () => {
   const contextUser = useUser();
@@ -29,6 +30,14 @@ const SelectRole: NextPage = () => {
             const userProfile = await useGetProfileByUserId(
               contextUser?.user?.id
             );
+            if (!userProfile) {
+              await useCreateProfile(
+                contextUser?.user?.id,
+                contextUser?.user?.name,
+                contextUser?.user?.email,
+                String(process.env.NEXT_PUBLIC_DEFAULT_AVATAR)
+              );
+            }
             if (userProfile?.role === "buyer") router.replace("/buyer");
             if (userProfile?.role === "seller") {
               const sellerProfile = await useGetSellerProfileByUserId(
