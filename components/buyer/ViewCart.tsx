@@ -38,7 +38,7 @@ const ViewCart: NextPage = () => {
     <MainLayout>
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[calc(100vh-172px)]">
-          <h2 className="text-H2-03 text-cod-gray-cg-600 m-10">
+          <h2 className="text-H3-03 sm:text-H2-03 text-cod-gray-cg-600 m-10 text-center">
             Your cart is empty
           </h2>
           <Button size="lg" href="/buyer">

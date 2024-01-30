@@ -53,7 +53,7 @@ const HomePage: NextPage = () => {
         <Loader />
       ) : allProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[50vh]">
-          <div className="flex flex-col items-center justify-center h-[50vh] w-[476px] ">
+          <div className="flex flex-col items-center justify-center h-[50vh] w-[80%] sm:w-[476px] ">
             <h4 className="text-H4-03 font-normal text-cod-gray-cg-600 mb-3.5 ml-2.5">
               No Products Available
             </h4>
