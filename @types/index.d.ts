@@ -230,6 +230,8 @@ export type InputProps = React.DetailedHTMLProps<
   iconSize?: number;
   onBlur?: any;
   showMaxLength?: boolean;
+  leftText?: string;
+  rightText?: string;
 };
 
 export type ToastProps = {

@@ -80,6 +80,15 @@ const Product: NextPage<ProductProps> = (props) => {
       return;
     }
 
+    if (Number(addQty) > Number(quantity_available)) {
+       notify({
+        message: "Quantity available is not enough.",
+        type: "error",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await removeProductQuantity(
         props.$id,

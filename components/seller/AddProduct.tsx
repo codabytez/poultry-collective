@@ -76,8 +76,19 @@ const AddProduct: NextPage<{
       return;
     }
 
-    const files = Array.from(
-      formData.getAll("uploadProductImage") as unknown as FileList
+    // Convert the object URLs in the images state back to File objects
+    const files = await Promise.all(
+      images.map((url, index) =>
+        fetch(url)
+          .then((response) => response.blob())
+          .then(
+            (blob) =>
+              new File([blob], `file_${new Date().getTime()}_${index}`, {
+                type: blob.type,
+                lastModified: new Date().getTime(),
+              })
+          )
+      )
     );
 
     const product = {
@@ -93,7 +104,6 @@ const AddProduct: NextPage<{
 
     try {
       await useCreateProduct(
-        product.images,
         contextUser.user?.id,
         product.productName as string,
         product.farmName as string,
@@ -101,7 +111,8 @@ const AddProduct: NextPage<{
         product.productPrice as string,
         product.quantityAvailable as string,
         product.productWeight as string,
-        product.sellerId as string
+        product.sellerId as string,
+        product.images
       );
 
       const totalProducts = await useGetTotalProducts(sellerId);
@@ -163,6 +174,7 @@ const AddProduct: NextPage<{
           type="text"
           name="productPrice"
           placeholder="Product Price (per crate)"
+          rightText="₦"
         />
 
         <Input
@@ -171,6 +183,7 @@ const AddProduct: NextPage<{
           type="text"
           name="productWeight"
           placeholder="Product Weight (kg)"
+          rightText="kg"
         />
 
         <Input

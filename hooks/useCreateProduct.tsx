@@ -1,7 +1,6 @@
 import { database, storage, ID } from "@/libs/AppwriteClient";
 
 const useCreateProduct = async (
-  files: File[],
   userId: string,
   productName: string,
   farmName: string,
@@ -9,13 +8,18 @@ const useCreateProduct = async (
   price: string,
   QuantityAvailable: string,
   productWeight: string,
-  sellerId: string
+  sellerId: string,
+  files: File[]
 ) => {
   const imageIds = files.map(
     () =>
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15)
-  );
+  ); // Generate random image ids
+
+  if (productWeight.length > 3) {
+    throw new Error("Product weight must be less than 1000");
+  }
 
   try {
     const imageResults = await Promise.all(
@@ -35,6 +39,7 @@ const useCreateProduct = async (
         return result.$id;
       })
     );
+    console.log("Image results:", imageResults);
 
     await database.createDocument(
       String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),
@@ -46,11 +51,11 @@ const useCreateProduct = async (
         quantity_available: QuantityAvailable,
         product_price: price,
         product_details: productDetails,
-        product_image: imageResults,
         product_weight: productWeight,
         created_at: new Date().toISOString(),
         farm_name: farmName,
         seller_id: sellerId,
+        product_image: imageResults,
       }
     );
   } catch (error) {

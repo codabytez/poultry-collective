@@ -68,6 +68,16 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
       return;
     }
 
+    if (Number(enteredQuantity) > Number(productsById?.quantity_available)) {
+      notify({
+       message: "Quantity available is not enough.",
+       type: "error",
+     });
+     setEnteredQuantity("");
+      setLoader(false);
+      return;
+    }
+
     try {
       await removeProductQuantity(
         productsById?.$id,

@@ -126,6 +126,8 @@ export function Input({
   maxLength,
   showMaxLength = false,
   rows,
+  leftText,
+  rightText,
   ...props
 }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -158,6 +160,7 @@ export function Input({
         }}
       >
         {leftIcon && leftIcon}
+        {leftText && <p className="text-SP-03">{leftText}</p>}
         {inputType === "input" ? (
           <>
             <input
@@ -238,6 +241,7 @@ export function Input({
             box-shadow: inset 0 0 20px 20px transparent;
           }
         `}</style>
+        {rightText && <p className="text-SP-03">{rightText}</p>}
         {rightIcon && rightIcon}
       </div>
     </div>
