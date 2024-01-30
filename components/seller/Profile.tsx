@@ -18,6 +18,9 @@ import { useSellerProfileStore } from "@/stores/sellerProfile";
 import SellerBanner from "./SellerBanner";
 import { notify } from "../UI/Toast";
 import useGetProductBySeller from "@/hooks/useGetProductBySeller";
+import useUpdateTotalProducts from "@/hooks/useUpdateTotalProducts";
+import useGetTotalProducts from "@/hooks/useGetTotalProducts";
+import SellerProduct from "./SellerProduct";
 
 type Props = {
   params: { id: string };
@@ -38,7 +41,9 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isCurrentUser = contextUser?.user?.id === currentSellerProfile?.user_id;
+  const isCurrentUser =
+    params.id === currentSellerProfile?.$id &&
+    contextUser?.user?.id === currentSellerProfile?.user_id;
 
   const handleShareProfile = () => {
     navigator.clipboard.writeText(
@@ -57,22 +62,8 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
       if (contextUser.user) {
         try {
           setIsLoading(true);
+          await setProductsBySeller(params?.id);
           await setSellerIdBySellerId(params?.id);
-
-          const updatedSellerProfile = currentSellerProfile;
-
-          if (updatedSellerProfile) {
-            const products = await useGetProductBySeller(
-              updatedSellerProfile.$id
-            );
-            const productsWithUrls = await Promise.all(
-              products.map(async (product) => {
-                const url = await useCreateBucketUrl(product.product_image[0]);
-                return { ...product, imageUrl: url };
-              })
-            );
-            setSellerProducts(productsWithUrls);
-          }
         } catch (error) {
           throw error;
         } finally {
@@ -98,6 +89,13 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
       try {
         setIsLoading(true);
         await deleteProduct(id, imageIds);
+        const totalProducts = await useGetTotalProducts(
+          currentSellerProfile?.$id
+        );
+        await useUpdateTotalProducts(
+          currentSellerProfile?.$id,
+          Number(totalProducts.total) - 1
+        );
         setProductsBySeller(currentSellerProfile?.$id);
       } catch (error) {
         throw error;
@@ -133,67 +131,33 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
               isCurrentUser={isCurrentUser}
               seller={currentSellerProfile}
             />
-            {!isCurrentUser && sellerProducts.length === 0 && (
-              <div className="flex justify-center items-center h-[400px]">
+            {!isCurrentUser && productsBySeller.length === 0 && (
+              <div className="flex justify-center items-center h-[200px] md:h-[400px]">
                 <p className="text-H4-03 text-cod-gray-cg font-normal">
                   No products listed yet
                 </p>
               </div>
             )}
-            {sellerProducts && sellerProducts.length > 0 && (
+            {productsBySeller && productsBySeller.length > 0 && (
               <div className="my-20 w-11/12 m-auto">
-                <h2 className="text-start text-cod-gray-cg text-H2-03 pb-8">
+                <h2 className="text-start text-cod-gray-cg text-H4-03 sm:text-H2-03 pb-8">
                   Listed Products
                 </h2>
-                <div className="flex justify-start items-start gap-4 gap-y-10 flex-wrap">
-                  {sellerProducts.map((product) => (
-                    <div
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px]">
+                  {productsBySeller.map((product) => (
+                    <SellerProduct
                       key={product.$id}
-                      className="flex flex-col justify-center items-start gap-4 w-[427px]  relative"
-                    >
-                      <div className="flex h-[300px] w-full justify-center items-start bg-no-repeat object-cover relative">
-                        <img
-                          src={product.imageUrl}
-                          alt={product.product_name}
-                          className="w-full h-full object-cover object-center"
-                        />
-
-                        <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute right-0 bottom-0">
-                          In stock: {product.quantity_available}
-                        </p>
-
-                        <p className="inline-flex py-1 px-2 items-start gap-2 bg-[#CAF0C2] text-black text-SC-03 font-normal absolute left-0 bottom-0">
-                          Weight: {product.product_weight}kg
-                        </p>
-                      </div>
-
-                      <div className="flex  justify-between items-center w-[427px]">
-                        <p className="text-H5-03 text-cod-gray-cg font-normal">
-                          {product.product_name}
-                        </p>
-
-                        <div className="flex items-center gap-2">
-                          <p className="text-H5-03 text-cod-gray-cg font-normal">
-                            N {Number(product.product_price).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                      {isCurrentUser && (
-                        <Trash
-                          onClick={() =>
-                            handleDelete(product.$id, product.product_image)
-                          }
-                          className="absolute top-4 right-4"
-                        />
-                      )}
-                    </div>
+                      product={product}
+                      isCurrentUser={isCurrentUser}
+                      handleDelete={handleDelete}
+                    />
                   ))}
                 </div>
               </div>
             )}
 
             {isCurrentUser && (
-              <div className="flex w-10/12 h-[400px] mt-20 items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
+              <div className="flex w-10/12 h-[200px] md:h-[400px] mt-20 items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
                 <button
                   onClick={handleOpenModal}
                   className="flex justify-center items-center gap-2"

@@ -1,5 +1,4 @@
 import { database } from "@/libs/AppwriteClient";
-import { useEffect, useState } from "react";
 
 const useUpdateProductQuantity = () => {
   const removeProductQuantity = async (productId: string, qty: string) => {

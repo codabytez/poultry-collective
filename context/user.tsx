@@ -8,12 +8,11 @@ import {
   ReactNode,
 } from "react";
 import { account, ID } from "@/libs/AppwriteClient";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { User, userContextProps } from "@/@types";
 import { NextPage } from "next";
 import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useCreateProfile from "@/hooks/useCreateProfile";
-import { usePathname } from "next/navigation";
 import Loader from "@/components/UI/Loader";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 

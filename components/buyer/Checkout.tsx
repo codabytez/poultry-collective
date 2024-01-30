@@ -33,40 +33,13 @@ const Checkout: NextPage = () => {
     country: z.string().min(2, { message: "Country is required" }),
     email: z.string().email({ message: "Email is required" }),
     phone: z.string().min(2, { message: "Phone is required" }),
-    cardName: z.string().min(2, { message: "Card name is required" }),
-    cardNumber: z
-      .string()
-      .min(16, { message: "Card number is required" })
-      .refine((value) => {
-        const cardType = creditCardType(value);
-        return (
-          cardType[0] &&
-          [
-            "visa",
-            "mastercard",
-            "verve",
-            "maestro",
-            "jcb",
-            "american-express",
-            "unionpay",
-          ].includes(cardType[0].type)
-        );
-      }, "Card type is not valid"),
-    expiryDate: z
-      .string()
-      .min(4, "Expiry date must be at least 4 characters long"),
-    cvv: z
-      .string()
-      .min(2, { message: "CVV is required" })
-      .length(3, "CVV must be 3 digits"),
+    fullName: z.string().min(2, { message: "Full name is required" }),
   });
 
   const {
     register: registerCheckout,
     handleSubmit,
-    setError,
     setValue,
-    reset,
     watch,
     clearErrors,
     formState: { errors },
@@ -75,7 +48,11 @@ const Checkout: NextPage = () => {
   });
 
   const onSubmit = () => {
+    setIsLoading(true);
     setIsModalOpen(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
 
   const subtotal = cart.reduce((total, item) => {
@@ -135,7 +112,7 @@ const Checkout: NextPage = () => {
         {
           display_name: "Full Name",
           variable_name: "name",
-          value: String(watch("cardName")),
+          value: String(watch("fullName")),
         },
       ],
     },
@@ -163,7 +140,7 @@ const Checkout: NextPage = () => {
     customer: {
       email,
       phone_number: String(watch("phone")),
-      name: String(watch("cardName")),
+      name: String(watch("fullName")),
     },
     customizations: {
       title: "Poultry Collective",
@@ -219,7 +196,7 @@ const Checkout: NextPage = () => {
               ))}
             </section>
 
-            <section className="order-1 lg:order-2 px-6 lg:px-0 lg:basis-[60%] xl:basis-auto">
+            <section className="order-1 lg:order-2 lg:px-0 lg:basis-[60%] xl:basis-auto">
               <CheckOutOrderSummary
                 subtotal={subtotal}
                 shippingFee={shippingFee}
@@ -239,6 +216,16 @@ const Checkout: NextPage = () => {
                 clearErrors={clearErrors}
                 isLoading={isLoading}
               />
+              <div className=" mt-8 w-full sm:w-[564px] lg:w-full xl:w-[564px]">
+                <Button
+                  size="lg"
+                  fullWidth
+                  disabled={isLoading}
+                  isLoading={isLoading}
+                >
+                  Pay Now
+                </Button>
+              </div>
             </section>
           </form>
         </>

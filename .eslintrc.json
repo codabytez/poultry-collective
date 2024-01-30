@@ -1,3 +1,18 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "prettier",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-unused-vars": "off",
+    "no-unused-expressions": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "import/no-unresolved": "error",
+    "import/named": "error",
+    // to enforce using type for object type definitions, can be type or interface
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"]
+  }
 }

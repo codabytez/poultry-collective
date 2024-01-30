@@ -23,7 +23,7 @@ const StarRating = ({
   const [tempRating, setTempRating] = useState(0);
   const contextUser = useUser();
   const [hasRated, setHasRated] = useState(false);
-  const [userRating, setUserRating] = useState<number | null>(null);
+  const [userRating, setUserRating] = useState<number | null>(0);
   const [totalRating, setTotalRating] = useState(0);
   const [totalUsersRated, setTotalUsersRated] = useState(0);
 
@@ -59,7 +59,9 @@ const StarRating = ({
     index: number,
     review: string = "No review provided"
   ) => {
-    if (hasRated) {
+    if (!contextUser?.user?.id) return;
+    const response = await useGetRatings(seller.$id, contextUser.user.id);
+    if (response.documents.length > 0) {
       notify({
         message: "You have already rated this seller",
         type: "error",
@@ -79,6 +81,13 @@ const StarRating = ({
         seller?.$id
       );
     } catch (error) {
+      // If the request fails, revert the rating in the UI and show an error message
+      setRating(defaultRating);
+      onSetRating(defaultRating);
+      notify({
+        message: "Failed to save rating",
+        type: "error",
+      });
       throw error;
     }
   };
@@ -87,7 +96,9 @@ const StarRating = ({
     <div className="flex items-center gap-2">
       <div className="flex gap-2">
         {Array.from(Array(maxRating).keys()).map((index) => {
-          const ratingToUse = isCurrentUser ? totalRating : userRating;
+          const ratingToUse = isCurrentUser
+            ? totalRating
+            : tempRating || userRating;
           if (ratingToUse === null) {
             return null;
           }
@@ -114,7 +125,7 @@ const StarRating = ({
       </div>
       <p className="text-H4-03 font-normal text-cod-gray-cg-200">
         {isCurrentUser
-          ? `${totalUsersRated > 0 ? totalUsersRated : null} ${
+          ? `${totalUsersRated > 0 ? totalUsersRated : 0} ${
               totalUsersRated > 1 ? "ratings" : "rating"
             }`
           : hasRated

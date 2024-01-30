@@ -82,6 +82,15 @@ const CheckOutAddress: NextPage<CheckOutAddressProps> = ({
         <div className="w-full sm:w-[500px] lg:w-full xl:w-[500px] flex flex-col gap-5 mt-5">
           <Input
             type="text"
+            name="fullName"
+            placeholder="Full Name"
+            fullWidth
+            register={registerCheckout}
+            error={errors.name}
+            disabled={isLoading}
+          />
+          <Input
+            type="text"
             name="email"
             placeholder="Email Address"
             fullWidth

@@ -184,6 +184,7 @@ export function Input({
             />
             {showMaxLength && (
               <p
+                className="text-H6-03"
                 style={{ position: "absolute", bottom: 0, right: 0 }}
               >{`${value?.length}/${maxLength}`}</p>
             )}
@@ -216,6 +217,7 @@ export function Input({
         )}
         {showMaxLength && (
           <p
+            className="text-H6-03"
             style={{ position: "absolute", bottom: 0, right: 0 }}
           >{`${value?.length}/${maxLength}`}</p>
         )}

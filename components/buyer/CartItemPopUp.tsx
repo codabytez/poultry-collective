@@ -113,7 +113,7 @@ const CartItemPopUp: NextPage<CartModalProps> = ({
           </div>
           <Trash
             size={32}
-            className="text-[#292D32] hover:scale-105 cursor-pointer hover:text-red-r-600 absolute right-4 top-[60%] sm:top-10"
+            className="text-[#292D32] hover:scale-105 cursor-pointer hover:text-red-600 absolute right-4 top-[60%] sm:top-10"
             onClick={handleDelete}
           />
         </div>

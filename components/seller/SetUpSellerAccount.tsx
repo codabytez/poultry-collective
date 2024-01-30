@@ -5,7 +5,7 @@ import Step3 from "@/components/seller/Step3";
 import Step1 from "@/components/seller/Step1";
 import Step2 from "@/components/seller/Step2";
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import withRoleCheck from "@/helpers/withRoleCheck";
 import nProgress from "nprogress";
@@ -19,19 +19,31 @@ import useUpdateSellerBio from "@/hooks/useUpdateSellerBio";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 import useUpdateSellerBankDetails from "@/hooks/useUpdateSellerBankDetails";
 import { useSellerProfileStore } from "@/stores/sellerProfile";
+import { notify } from "../UI/Toast";
 
 const SetupAccPage: NextPage = () => {
-  const { bioAndBanner, setBioAndBanner } = useFormContext();
-  const { businessInfo, setBusinessInfo } = useFormContext();
-  const { bankDetails, setBankDetails } = useFormContext();
+  const router = useRouter();
+  const { bioAndBanner } = useFormContext();
+  const { businessInfo } = useFormContext();
+  const { bankDetails } = useFormContext();
   const contextUser = useUser();
   const [errorMessage, setErrorMessage] = useState("");
+  const [isComplete1, setIsComplete1] = useState(false);
+  const [isComplete2, setIsComplete2] = useState(false);
+  const [isComplete3, setIsComplete3] = useState(false);
   const { currentSellerProfile, setCurrentSellerProfile } =
     useSellerProfileStore();
-
-  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  const [step, setStep] = useState(() => {
+    const savedStep = localStorage.getItem("setupStep");
+    return savedStep ? Number(savedStep) : 1;
+  });
+
+  // When the step state changes, save the current step in the localStorage
+  useEffect(() => {
+    localStorage.setItem("setupStep", String(step));
+  }, [step]);
 
   const handleNext = async () => {
     if (step === 1) {
@@ -40,6 +52,16 @@ const SetupAccPage: NextPage = () => {
       console.log("step 1");
       try {
         if (!contextUser?.user?.id) throw new Error("User not found");
+        const sellerProfile = await useGetSellerProfileByUserId(
+          contextUser?.user?.id
+        );
+        if (sellerProfile?.user_id === contextUser?.user?.id) {
+          notify({
+            message: "Seller profile already exists",
+            type: "error",
+          });
+          throw new Error("Seller profile already exists");
+        }
         const res = await useCreateSellerProfile(
           contextUser?.user?.id,
           businessInfo.name,
@@ -48,7 +70,6 @@ const SetupAccPage: NextPage = () => {
           businessInfo.phoneNumber,
           String(process.env.NEXT_PUBLIC_DEFAULT_SELLER_AVATAR)
         );
-        console.log(res);
         setStep((prev) => prev + 1);
       } catch (e) {
         console.log(e);
@@ -83,8 +104,6 @@ const SetupAccPage: NextPage = () => {
           }
 
           await setCurrentSellerProfile(contextUser?.user?.id);
-
-          console.log(currentSellerProfile);
         }
 
         setStep((prev) => prev + 1);
@@ -123,8 +142,6 @@ const SetupAccPage: NextPage = () => {
 
         await setCurrentSellerProfile(contextUser?.user?.id);
 
-        console.log(currentSellerProfile);
-
         router.push("/seller");
       } catch (e) {
         console.log(e);
@@ -132,6 +149,7 @@ const SetupAccPage: NextPage = () => {
         setTimeout(() => {
           setLoading(false);
           nProgress.done();
+          localStorage.removeItem("setupStep");
         }, 2000);
       }
       return;
@@ -159,33 +177,43 @@ const SetupAccPage: NextPage = () => {
   };
 
   return (
-    <section className="h-screen flex justify-center items-center">
-      <div className="w-[819px] min-h-[740px] bg-white shadow-xl shadow-cod-gray-cg/5 text-center py-12">
-        <h5 className="text-H5-03 text-cod-gray-cg-600 mb-11">
+    <section className="sm:h-screen flex justify-center items-center">
+      <div className="max-w-[819px] min-h-[740px] bg-white shadow-xl shadow-cod-gray-cg/5 text-center py-12 px-4">
+        <h5 className="text-H5-03 text-cod-gray-cg-600 mb-5 md:mb-11">
           STEP {step} OF 3
         </h5>
-        <div className="flex flex-col gap-2 items-center w-[437px] mx-auto mb-6">
-          <h3 className="text-center text-H3-03 font-normal text-cod-gray-cg-600">
+        <div className="flex flex-col gap-2 items-center sm:w-[437px] mx-auto mb-6">
+          <h3 className="text-center text-H4-03 sm:text-H3-03 font-normal text-cod-gray-cg-600">
             Set up your seller profile...
           </h3>
-          <p className="text-H5-03 font-normal text-cod-gray-cg-400">
+          <p className="text-SP-03 sm:text-H5-03 font-normal text-cod-gray-cg-400">
             Before you start selling, you need to set up your profile.
           </p>
         </div>
 
         <div className="flex justify-center mb-12">
-          {step === 1 && <Step1 />}
-          {step === 2 && <Step2 />}
-          {step === 3 && <Step3 />}
+          {step === 1 && (
+            <Step1 setIsComplete={setIsComplete1} isLoading={loading} />
+          )}
+          {step === 2 && (
+            <Step2 setIsComplete={setIsComplete2} isLoading={loading} />
+          )}
+          {step === 3 && (
+            <Step3 setIsComplete={setIsComplete3} isLoading={loading} />
+          )}
         </div>
 
-        <div className="w-[400px] mx-auto flex flex-col gap-6">
+        <div className="w-[80%] sm:w-[400px] mx-auto flex flex-col gap-6">
           <Button
             size="lg"
             fullWidth
             onClick={handleNext}
-            isLoading={loading}
-            disabled={loading}
+            disabled={
+              (step === 1 && !isComplete1) ||
+              (step === 2 && !isComplete2) ||
+              (step === 3 && !isComplete3) ||
+              loading
+            }
           >
             {step === 3
               ? "Finish Setup"
@@ -199,7 +227,6 @@ const SetupAccPage: NextPage = () => {
               size="lg"
               fullWidth
               onClick={handleBack}
-              isLoading={loading}
               disabled={loading}
             >
               Back
@@ -211,7 +238,6 @@ const SetupAccPage: NextPage = () => {
               size="lg"
               fullWidth
               onClick={handleSkip}
-              isLoading={loading}
               disabled={loading}
             >
               Skip

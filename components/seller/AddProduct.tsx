@@ -11,6 +11,8 @@ import useCreateProduct from "@/hooks/useCreateProduct";
 import { useProductStore } from "@/stores/product";
 import nProgress from "nprogress";
 import withRoleCheck from "@/helpers/withRoleCheck";
+import useGetTotalProducts from "@/hooks/useGetTotalProducts";
+import useUpdateTotalProducts from "@/hooks/useUpdateTotalProducts";
 
 const AddProduct: NextPage<{
   farmName: string;
@@ -27,16 +29,22 @@ const AddProduct: NextPage<{
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      if (e.target.files.length > 3) {
+      const filesArray = Array.from(e.target.files);
+
+      // Check if any file is larger than 2MB
+      const isAnyFileTooLarge = filesArray.some(
+        (file) => file.size > 2 * 1024 * 1024
+      );
+
+      if (isAnyFileTooLarge) {
+        setError("Each file must be less than 2MB.");
+      } else if (filesArray.length > 3) {
         setError("You can only upload up to 3 images.");
       } else {
-        const filesArray = Array.from(e.target.files).map((file) => {
-          const objectUrl = URL.createObjectURL(file);
-          return objectUrl;
-        });
+        const objectUrls = filesArray.map((file) => URL.createObjectURL(file));
 
         // Store file objects to state
-        setImages((prevImages) => prevImages.concat(filesArray));
+        setImages((prevImages) => prevImages.concat(objectUrls));
 
         setError(null); // Clear any previous error
       }
@@ -46,7 +54,6 @@ const AddProduct: NextPage<{
   const handleRemoveImage = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!contextUser?.user) return router.push("/login");
@@ -97,7 +104,8 @@ const AddProduct: NextPage<{
         product.sellerId as string
       );
 
-      // await setProductsBySeller(contextUser.user?.id);
+      const totalProducts = await useGetTotalProducts(sellerId);
+      await useUpdateTotalProducts(sellerId, Number(totalProducts.total) + 1);
     } catch (error) {
       throw new Error("Failed to create product. Please try again.");
     } finally {
@@ -120,20 +128,21 @@ const AddProduct: NextPage<{
   };
 
   return (
-    <div className="w-[602px] max-h-[1100px] h-[70vh] m-auto flex flex-col justify-start items-center bg-white pt-14 overflow-y-auto">
-      <h3 className="text-H3-03 font-normal text-cod-gray-cg-600 pb-6">
+    <div className="w-full sm:w-[602px] max-h-[1100px] h-[80vh] m-auto flex flex-col justify-start items-center bg-white pt-14 overflow-y-auto">
+      <h3 className="text-H4-03 sm:text-H3-03 font-normal text-cod-gray-cg-600 pb-6">
         Add your product
       </h3>
 
-      <p className="w-[437.5px] h-16 text-cod-gray-cg-400 text-H5-03 font-normal text-center">
+      <p className="w-[90%] sm:w-[437.5px] h-16 text-cod-gray-cg-400 text-SP-03 sm:text-H5-03 font-normal text-center">
         Upload your product details and start selling
       </p>
 
       <form
-        className="inline-flex flex-col items-start gap-8 mt-5"
+        className="w-full sm:w-auto inline-flex flex-col items-start gap-8 mt-5"
         onSubmit={handleSubmit}
       >
         <Input
+          disabled={isLoading}
           fullWidth
           type="text"
           name="productName"
@@ -141,6 +150,7 @@ const AddProduct: NextPage<{
         />
 
         <Input
+          disabled={isLoading}
           fullWidth
           type="text"
           name="quantityAvailable"
@@ -148,6 +158,7 @@ const AddProduct: NextPage<{
         />
 
         <Input
+          disabled={isLoading}
           fullWidth
           type="text"
           name="productPrice"
@@ -155,6 +166,7 @@ const AddProduct: NextPage<{
         />
 
         <Input
+          disabled={isLoading}
           fullWidth
           type="text"
           name="productWeight"
@@ -162,6 +174,7 @@ const AddProduct: NextPage<{
         />
 
         <Input
+          disabled={isLoading}
           fullWidth
           type="text"
           name="productDetails"
@@ -175,10 +188,10 @@ const AddProduct: NextPage<{
           showMaxLength={true}
         />
 
-        <div className="w-[398px] h-[179px] bg-light-green-shade flex justify-center items-center mb-3">
+        <div className="w-full sm:w-[398px] h-[179px] bg-light-green-shade flex justify-center items-center mb-3">
           <label htmlFor="uploadProductImage">
             {error ? (
-              <p className="text-SP-03 text-red-r-600 text-center">{error}</p>
+              <p className="text-SP-03 text-red-600 text-center">{error}</p>
             ) : images.length === 0 ? (
               <div>
                 <div className="flex gap-3 items-center mb-4">
@@ -190,24 +203,33 @@ const AddProduct: NextPage<{
                 </div>
 
                 <div className="inline-flex justify-center items-center gap-6">
-                  {Array.from({ length: 3 }).map((_, index) => (
-                    <ImgIcon key={index} size={100} color="#CED4DA" />
-                  ))}
+                  {Array.from({ length: 3 }).map((_, index) =>
+                    isLoading ? (
+                      <div
+                        key={index}
+                        className="animate-pulse flex w-20 h-20 sm:w-[100px] sm:h-[100px] relative p-2 justify-center items-center shrink-0"
+                      >
+                        <div className="rounded-lg w-16 h-16 sm:w-[81.25px] sm:h-[81.25px] object-cover object-center bg-gray-300"></div>
+                      </div>
+                    ) : (
+                      <ImgIcon key={index} size={80} color="#CED4DA" />
+                    )
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="inline-flex justify-center items-center gap-6">
+              <div className="inline-flex justify-center items-center gap-6 w-full">
                 {images.map((image, index) => (
                   <div
                     key={index}
-                    className="flex w-[100px] h-[100px] relative p-2 justify-center items-center shrink-0"
+                    className="flex w-20 h-20 sm:w-[100px] sm:h-[100px] relative p-2 justify-center items-center shrink-0"
                   >
                     <Image
                       width={81.25}
                       height={81.25}
                       src={image}
                       alt={image}
-                      className="rounded-lg w-[81.25px] h-[81.25px] object-cover object-center"
+                      className="rounded-lg w-16 h-16 sm:w-[81.25px] sm:h-[81.25px] object-cover object-center"
                     />
                     <CloseCircle
                       variant="Bold"
@@ -222,6 +244,7 @@ const AddProduct: NextPage<{
             )}
           </label>
           <input
+            disabled={isLoading}
             className="hidden"
             type="file"
             name="uploadProductImage"

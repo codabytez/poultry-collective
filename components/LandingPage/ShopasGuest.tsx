@@ -25,7 +25,7 @@ const ShopasGuest: NextPage = () => {
           Shop as a Guest
         </h1>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px]">
-          {!isLoading
+          {!isLoading && allProducts.length > 0
             ? allProducts
                 .slice(0, 6)
                 .map((product) => <Product key={product.$id} {...product} />)

@@ -133,7 +133,7 @@ const Product: NextPage<ProductProps> = (props) => {
         </Link>
         <div className="flex w-full justify-between items-center text-cod-gray-cg-600 text-xl leading-9">
           <h3>{product_name}</h3>
-          <p>Price: ${Number(product_price).toLocaleString()}</p>
+          <p>Price: ₦ {Number(product_price).toLocaleString()}</p>
         </div>
         <Button size="lg" onClick={onAddToCart} isLoading={isLoading}>
           Add to Cart

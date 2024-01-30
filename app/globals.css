@@ -15,6 +15,10 @@ html {
   scroll-snap-type: y mandatory;
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 select.hide-caret {
   appearance: none;
 }

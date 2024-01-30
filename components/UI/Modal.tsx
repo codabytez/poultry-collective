@@ -1,5 +1,5 @@
 "use client";
-import { MouseEvent } from "react";
+import { useEffect, MouseEvent } from "react";
 import { NextPage } from "next";
 import { ModalProps } from "@/@types";
 
@@ -8,6 +8,14 @@ const Modal: NextPage<ModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  }, [isModalOpen]);
+
   if (!isModalOpen) {
     return null;
   }
@@ -18,17 +26,17 @@ const Modal: NextPage<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-x-0 top-[100px] flex justify-center pt-10 z-50 overflow-y-scroll w-screen"
+      className="fixed inset-0 flex justify-center pt-10 z-50 overflow-y-scroll w-screen bg-black bg-opacity-50"
       onClick={() => setIsModalOpen(false)}
     >
       <div
-        className="bg-white p-4 rounded shadow-lg relative"
+        className="bg-white p-4 rounded shadow-lg relative pt-14 h-max"
         onClick={stopPropagation}
       >
         {children}
         <button
           onClick={() => setIsModalOpen(false)}
-          className="mt-4 px-4 py-2 text-white rounded absolute -top-2 right-2"
+          className="mt-4 px-4 py-2 text-white rounded absolute top-0 sm:-top-2 right-0 sm:right-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

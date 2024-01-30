@@ -106,7 +106,7 @@ const CartItem: NextPage<cartItemProps> = (props) => {
 
           <Trash
             size={32}
-            className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-r-600 absolute right-6 top-[70%] sm:top-20"
+            className="text-[#292D32] hover:scale-105  cursor-pointer hover:text-red-600 absolute right-6 top-[70%] sm:top-20"
             onClick={() => product_id && handleDelete(product_id)}
           />
         </div>

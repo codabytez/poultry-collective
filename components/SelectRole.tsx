@@ -79,18 +79,17 @@ const SelectRole: NextPage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-[683px] h-[592px] shrink-0 bg-white shadow-xl m-auto flex flex-col justify-center items-center gap-8">
-          <h3 className="text-center text-cod-gray-cg text-H3-03 font-normal w-[511px]">
+        <div className="w-full md:w-[683px] h-[592px] shrink-0 bg-white shadow-xl m-auto flex flex-col justify-center items-center gap-8 px-4">
+          <h3 className="text-center text-cod-gray-cg text-H5-03 sm:text-H3-03 font-normal sm:w-[511px]">
             Now that you’re here, do you want to buy or sell?
           </h3>
 
-          <div className="flex flex-col w-[304px] items-center gap-16 justify-center">
+          <div className="flex flex-col w-[304px] items-center gap-6 sm:gap-16 justify-center">
             <Button
               size="lg"
               onClick={() => handleRoleSelect("buyer")}
               fullWidth
               disabled={btnDisabled}
-              isLoading={btnDisabled}
             >
               Buy
             </Button>
@@ -100,7 +99,6 @@ const SelectRole: NextPage = () => {
               onClick={() => handleRoleSelect("seller")}
               fullWidth
               disabled={btnDisabled}
-              isLoading={btnDisabled}
             >
               Sell
             </Button>

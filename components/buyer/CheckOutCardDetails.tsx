@@ -61,7 +61,7 @@ const CheckOutCardDetails: NextPage<CheckOutCardDetailsProps> = ({
   const [cvv, setCvv] = useState("");
 
   return (
-    <div className="w-full sm:w-[564px] lg:w-full xl:w-[564px] rounded bg-light-green-shade py-6 px-8 mt-20">
+    <div className="w-full sm:w-[564px] lg:w-full xl:w-[564px] rounded bg-light-green-shade py-6 px-8 mt-20 hidden">
       <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-5">
         Card Details
       </h4>
@@ -192,3 +192,31 @@ const CheckOutCardDetails: NextPage<CheckOutCardDetailsProps> = ({
 };
 
 export default CheckOutCardDetails;
+
+
+  //   cardName: z.string().min(2, { message: "Card name is required" }),
+  //   cardNumber: z
+  //     .string()
+  //     .min(16, { message: "Card number is required" })
+  //     .refine((value) => {
+  //       const cardType = creditCardType(value);
+  //       return (
+  //         cardType[0] &&
+  //         [
+  //           "visa",
+  //           "mastercard",
+  //           "verve",
+  //           "maestro",
+  //           "jcb",
+  //           "american-express",
+  //           "unionpay",
+  //         ].includes(cardType[0].type)
+  //       );
+  //     }, "Card type is not valid"),
+  //   expiryDate: z
+  //     .string()
+  //     .min(4, "Expiry date must be at least 4 characters long"),
+  //   cvv: z
+  //     .string()
+  //     .min(2, { message: "CVV is required" })
+  //     .length(3, "CVV must be 3 digits"),

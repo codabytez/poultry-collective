@@ -2,22 +2,27 @@
 import { NextPage } from "next";
 import { useFormContext } from "@/context/seller";
 import { Input } from "../UI/Input";
-import withRoleCheck from "@/helpers/withRoleCheck";
 
-const Step1: NextPage = () => {
+const Step1: NextPage<{
+  setIsComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+}> = ({ setIsComplete, isLoading }) => {
   const { businessInfo, setBusinessInfo } = useFormContext();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setBusinessInfo((prev: string[]) => ({
-      ...prev,
+    const newBusinessInfo = {
+      ...businessInfo,
       [e.target.name]: e.target.value,
-    }));
+    };
+    setBusinessInfo(newBusinessInfo);
+    setIsComplete(Object.values(newBusinessInfo).every((item) => item !== ""));
   };
   return (
-    <div className="flex flex-col items-start gap-6 w-[400px]">
+    <div className="flex flex-col items-start gap-6 w-[80%] sm:w-[400px]">
       <Input
+        disabled={isLoading}
         fullWidth
         type="text"
         placeholder="Business Name"
@@ -27,6 +32,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        disabled={isLoading}
         fullWidth
         type="text"
         placeholder="Phone Number"
@@ -36,6 +42,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        disabled={isLoading}
         fullWidth
         type="text"
         placeholder="Address"
@@ -48,6 +55,7 @@ const Step1: NextPage = () => {
       />
 
       <Input
+        disabled={isLoading}
         fullWidth
         type="text"
         placeholder="City/Town"

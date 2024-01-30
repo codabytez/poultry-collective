@@ -106,6 +106,24 @@ export type ProductProps = {
   setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export type SellerProductProps = {
+  product: {
+    user_id: string;
+    $id: string;
+    product_name: string;
+    farm_name: string;
+    product_price: string;
+    quantity_available: string;
+    product_image: string[];
+    product_weight: string;
+    product_details: string;
+    imageUrl?: string;
+    product_id?: string;
+  };
+  handleDelete?: (id: string, product_image: string[]) => Promise<void>;
+  isCurrentUser: boolean;
+};
+
 export type testimonyProps = {
   id: number;
   testimony: string;
