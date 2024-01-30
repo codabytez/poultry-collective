@@ -273,7 +273,7 @@ const AddProduct: NextPage<{
           fullWidth
           type="submit"
           isLoading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || !productDescription || !images}
         >
           Save Details
         </Button>
