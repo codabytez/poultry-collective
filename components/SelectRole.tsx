@@ -44,7 +44,7 @@ const SelectRole: NextPage = () => {
                 contextUser?.user?.id
               );
               if (sellerProfile?.id)
-                router.replace(`/seller/${sellerProfile?.id}`);
+                router.replace(`/seller/profile/${sellerProfile?.id}`);
               if (!sellerProfile?.id) router.replace("/seller/setup-acc");
             }
           }
