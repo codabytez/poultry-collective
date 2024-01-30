@@ -51,8 +51,10 @@ const SelectRole: NextPage = () => {
         } catch (error) {
           throw error;
         } finally {
-          setIsLoading(false);
-          nProgress.done();
+          setTimeout(() => {
+            nProgress.done();
+            setIsLoading(false);
+          }, 3000);
         }
       })();
     }

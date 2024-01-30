@@ -67,7 +67,7 @@ const Checkout: NextPage = () => {
     return total + Number(item.quantity);
   }, 0);
 
-  const shippingFeePerKg = 1;
+  const shippingFeePerKg = 100;
   const shippingFee = totalWeight * shippingFeePerKg;
   const locationDistance = 10;
 
@@ -83,8 +83,8 @@ const Checkout: NextPage = () => {
     distance: number
   ) {
     const feePerKg = shippingFeePerKg;
-    const feePerItem = 1;
-    const feePerKm = 1;
+    const feePerItem = 10;
+    const feePerKm = 10;
 
     return feePerKg * weight + feePerItem * quantity + feePerKm * distance;
   }
