@@ -117,10 +117,8 @@ const UserProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     try {
       account.createOAuth2Session(
         "google",
-        // `${currentDomain}/signup/select-role`,
-        // `${currentDomain}/login`
-        "localhost:3000",
-        "localhost:3000"
+        `${currentDomain}/signup/select-role`,
+        `${currentDomain}/login`
       );
     } catch (e) {
       throw e;
