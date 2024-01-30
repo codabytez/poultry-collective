@@ -19,7 +19,7 @@ const ShopasGuest: NextPage = () => {
     <section
       id="shopAsGuest"
       className={`overflow-hidden mx-auto max-w-[1413px] px-5 ${
-        allProducts.length > 0 && "hidden"
+        allProducts.length < 1 && "hidden"
       }`}
     >
       <div className="flex flex-col pb-1 items-start gap-10 my-32">
