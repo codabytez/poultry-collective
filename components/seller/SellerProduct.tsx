@@ -18,7 +18,7 @@ const SellerProduct: NextPage<SellerProductProps> = ({
         "cursor-pointer hover:scale-[1.01] hover:opacity-80 transition-all duration-300"
       }`}
       onClick={() => {
-        if (isCurrentUser) {
+        if (isCurrentUser && product) {
           router.push(
             `/seller/profile/${product.user_id}/productpreview/${product.$id}`
           );
