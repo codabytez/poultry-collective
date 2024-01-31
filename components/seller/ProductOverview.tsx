@@ -108,12 +108,12 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
             ))}
           </div>
           <div className="flex flex-col gap-6">
-            <h3 className="text-cod-gray-cg-500 text-H5-03 sm:text-H3-03">
+            <h3 className="text-cod-gray-cg-500 text-H4-03 sm:text-H3-03">
               {productsById?.product_weight}kg{" "}
               {productsById?.product_name.split(" ").slice(-1)[0]}s: ₦
               {Number(productsById?.product_price).toLocaleString()}
             </h3>
-            <p className="w-[80%] pb-10 sm:w-[640px] text-H4-03 text-cod-gray-cg-500">
+            <p className="w-[80%] pb-10 sm:w-[640px] text-H5-03 sm:text-H4-03 font-normal text-cod-gray-cg-500">
               {productsById?.product_details}
             </p>
             <div className="w-[250px] sm:w-[400px]">
