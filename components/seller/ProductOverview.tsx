@@ -46,6 +46,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
   }, []);
 
   useEffect(() => {
+    if (productsById.product_image.length === 0) return;
     const createUrls = async () => {
       const urls = await Promise.all(
         productsById.product_image.map((fileId: string) =>
@@ -98,7 +99,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
         <SellerBanner isCurrentUser seller={currentSellerProfile} />
         <div className="my-20 w-11/12 m-auto flex-col gap-10">
           <div className="inline-flex gap-9 overflow-x-scroll hide-scrollbar">
-            {/* {imageUrls.map((url, index) => (
+            {imageUrls.map((url, index) => (
               <Image
                 key={index}
                 src={url}
@@ -107,7 +108,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
                 height={500}
                 className="object-cover"
               />
-            ))} */}
+            ))}
           </div>
           <div className="flex flex-col gap-6">
             <h3 className="text-cod-gray-cg-500 text-H4-03 sm:text-H3-03">
