@@ -54,7 +54,7 @@ const SellerProduct: NextPage<SellerProductProps> = ({
       {isCurrentUser && (
         <Trash
           size={40}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white hover:text-red-700 transition-all cursor-pointer hover:scale-105 z-50"
+          className="absolute top-4 right-4 p-2 rounded-full bg-white hover:text-red-700 transition-all cursor-pointer hover:scale-105 z-10"
           onClick={() => {
             if (handleDelete) {
               handleDelete(product.$id, product.product_image);
