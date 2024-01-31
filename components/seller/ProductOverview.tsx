@@ -45,18 +45,20 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   const createUrls = async () => {
-  //     const urls = await Promise.all(
-  //       productsById.product_image.map(useCreateBucketUrl)
-  //     );
-  //     setImageUrls(urls);
-  //   };
+  useEffect(() => {
+    const createUrls = async () => {
+      const urls = await Promise.all(
+        productsById.product_image.map((fileId: string) =>
+          useCreateBucketUrl(fileId)
+        )
+      );
+      setImageUrls(urls);
+    };
 
-  //   if (productsById.product_image.length > 0) {
-  //     createUrls();
-  //   }
-  // }, [productsById.product_image]);
+    if (productsById.product_image.length > 0) {
+      createUrls();
+    }
+  }, [productsById.product_image]);
 
   const handleShareProfile = () => {
     navigator.clipboard.writeText(
