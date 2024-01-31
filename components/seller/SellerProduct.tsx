@@ -2,14 +2,28 @@
 import { SellerProductProps } from "@/@types";
 import { Trash } from "iconsax-react";
 import { NextPage } from "next";
+import { useRouter } from "nextjs13-progress";
 
 const SellerProduct: NextPage<SellerProductProps> = ({
   product,
   handleDelete,
   isCurrentUser,
 }) => {
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col justify-center items-start gap-4 relative max-w-[427px] transition-all flex-1">
+    <div
+      className={`flex flex-col justify-center items-start gap-4 relative max-w-[427px] transition-all flex-1 ${
+        isCurrentUser && "cursor-pointer"
+      }`}
+      onClick={() => {
+        if (isCurrentUser) {
+          router.push(
+            `/seller/profile/${product.user_id}/productpreview/${product.$id}`
+          );
+        }
+      }}
+    >
       <div className="flex h-[300px] w-full justify-center items-start bg-no-repeat object-cover relative">
         <img
           src={product.imageUrl}
@@ -40,7 +54,7 @@ const SellerProduct: NextPage<SellerProductProps> = ({
       {isCurrentUser && (
         <Trash
           size={40}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white hover:text-red-700 transition-all cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-full bg-white hover:text-red-700 transition-all cursor-pointer hover:scale-105 z-50"
           onClick={() => {
             if (handleDelete) {
               handleDelete(product.$id, product.product_image);

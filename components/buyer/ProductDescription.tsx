@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useProductStore } from "@/stores/product";
 import { useCartStore } from "@/stores/cart";
 import { useUser } from "@/context/user";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs13-progress";
 import { notify } from "../UI/Toast";
 import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
 import { LoadingSkeleton } from "../UI/LoadingSkeleton";
@@ -70,10 +70,10 @@ const ProductDescription: NextPage<productDetailTypes> = ({ params }) => {
 
     if (Number(enteredQuantity) > Number(productsById?.quantity_available)) {
       notify({
-       message: "Quantity available is not enough.",
-       type: "error",
-     });
-     setEnteredQuantity("");
+        message: "Quantity available is not enough.",
+        type: "error",
+      });
+      setEnteredQuantity("");
       setLoader(false);
       return;
     }

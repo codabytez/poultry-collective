@@ -59,16 +59,18 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
 
   useEffect(() => {
     const fetchSellerProfile = async () => {
-      if (contextUser.user) {
-        try {
-          setIsLoading(true);
-          await setProductsBySeller(params?.id);
-          await setSellerIdBySellerId(params?.id);
-        } catch (error) {
-          throw error;
-        } finally {
-          setIsLoading(false);
-        }
+      if (!contextUser.user) {
+        router.push("/login");
+        return;
+      }
+      try {
+        setIsLoading(true);
+        await setProductsBySeller(params?.id);
+        await setSellerIdBySellerId(params?.id);
+      } catch (error) {
+        throw error;
+      } finally {
+        setIsLoading(false);
       }
     };
 

@@ -124,13 +124,19 @@ const StarRating = ({
         })}
       </div>
       <p className="text-H4-03 font-normal text-cod-gray-cg-200">
-        {isCurrentUser
-          ? `${totalUsersRated > 0 ? totalUsersRated : 0} ${
-              totalUsersRated > 1 ? "ratings" : "rating"
-            }`
-          : hasRated
-          ? `${userRating} / ${maxRating} rating`
-          : `${rating} / ${maxRating} rating`}
+        {isCurrentUser ? (
+          <span>
+            (
+            {`${totalUsersRated > 0 ? totalUsersRated : 0} ${
+              totalUsersRated > 1 ? " ratings" : " rating"
+            }`}
+            )
+          </span>
+        ) : hasRated ? (
+          `${userRating} / ${maxRating} rating`
+        ) : (
+          `${rating} / ${maxRating} rating`
+        )}
       </p>
     </div>
   );

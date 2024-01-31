@@ -7,12 +7,10 @@ import Button from "./UI/Button";
 import { useEffect, useState } from "react";
 import Modal from "./UI/Modal";
 import { useCartStore } from "@/stores/cart";
-import { useProductStore } from "@/stores/product";
 import { useUser } from "@/context/user";
 import { notify } from "./UI/Toast";
 import CartModal from "./buyer/CartModal";
 import { useRouter } from "next/navigation";
-import { LoadingSkeleton } from "./UI/LoadingSkeleton";
 import useUpdateProductQuantity from "@/hooks/useUpdateProductQuantity";
 import useGetProductById from "@/hooks/useGetProductById";
 import { Link } from "nextjs13-progress";
@@ -81,7 +79,7 @@ const Product: NextPage<ProductProps> = (props) => {
     }
 
     if (Number(addQty) > Number(quantity_available)) {
-       notify({
+      notify({
         message: "Quantity available is not enough.",
         type: "error",
       });

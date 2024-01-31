@@ -66,8 +66,8 @@ const HomePage: NextPage = () => {
         <>
           <section className="flex flex-col mb-28 px-5">
             <h1 className="text-H4-03 sm:text-H2-03 text-cod-gray-cg-600 my-10">
-              Hi <span>{contextUser?.user?.name.split(" ")[0]}</span> Start
-              Shopping
+              Hi <span>{contextUser?.user?.name.split(" ")[0]},</span> tart
+              shopping
             </h1>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-[60px]">

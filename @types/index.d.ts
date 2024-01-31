@@ -88,12 +88,14 @@ export type sellerProfilePageProps = {
 
 export type ProductProps = {
   user_id: string;
+  seller_id?: string;
+
   $id: string;
   product_name: string;
   farm_name: string;
   product_price: string;
   quantity_available: string;
-  product_image: string;
+  product_image: any;
   product_weight: string;
   product_details: string;
   imageUrl?: string;
@@ -103,19 +105,7 @@ export type ProductProps = {
 };
 
 export type SellerProductProps = {
-  product: {
-    user_id: string;
-    $id: string;
-    product_name: string;
-    farm_name: string;
-    product_price: string;
-    quantity_available: string;
-    product_image: string[];
-    product_weight: string;
-    product_details: string;
-    imageUrl?: string;
-    product_id?: string;
-  };
+  product: ProductProps;
   handleDelete?: (id: string, product_image: string[]) => Promise<void>;
   isCurrentUser: boolean;
 };

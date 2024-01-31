@@ -126,7 +126,7 @@ const LoginForm: NextPage = () => {
           if (sellerProfile?.id)
             router.push(`/seller/profile/${sellerProfile.id}`);
           else router.push("/seller");
-        } else router.push("/buyer");
+        } else router.push("/signup/select-role");
       }
     };
 

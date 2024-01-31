@@ -69,15 +69,6 @@ const SellerHomePage: NextPage = () => {
 
       if (!sellerProfile) throw new Error("Seller profile not found");
 
-      // if (bioAndBanner.bannerImage.raw) {
-      //   const res = await useChangeSellerBanner(
-      //     bioAndBanner.bannerImage.raw,
-      //     String(process.env.NEXT_PUBLIC_DEFAULT_SELLER_AVATAR)
-      //   );
-      //   bioAndBanner.bannerImage &&
-      //     (await useUpdateSellerBanner(sellerProfile?.id, res));
-      // }
-
       await setCurrentSellerProfile(contextUser?.user?.id);
 
       bioAndBanner.bio &&
