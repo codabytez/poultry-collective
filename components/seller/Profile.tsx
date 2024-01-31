@@ -159,7 +159,7 @@ const SellerProfile: NextPage<Props> = ({ params }) => {
             )}
 
             {isCurrentUser && (
-              <div className="flex w-10/12 h-[200px] md:h-[400px] mt-20 items-center justify-center border-4 border-dashed border-main-green-mg mx-auto">
+              <div className="flex w-10/12 h-[200px] md:h-[300px] mt-20 items-center justify-center border-2 rounded border-dashed border-main-green-mg mx-auto">
                 <button
                   onClick={handleOpenModal}
                   className="flex justify-center items-center gap-2"
