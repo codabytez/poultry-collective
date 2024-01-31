@@ -24,26 +24,26 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     if (contextUser.user) {
-  //       setIsLoading(true);
-  //       try {
-  //         await setProductsById(params.productid);
-  //         await setSellerIdBySellerId(productsById?.seller_id);
-  //       } catch (error) {
-  //         throw new Error("Failed to load product.");
-  //       } finally {
-  //         setTimeout(() => {
-  //           setIsLoading(false);
-  //         }, 2000);
-  //       }
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (contextUser.user) {
+        setIsLoading(true);
+        try {
+          await setProductsById(params.productid);
+          await setSellerIdBySellerId(productsById?.seller_id);
+        } catch (error) {
+          throw new Error("Failed to load product.");
+        } finally {
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        }
+      }
+    };
 
-  //   fetchProducts();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+    fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // useEffect(() => {
   //   const createUrls = async () => {
@@ -92,11 +92,11 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
         </button>
       </div>
 
-      {/* <div>
+      <div>
         <SellerBanner isCurrentUser seller={currentSellerProfile} />
         <div className="my-20 w-11/12 m-auto flex-col gap-10">
           <div className="inline-flex gap-9 overflow-x-scroll hide-scrollbar">
-            {imageUrls.map((url, index) => (
+            {/* {imageUrls.map((url, index) => (
               <Image
                 key={index}
                 src={url}
@@ -105,7 +105,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
                 height={500}
                 className="object-cover"
               />
-            ))}
+            ))} */}
           </div>
           <div className="flex flex-col gap-6">
             <h3 className="text-cod-gray-cg-500 text-H4-03 sm:text-H3-03">
@@ -123,7 +123,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </MainLayout>
   );
 };
