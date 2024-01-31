@@ -66,7 +66,7 @@ export const Navbar: NextPage = () => {
             href="/buyer/viewcart"
             className="border-main-green-mg relative"
           >
-            {contextUser?.user && (
+            {contextUser?.user && !contextUser?.user?.role === "seller" && (
               <Button className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-main-green-mg text-white text-xs flex justify-center items-center">
                 {cart?.length}
               </Button>
