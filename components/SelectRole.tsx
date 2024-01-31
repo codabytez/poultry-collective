@@ -13,10 +13,12 @@ import nProgress from "nprogress";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
 import useDeleteAllCartByUserId from "@/hooks/useDeleteAllCartByUserId";
 import useCreateProfile from "@/hooks/useCreateProfile";
+import { useCartStore } from "@/stores/cart";
 
 const SelectRole: NextPage = () => {
   const contextUser = useUser();
   const router = useRouter();
+  const { loadUserCart } = useCartStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
 
@@ -26,7 +28,7 @@ const SelectRole: NextPage = () => {
       (async () => {
         try {
           if (contextUser?.user?.id) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
+            await loadUserCart(contextUser?.user?.id);
             const userProfile = await useGetProfileByUserId(
               contextUser?.user?.id
             );
@@ -66,6 +68,7 @@ const SelectRole: NextPage = () => {
     setBtnDisabled(true);
     if (!contextUser?.user) router.push("/signup");
     if (contextUser?.user) {
+      await loadUserCart(contextUser?.user?.id);
       try {
         const documentId = await useGetProfileByUserId(contextUser.user.id);
         if (documentId?.id) await useUpdateProfile(documentId?.id, { role });

@@ -19,10 +19,12 @@ import nProgress from "nprogress";
 import { FcGoogle } from "react-icons/fc";
 import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
+import { useCartStore } from "@/stores/cart";
 
 const LoginForm: NextPage = () => {
   const router = useRouter();
   const contextUser = useUser();
+  const { loadUserCart } = useCartStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userLoading, setUserLoading] = useState<boolean>(false);
 
@@ -51,6 +53,9 @@ const LoginForm: NextPage = () => {
     try {
       await contextUser.login(email, password);
       reset();
+      if (contextUser.user) {
+        await loadUserCart(contextUser?.user?.id);
+      }
     } catch (error) {
       // Check the error message to set the appropriate form error
       const errorMessage = (error as Error).message;

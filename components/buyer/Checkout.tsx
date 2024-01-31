@@ -10,7 +10,6 @@ import { useCartStore } from "@/stores/cart";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import creditCardType from "credit-card-type";
 import withRoleCheck from "@/helpers/withRoleCheck";
 import CheckOutAddress from "./CheckOutAddress";
 import CheckOutOrderSummary from "./CheckOutOrderSummary";
@@ -84,7 +83,7 @@ const Checkout: NextPage = () => {
   ) {
     const feePerKg = shippingFeePerKg;
     const feePerItem = 10;
-    const feePerKm = 10;
+    const feePerKm = 100;
 
     return feePerKg * weight + feePerItem * quantity + feePerKm * distance;
   }
