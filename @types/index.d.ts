@@ -55,12 +55,8 @@ export type User = {
   image: string;
 };
 
-export type profileProps = {
-  id: string;
+export type profileProps = User & {
   user_id: string;
-  name: string;
-  email: string;
-  image: string;
 };
 
 export type sellerProfileProps = {
