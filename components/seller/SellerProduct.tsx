@@ -14,7 +14,8 @@ const SellerProduct: NextPage<SellerProductProps> = ({
   return (
     <div
       className={`flex flex-col justify-center items-start gap-4 relative max-w-[427px] transition-all flex-1 ${
-        isCurrentUser && "cursor-pointer"
+        isCurrentUser &&
+        "cursor-pointer hover:scale-[1.01] hover:opacity-80 transition-all duration-300"
       }`}
       onClick={() => {
         if (isCurrentUser) {
