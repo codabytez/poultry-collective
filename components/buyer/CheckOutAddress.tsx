@@ -113,10 +113,10 @@ const CheckOutAddress: NextPage<CheckOutAddressProps> = ({
 
       <div className="mt-8">
         <h4 className="text-cod-gray-cg-600 text-H4-03 font-semibold mb-2">
-          Delivery Fees: ${deliveryFee.toLocaleString()}
+          Delivery Fees: ₦ {deliveryFee.toLocaleString()}
         </h4>
         <h6 className="text-cod-gray-cg-600 text-H6-03 w-full max-w-[342.32px] ">
-          Delivery fees are determind by product quantity, weight and your
+          Delivery fees are determined by product quantity, weight and your
           location distance.
         </h6>
       </div>

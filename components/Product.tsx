@@ -45,7 +45,7 @@ const Product: NextPage<ProductProps> = (props) => {
     }
   }, [isModalOpen, loadUserCart, contextUser?.user]);
 
-  if (Number(localQuantityAvailable) < 3) {
+  if (Number(localQuantityAvailable) < 1) {
     return null;
   }
 

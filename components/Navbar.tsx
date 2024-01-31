@@ -49,7 +49,7 @@ export const Navbar: NextPage = () => {
   return (
     <nav className="select-none sticky top-0 z-50 bg-white m-auto">
       <div className="bg-light-green-shade w-full">
-        <div className="lg:h-[80px] max-w-[1440px] m-auto flex justify-between lg:justify-end items-center gap-4 lg:gap-36 px-4 lg:px-8 pb-3.5">
+        <div className="lg:h-[80px] max-w-[1440px] m-auto flex justify-between lg:justify-end items-center gap-4 lg:gap-36 px-4 lg:px-16 pb-3.5">
           <Button
             variant="link-primary"
             disabled={isLoading}

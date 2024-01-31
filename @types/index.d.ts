@@ -89,7 +89,6 @@ export type sellerProfilePageProps = {
 export type ProductProps = {
   user_id: string;
   seller_id?: string;
-
   $id: string;
   product_name: string;
   farm_name: string;
