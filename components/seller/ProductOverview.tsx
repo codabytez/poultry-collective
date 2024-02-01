@@ -45,22 +45,6 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (productsById.product_image.length === 0) return;
-    const createUrls = async () => {
-      const urls = await Promise.all(
-        productsById.product_image.map((fileId: string) =>
-          useCreateBucketUrl(fileId)
-        )
-      );
-      setImageUrls(urls);
-    };
-
-    if (productsById.product_image.length > 0) {
-      createUrls();
-    }
-  }, [productsById.product_image]);
-
   const handleShareProfile = () => {
     navigator.clipboard.writeText(
       `${window.location.origin}/seller/profile/${productsById?.seller_id}`
@@ -99,7 +83,7 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
         <SellerBanner isCurrentUser seller={currentSellerProfile} />
         <div className="my-20 w-11/12 m-auto flex-col gap-10">
           <div className="inline-flex gap-9 overflow-x-scroll hide-scrollbar">
-            {imageUrls.map((url, index) => (
+            {productsById.imageUrls.map((url: string, index: number) => (
               <Image
                 key={index}
                 src={url}

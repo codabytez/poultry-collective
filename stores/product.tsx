@@ -50,7 +50,14 @@ export const useProductStore = create<ProductStore>()(
         setProductsById: async (productId: string) => {
           const product = await useGetProductById(productId);
           const url = await useCreateBucketUrl(product.product_image[0]);
-          const result = { ...product, imageUrl: url };
+          const allUrls = await Promise.all(
+            product.product_image.map(async (fileId: string) => {
+              const url = await useCreateBucketUrl(fileId);
+              return url;
+            })
+          );
+          const result = { ...product, imageUrl: url, imageUrls: allUrls };
+
           set({ productsById: result });
         },
 
