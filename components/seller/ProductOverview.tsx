@@ -21,15 +21,13 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
   const { productsById, setProductsById } = useProductStore();
   const { currentSellerProfile, setSellerIdBySellerId } =
     useSellerProfileStore();
-  const [isLoading, setIsLoading] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (contextUser.user) {
-        setIsLoading(true);
         try {
-          await setProductsById(params.productid);
+          await setProductsById(params?.productid);
           await setSellerIdBySellerId(productsById?.seller_id);
         } catch (error) {
           throw new Error("Failed to load product.");
@@ -83,16 +81,17 @@ const ProductOverview: NextPage<productDetailTypes> = ({ params }) => {
         <SellerBanner isCurrentUser seller={currentSellerProfile} />
         <div className="my-20 w-11/12 m-auto flex-col gap-10">
           <div className="inline-flex gap-9 overflow-x-scroll hide-scrollbar">
-            {productsById.imageUrls.map((url: string, index: number) => (
-              <Image
-                key={index}
-                src={url}
-                alt={productsById.product_name + index + 1}
-                width={500}
-                height={500}
-                className="object-cover"
-              />
-            ))}
+            {productsById?.imageUrls &&
+              productsById?.imageUrls.map((url: string, index: number) => (
+                <Image
+                  key={index}
+                  src={url}
+                  alt={productsById?.product_name + index + 1}
+                  width={500}
+                  height={500}
+                  className="object-cover"
+                />
+              ))}
           </div>
           <div className="flex flex-col gap-6">
             <h3 className="text-cod-gray-cg-500 text-H4-03 sm:text-H3-03">
