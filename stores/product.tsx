@@ -3,7 +3,7 @@ import useCreateBucketUrl from "@/hooks/useCreateBucketUrl";
 import useGetAllProducts from "@/hooks/useGetAllProducts";
 import useGetProductById from "@/hooks/useGetProductById";
 import useGetProductBySeller from "@/hooks/useGetProductBySeller";
-import useDeleteProduct from "@/hooks/useDeleteProduct"; // Import the hook
+import useDeleteProduct from "@/hooks/useDeleteProduct";
 import { create } from "zustand";
 import { persist, devtools, createJSONStorage } from "zustand/middleware";
 

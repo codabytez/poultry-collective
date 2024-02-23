@@ -6,7 +6,7 @@ const Testimonial: NextPage = () => {
   return (
     <>
       <section
-        id="help"
+        id="reviews"
         className="mt-[150px] mb-16 py-16 bg-light-green-shade px-5 mx-4"
       >
         <h2 className="text-H4-03 md:text-H2-03 text-cod-gray-cg text-center">

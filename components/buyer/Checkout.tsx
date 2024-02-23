@@ -21,7 +21,7 @@ import { PaystackButton } from "react-paystack";
 const Checkout: NextPage = () => {
   const contextUser = useUser();
   const { cart, deleteAllCart } = useCartStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paymentMethodModal, setPaymentMethodModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState<boolean | null>(null);
@@ -48,7 +48,7 @@ const Checkout: NextPage = () => {
 
   const onSubmit = () => {
     setIsLoading(true);
-    setIsModalOpen(true);
+    setPaymentMethodModal(true);
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -121,12 +121,12 @@ const Checkout: NextPage = () => {
       }
       setIsOpen(true);
       setFeedback(true);
-      setIsModalOpen(false);
+      setPaymentMethodModal(false);
     },
     onClose: () => {
       setIsOpen(true);
       setFeedback(false);
-      setIsModalOpen(false);
+      setPaymentMethodModal(false);
     },
   };
 
@@ -229,7 +229,10 @@ const Checkout: NextPage = () => {
           </form>
         </>
       )}
-      <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+      <Modal
+        isModalOpen={paymentMethodModal}
+        setIsModalOpen={setPaymentMethodModal}
+      >
         <div className="flex flex-col items-center justify-center h-[400px]">
           <h3 className="text-H5-03 md:text-H3-03 font-semibold text-center mb-4">
             Choose a payment method
@@ -251,7 +254,12 @@ const Checkout: NextPage = () => {
                 initializePayment({
                   callback: (response: any) => {
                     console.log(response);
-                    setIsModalOpen(false);
+                    console.log(
+                      "This is the response status: ",
+                      response.status
+                    );
+                    setPaymentMethodModal(false);
+                    closePaymentModal(); // this will close the modal programmatically
                     if (response.status === "completed") {
                       if (contextUser.user) {
                         deleteAllCart(contextUser.user?.id);
@@ -259,11 +267,11 @@ const Checkout: NextPage = () => {
                       setIsOpen(true);
                       setFeedback(true);
                     }
-                    closePaymentModal(); // this will close the modal programmatically
                   },
                   onClose: () => {
-                    console.log("Payment modal closed");
-                    setIsModalOpen(false);
+                    setPaymentMethodModal(false);
+                    setIsOpen(true);
+                    setFeedback(false);
                   },
                 });
               }}

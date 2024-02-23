@@ -156,17 +156,17 @@ const SignUpForm: NextPage = () => {
             <Image src={signupImg} className="hidden lg:flex" alt="Signup" />
 
             <div className="inline-flex flex-col items-start gap-2">
-              <h3 className="text-H4-03 md:text-H3-03 text-cod-gray-cg-500 sm:w-[543px]">
+              <h3 className="text-H4-03 md:text-H3-03 text-cod-gray-cg-500 w-[90%] mx-auto  max-w-[543px]">
                 Hi, Welcome to Poultry Collective
               </h3>
 
-              <p className="text-BC-03 md:text-H5-03 font-normal text-cod-gray-cg-400 sm:w-[453px]">
+              <p className="text-BC-03 md:text-H5-03 font-normal text-cod-gray-cg-400 w-[90%] mx-auto  max-w-[453px]">
                 Sign up with Poultry Collective and start buying and selling
                 fresh poultry produce.
               </p>
 
               <form
-                className="w-[90%] lg:w-[400px] flex flex-col items-start gap-6 pt-5"
+                className="w-[90%] lg:w-[400px] flex flex-col items-start gap-6 pt-5 mx-auto"
                 onSubmit={handleSubmit(onSubmit)}
                 noValidate
               >
@@ -251,7 +251,7 @@ const SignUpForm: NextPage = () => {
                 </div>
               </form>
 
-              <div className="w-[90%] lg:w-[400px] flex flex-col items-center justify-start gap-8 mt-5">
+              <div className="w-[90%] mx-auto lg:w-[400px] flex flex-col items-center justify-start gap-8 mt-5">
                 <p className="text-SP-03 font-normal text-cod-gray-cg-400">
                   or
                 </p>

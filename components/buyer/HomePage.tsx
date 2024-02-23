@@ -35,8 +35,8 @@ const HomePage: NextPage = () => {
   const currentItems = allProducts.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
+    if (!contextUser?.user) return router.push("/login");
     const fetchAllProducts = async () => {
-      if (!contextUser?.user) return router.replace("/login");
       await setAllProducts();
       setTimeout(() => {
         setIsLoading(false);

@@ -17,6 +17,7 @@ function withRoleCheck<P extends object>(
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+      if (!user) return router.push("/login");
       if (user) {
         (async () => {
           try {

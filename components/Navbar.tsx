@@ -5,7 +5,7 @@ import Logo from "./Logo";
 import Button from "./UI/Button";
 import { ArrowDown2, Menu, Shop, ShoppingCart } from "iconsax-react";
 import { useUser } from "@/context/user";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import useGetProfileByUserId from "@/hooks/useGetProfileByUserId";
 import useGetSellerProfileByUserId from "@/hooks/useGetSellerProfileByUserId";
@@ -84,6 +84,7 @@ export const Navbar: NextPage = () => {
 export const BottomNavbar: NextPage = () => {
   const contextUser = useUser();
   const router = useRouter();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -126,8 +127,18 @@ export const BottomNavbar: NextPage = () => {
         </svg>
       </button>
       <div
-        className={`flex gap-4 bg-white h-[calc(100%-140px)] overflow-hidden w-full lg:w-[70%] justify-center lg:justify-between items-center fixed top-[140px] lg:relative lg:top-0 transition-all duration-500 ${
-          isOpen ? "translate-x-0" : "-translate-x-[150%] lg:translate-x-0"
+        className={`flex gap-4 bg-white ${
+          pathname.endsWith("login") || pathname.endsWith("signup")
+            ? "h-[calc(100%-80px)]"
+            : "h-[calc(100%-140px)]"
+        }  overflow-hidden w-full lg:w-[70%] justify-center lg:justify-between items-center fixed ${
+          pathname.endsWith("login") || pathname.endsWith("signup")
+            ? "top-[80px]"
+            : "top-[150px]"
+        } lg:relative lg:top-0 transition-all duration-500 ${
+          isOpen
+            ? "translate-x-[-15px]"
+            : "-translate-x-[150%] lg:translate-x-0"
         } flex-col lg:flex-row`}
       >
         <div className="flex flex-col lg:flex-row justify-center lg:justify-end items-center gap-4 lg:gap-16 text-H6-01 text-base text-cod-gray-cg-500">
@@ -149,10 +160,10 @@ export const BottomNavbar: NextPage = () => {
           <div className="flex justify-center items-center gap-1 hover:text-main-green-mg transition-all cursor-pointer">
             <Button
               variant="link-primary"
-              href="/#help"
+              href="/#reviews"
               onClick={() => setIsOpen(false)}
             >
-              Help
+              Reviews
             </Button>
           </div>
         </div>
